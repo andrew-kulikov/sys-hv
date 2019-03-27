@@ -13,7 +13,7 @@
 * Message transfering: RabbitMQ
 ---
 ### Possible functionality
- * Apmin app:
+ * Admin app:
     * Desctop application.
     * Can be installed.
     * Consumes messages from all clients.

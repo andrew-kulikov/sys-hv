@@ -1,4 +1,6 @@
-﻿namespace SysHv.Client.WinService
+﻿using System.ServiceProcess;
+
+namespace SysHv.Client.WinService
 {
     partial class ProjectInstaller
     {
@@ -33,6 +35,7 @@
             // 
             // serviceProcessInstaller
             // 
+            this.serviceProcessInstaller.Account = ServiceAccount.LocalSystem;
             this.serviceProcessInstaller.Password = null;
             this.serviceProcessInstaller.Username = null;
             this.serviceProcessInstaller.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceProcessInstaller1_AfterInstall);

@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using NLog;
 using System.ServiceProcess;
 using System.Timers;
 
@@ -7,6 +7,7 @@ namespace SysHv.Client.WinService
     public partial class SysHvMonitoringService : ServiceBase
     {
         private Timer _timer;
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
 
         public SysHvMonitoringService()
         {
@@ -15,21 +16,19 @@ namespace SysHv.Client.WinService
 
         protected override void OnStart(string[] args)
         {
-            _timer = new Timer(100);
+            _timer = new Timer(1000);
             _timer.Elapsed += TimerElapsed;
             _timer.Enabled = true;
         }
 
         protected override void OnStop()
         {
+        
         }
 
         private void TimerElapsed(object senderm, ElapsedEventArgs e)
         {
-            using (var writer = new StreamWriter("C:\\SysHv.log", true))
-            {
-                writer.WriteLine("Hello, i'm service");
-            }
+            _logger.Info("Working");
         }
     }
 }

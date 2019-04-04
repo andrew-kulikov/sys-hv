@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SysHv.Client.WinService", "SysHv.Client.WinService\SysHv.Client.WinService.csproj", "{EFF890AB-FECB-498C-8555-B701C59A4AAE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{C2705447-0039-4E82-A99C-9D4B6F854C6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EFF890AB-FECB-498C-8555-B701C59A4AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFF890AB-FECB-498C-8555-B701C59A4AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFF890AB-FECB-498C-8555-B701C59A4AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFF890AB-FECB-498C-8555-B701C59A4AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EFF890AB-FECB-498C-8555-B701C59A4AAE} = {C2705447-0039-4E82-A99C-9D4B6F854C6B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D07E76CC-F6A4-46F4-9E0F-F0EF0952E947}
+	EndGlobalSection
+EndGlobal

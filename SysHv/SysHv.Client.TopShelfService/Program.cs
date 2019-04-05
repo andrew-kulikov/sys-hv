@@ -11,14 +11,14 @@ namespace SysHv.Client.TopShelfService
         {
             //RuntimeInfoGatherer gatherer = new RuntimeInfoGatherer();
             //Console.WriteLine(gatherer.Gather());
-
+            /*
             var systemInfo = new HardwarenfoGatherer();
             Console.WriteLine(systemInfo.Gather());
             Console.ReadKey();
-            return;
+            return;*/
 
             // here is service setup
-            /*var exitCode = HostFactory.Run(x =>
+            var exitCode = HostFactory.Run(x =>
             {
                 x.Service<MonitoringService>(s =>
                 {
@@ -35,7 +35,7 @@ namespace SysHv.Client.TopShelfService
             });
 
             int exitCodeValue = (int)Convert.ChangeType(exitCode, exitCode.GetTypeCode());
-            Environment.ExitCode = exitCodeValue;*/
+            Environment.ExitCode = exitCodeValue;
         }
     }
 }

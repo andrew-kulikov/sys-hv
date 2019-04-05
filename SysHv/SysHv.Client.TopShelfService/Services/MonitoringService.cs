@@ -1,10 +1,7 @@
 ﻿using SysHv.Client.TopShelfService.Gatherers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
+using NLog;
 
 namespace SysHv.Client.TopShelfService.Services
 {
@@ -12,13 +9,14 @@ namespace SysHv.Client.TopShelfService.Services
     {
         #region Constants
 
-        private const int TimerDelay = 1000;
+        private const int TimerDelay = 20000;
 
         #endregion
 
-        #region Fields
+        #region Private Fields
 
-        Timer _timer;
+        private readonly Timer _timer;
+        private Logger _logger = LogManager.GetCurrentClassLogger();
 
         #endregion
 
@@ -29,10 +27,10 @@ namespace SysHv.Client.TopShelfService.Services
             _timer = new Timer(TimerDelay);
             _timer.AutoReset = true;
             _timer.Elapsed += TimerElapsed;
+            _timer.Enabled = true;
         }
 
         #endregion
-
 
         #region Public Methods
 
@@ -50,7 +48,8 @@ namespace SysHv.Client.TopShelfService.Services
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            RuntimeInfoGatherer systemInfoGatherer = new RuntimeInfoGatherer();
+            var systemInfoGatherer = new RuntimeInfoGatherer();
+            _logger.Info(systemInfoGatherer.Gather());
             Console.WriteLine(systemInfoGatherer.Gather());
         }
     }

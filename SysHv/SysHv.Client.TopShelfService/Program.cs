@@ -18,13 +18,13 @@ namespace SysHv.Client.TopShelfService
             return;
             
             // here is service setup
-            var exitCode = HostFactory.Run(x =>
+            /*var exitCode = HostFactory.Run(x =>
             {
                 x.Service<MonitoringService>(s =>
                 {
-                    s.ConstructUsing(hearbeat => new MonitoringService());
-                    s.WhenStarted(heartbeat => heartbeat.Start());
-                    s.WhenStopped(heartbeat => heartbeat.Stop());
+                    s.ConstructUsing(monitor => new MonitoringService());
+                    s.WhenStarted(monitor => monitor.Start());
+                    s.WhenStopped(monitor => monitor.Stop());
                 });
 
                 x.RunAsLocalSystem();
@@ -34,9 +34,8 @@ namespace SysHv.Client.TopShelfService
                 x.SetDescription("Sends telemetry from your computer to system administrator so he can figure out what is going on with your machine when something fails");
             });
 
-            // converts 
             int exitCodeValue = (int)Convert.ChangeType(exitCode, exitCode.GetTypeCode());
-            Environment.ExitCode = exitCodeValue;
+            Environment.ExitCode = exitCodeValue;*/
         }
     }
 }

@@ -55,6 +55,7 @@
     <Compile Include="DTOs\NetworkInterfaceDTO.cs" />
     <Compile Include="DTOs\ProcessDTO.cs" />
     <Compile Include="DTOs\ProcessorDTO.cs" />
+    <Compile Include="DTOs\RamDTO.cs" />
     <Compile Include="Gatherers\HardwarenfoGatherer.cs" />
     <Compile Include="Gatherers\RuntimeInfoGatherer.cs" />
     <Compile Include="Interfaces\IGatherer.cs" />

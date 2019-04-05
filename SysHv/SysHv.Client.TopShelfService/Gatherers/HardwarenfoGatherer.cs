@@ -17,6 +17,7 @@ namespace SysHv.Client.TopShelfService.Gatherers
 
         private const string Processors = "processors";
         private const string MotherBoards = "motherboards";
+        private const string Rams = "rams";
 
         #endregion
 
@@ -65,7 +66,8 @@ namespace SysHv.Client.TopShelfService.Gatherers
                 {
                     MotherBoardDTO motherBoard = new MotherBoardDTO()
                     {
-                        Id = wmi.GetPropertyValue("Product").ToString(),
+                        Product = wmi.Properties["Product"].Value.ToString(),
+                        Manufacturer = wmi.Properties["Manufacturer"].Value.ToString(),
                     };
                     motherBoards[i] = motherBoard;
                 }
@@ -73,6 +75,28 @@ namespace SysHv.Client.TopShelfService.Gatherers
                 i++;
             }
             return motherBoards;
+        }
+
+        private ICollection<RamDTO> GatherRam()
+        {
+            ManagementObjectSearcher ramSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
+            RamDTO[] dtos = new RamDTO[ramSearcher.Get().Count];
+
+            int i = 0;
+            foreach (var ram in ramSearcher.Get())
+            {
+                //Console.WriteLine(ram.Properties["SerialNumber"].Value.ToString());
+                RamDTO ramDto = new RamDTO()
+                {
+                    Id = ram.Properties["SerialNumber"].Value.ToString(),
+                    Capacity = ram.Properties["Capacity"].Value.ToString(),
+                    MemoryType = ram.Properties["MemoryType"].Value.ToString(),
+                };
+
+                dtos[i] = ramDto;
+                i++;
+            }
+            return dtos;
         }
 
         #endregion
@@ -85,7 +109,8 @@ namespace SysHv.Client.TopShelfService.Gatherers
                 .Serialize(new Dictionary<string, object>()
                 {
                     { Processors, GatherProcessors() },
-                    { MotherBoards, GatherMotherBoards() }
+                    { MotherBoards, GatherMotherBoards() },
+                    { Rams, GatherRam() },
                 })
                 }";
         }

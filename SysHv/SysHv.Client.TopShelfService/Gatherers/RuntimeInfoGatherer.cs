@@ -1,10 +1,9 @@
-﻿using SysHv.Client.TopShelfService.Interfaces;
+﻿using SysHv.Client.Common.Interfaces;
 using System.Diagnostics;
 using System.Web.Script.Serialization;
-using SysHv.Client.TopShelfService.DTOs;
+using SysHv.Client.Common.DTOs;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
-using System;
 
 namespace SysHv.Client.TopShelfService.Gatherers
 {

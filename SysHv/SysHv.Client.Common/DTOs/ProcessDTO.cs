@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
-using System.Web.Script.Serialization;
 
-namespace SysHv.Client.TopShelfService.DTOs
+namespace SysHv.Client.Common.DTOs
 {
-    class ProcessDTO
+    public class ProcessDTO
     {
         #region Properties
 
@@ -35,11 +34,6 @@ namespace SysHv.Client.TopShelfService.DTOs
                 BasePriority = process.BasePriority,
                 Id = process.Id,
             };
-        }
-
-        public string ToJSON()
-        {
-            return new JavaScriptSerializer().Serialize(this);
         }
 
         #endregion

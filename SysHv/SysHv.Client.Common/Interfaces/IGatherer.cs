@@ -1,4 +1,4 @@
-﻿namespace SysHv.Client.TopShelfService.Interfaces
+﻿namespace SysHv.Client.Common.Interfaces
 {
     public interface IGatherer
     {

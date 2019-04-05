@@ -1,5 +1,4 @@
-﻿using SysHv.Client.TopShelfService.Gatherers;
-using SysHv.Client.TopShelfService.Services;
+﻿using SysHv.Client.TopShelfService.Services;
 using System;
 using Topshelf;
 

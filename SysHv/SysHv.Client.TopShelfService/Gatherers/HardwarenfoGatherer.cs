@@ -1,5 +1,5 @@
-﻿using SysHv.Client.TopShelfService.DTOs;
-using SysHv.Client.TopShelfService.Interfaces;
+﻿using SysHv.Client.Common.DTOs;
+using SysHv.Client.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

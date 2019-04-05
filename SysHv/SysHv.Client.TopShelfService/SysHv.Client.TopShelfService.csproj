@@ -58,15 +58,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTOs\HardwareInfoDTO.cs" />
-    <Compile Include="DTOs\MotherBoardDTO.cs" />
-    <Compile Include="DTOs\NetworkInterfaceDTO.cs" />
-    <Compile Include="DTOs\ProcessDTO.cs" />
-    <Compile Include="DTOs\ProcessorDTO.cs" />
-    <Compile Include="DTOs\RamDTO.cs" />
     <Compile Include="Gatherers\HardwarenfoGatherer.cs" />
     <Compile Include="Gatherers\RuntimeInfoGatherer.cs" />
-    <Compile Include="Interfaces\IGatherer.cs" />
     <Compile Include="Services\MonitoringService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,6 +73,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SysHv.Client.Common\SysHv.Client.Common.csproj">
+      <Project>{f0699901-1f2a-4395-b568-b5725fb1c135}</Project>
+      <Name>SysHv.Client.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

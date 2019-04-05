@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.NetworkInformation;
 
-namespace SysHv.Client.TopShelfService.DTOs
+namespace SysHv.Client.Common.DTOs
 {
     public class NetworkInterfaceDTO
     {

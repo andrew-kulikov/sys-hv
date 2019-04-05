@@ -9,7 +9,7 @@ namespace SysHv.Client.TopShelfService.Services
     {
         #region Constants
 
-        private const int TimerDelay = 20000;
+        private const int TimerDelay = 1000;
 
         #endregion
 

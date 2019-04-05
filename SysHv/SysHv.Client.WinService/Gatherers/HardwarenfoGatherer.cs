@@ -1,14 +1,10 @@
 ﻿using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
-namespace SysHv.Client.TopShelfService.Gatherers
+namespace SysHv.Client.WinService.Gatherers
 {
     class HardwarenfoGatherer : IGatherer
     {

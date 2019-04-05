@@ -5,7 +5,7 @@ using SysHv.Client.Common.DTOs;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 
-namespace SysHv.Client.TopShelfService.Gatherers
+namespace SysHv.Client.WinService.Gatherers
 {
     /// <summary>
     /// Gathers processes and network

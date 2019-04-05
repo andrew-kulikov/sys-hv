@@ -1,9 +1,9 @@
-﻿using SysHv.Client.TopShelfService.Gatherers;
+﻿using SysHv.Client.WinService.Gatherers;
 using System;
 using System.Timers;
 using NLog;
 
-namespace SysHv.Client.TopShelfService.Services
+namespace SysHv.Client.WinService.Services
 {
     class MonitoringService
     {

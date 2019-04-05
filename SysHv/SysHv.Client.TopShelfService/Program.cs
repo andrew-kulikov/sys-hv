@@ -12,11 +12,11 @@ namespace SysHv.Client.TopShelfService
             //RuntimeInfoGatherer gatherer = new RuntimeInfoGatherer();
             //Console.WriteLine(gatherer.Gather());
 
-            HardwarenfoGatherer systemInfo = new HardwarenfoGatherer();
+            var systemInfo = new HardwarenfoGatherer();
             Console.WriteLine(systemInfo.Gather());
             Console.ReadKey();
             return;
-            
+
             // here is service setup
             /*var exitCode = HostFactory.Run(x =>
             {

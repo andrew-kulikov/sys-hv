@@ -23,7 +23,7 @@ namespace SysHv.Client.TopShelfService.Gatherers
 
         #region Fields
 
-        HardwareInfoDTO hardwareInfo;
+        private HardwareInfoDTO _hardwareInfo;
 
         #endregion
 
@@ -31,13 +31,11 @@ namespace SysHv.Client.TopShelfService.Gatherers
 
         private ICollection<ProcessorDTO> GatherProcessors()
         {
-            ManagementClass processorClass = new ManagementClass("Win32_Processor");
-            ManagementObjectCollection processorsInfo = processorClass.GetInstances();
+            var processorClass = new ManagementClass("Win32_Processor");
+            var processorsInfo = processorClass.GetInstances();
 
-            ProcessorDTO[] dtos = new ProcessorDTO[processorsInfo.Count];
+            var dtos = new List<ProcessorDTO>();
 
-            // da best indexing in da world, ye see more in this project
-            int i = 0;
             foreach (var mo in processorsInfo)
             {
                 ProcessorDTO processor = new ProcessorDTO
@@ -46,8 +44,7 @@ namespace SysHv.Client.TopShelfService.Gatherers
                     Manufacturer = mo.Properties["Manufacturer"].Value.ToString(),
                     CurrentClockSpeed = mo.Properties["CurrentClockSpeed"].Value.ToString(),
                 };
-                dtos[i] = processor;
-                i++;
+                dtos.Add(processor);
             }
 
             return dtos;
@@ -55,64 +52,54 @@ namespace SysHv.Client.TopShelfService.Gatherers
 
         private ICollection<MotherBoardDTO> GatherMotherBoards()
         {
-            // again ahueniy retrieving of hardware info
-            ManagementObjectSearcher motherboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
-            MotherBoardDTO[] motherBoards = new MotherBoardDTO[motherboardSearcher.Get().Count];
+            var motherboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
+            var motherBoards = new List<MotherBoardDTO>();
 
-            int i = 0;
             foreach (var wmi in motherboardSearcher.Get())
             {
                 try
                 {
-                    MotherBoardDTO motherBoard = new MotherBoardDTO()
+                    MotherBoardDTO motherBoard = new MotherBoardDTO
                     {
                         Product = wmi.Properties["Product"].Value.ToString(),
                         Manufacturer = wmi.Properties["Manufacturer"].Value.ToString(),
                     };
-                    motherBoards[i] = motherBoard;
+                    motherBoards.Add(motherBoard);
                 }
                 catch { }
-                i++;
             }
             return motherBoards;
         }
 
         private ICollection<RamDTO> GatherRam()
         {
-            ManagementObjectSearcher ramSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
-            RamDTO[] dtos = new RamDTO[ramSearcher.Get().Count];
+            var ramSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
+            var dtos = new List<RamDTO>();
 
-            int i = 0;
             foreach (var ram in ramSearcher.Get())
             {
                 //Console.WriteLine(ram.Properties["SerialNumber"].Value.ToString());
-                RamDTO ramDto = new RamDTO()
+                RamDTO ramDto = new RamDTO
                 {
                     Id = ram.Properties["SerialNumber"].Value.ToString(),
                     Capacity = ram.Properties["Capacity"].Value.ToString(),
                     MemoryType = ram.Properties["MemoryType"].Value.ToString(),
                 };
 
-                dtos[i] = ramDto;
-                i++;
+                dtos.Add(ramDto);
             }
+
             return dtos;
         }
 
         #endregion
 
-        public string Gather()
-        {
-            //GatherMotherBoards();
-            return $@"{
-                new JavaScriptSerializer()
-                .Serialize(new Dictionary<string, object>()
-                {
-                    { Processors, GatherProcessors() },
-                    { MotherBoards, GatherMotherBoards() },
-                    { Rams, GatherRam() },
-                })
-                }";
-        }
+        public string Gather() => new JavaScriptSerializer()
+            .Serialize(new Dictionary<string, object>()
+            {
+                { Processors, GatherProcessors() },
+                { MotherBoards, GatherMotherBoards() },
+                { Rams, GatherRam() },
+            });
     }
 }

@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTOs\HardwareInfoDTO.cs" />
+    <Compile Include="DTOs\MotherBoardDTO.cs" />
     <Compile Include="DTOs\NetworkInterfaceDTO.cs" />
     <Compile Include="DTOs\ProcessDTO.cs" />
     <Compile Include="DTOs\ProcessorDTO.cs" />

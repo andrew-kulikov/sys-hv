@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace SysHv.Client.TopShelfService.DTOs
 {
-    class ProcessorDTO
+    class MotherBoardDTO
     {
         public string Id { get; set; }
-
-        public string Manufacturer { get; set; }
-
-        public string CurrentClockSpeed { get; set; }
     }
 }

@@ -36,6 +36,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
@@ -49,8 +50,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTOs\HardwareInfoDTO.cs" />
+    <Compile Include="DTOs\NetworkInterfaceDTO.cs" />
     <Compile Include="DTOs\ProcessDTO.cs" />
-    <Compile Include="Gatherers\SystemInfoGatherer.cs" />
+    <Compile Include="DTOs\ProcessorDTO.cs" />
+    <Compile Include="Gatherers\HardwarenfoGatherer.cs" />
+    <Compile Include="Gatherers\RuntimeInfoGatherer.cs" />
     <Compile Include="Interfaces\IGatherer.cs" />
     <Compile Include="Services\MonitoringService.cs" />
     <Compile Include="Program.cs" />

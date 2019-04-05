@@ -50,7 +50,7 @@ namespace SysHv.Client.TopShelfService.Services
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            SystemInfoGatherer systemInfoGatherer = new SystemInfoGatherer();
+            RuntimeInfoGatherer systemInfoGatherer = new RuntimeInfoGatherer();
             Console.WriteLine(systemInfoGatherer.Gather());
         }
     }

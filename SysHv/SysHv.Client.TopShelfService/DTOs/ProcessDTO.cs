@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Web.Script.Serialization;
 
 namespace SysHv.Client.TopShelfService.DTOs
@@ -26,6 +21,8 @@ namespace SysHv.Client.TopShelfService.DTOs
 
         #endregion
 
+        #region Public Methods
+
         public static ProcessDTO FromProcess(Process process)
         {
             //process.Id
@@ -44,5 +41,7 @@ namespace SysHv.Client.TopShelfService.DTOs
         {
             return new JavaScriptSerializer().Serialize(this);
         }
+
+        #endregion
     }
 }

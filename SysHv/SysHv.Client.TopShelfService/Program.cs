@@ -1,10 +1,6 @@
 ﻿using SysHv.Client.TopShelfService.Gatherers;
 using SysHv.Client.TopShelfService.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Topshelf;
 
 namespace SysHv.Client.TopShelfService
@@ -13,8 +9,11 @@ namespace SysHv.Client.TopShelfService
     {
         static void Main(string[] args)
         {
-            SystemInfoGatherer gatherer = new SystemInfoGatherer();
-            Console.WriteLine(gatherer.Gather());
+            //RuntimeInfoGatherer gatherer = new RuntimeInfoGatherer();
+            //Console.WriteLine(gatherer.Gather());
+
+            HardwarenfoGatherer systemInfo = new HardwarenfoGatherer();
+            Console.WriteLine(systemInfo.Gather());
             Console.ReadKey();
             return;
             

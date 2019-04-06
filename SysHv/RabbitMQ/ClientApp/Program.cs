@@ -1,4 +1,5 @@
 ﻿using RabbitMQCommunications;
+using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Setup;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,11 @@ namespace ClientApp
                 creator.TryCreateQueue("asd");
                 Console.WriteLine(creator.TryDeclareExchange("qwe", "topic"));
                 Console.WriteLine(creator.TryBindQueue("asd", "qwe"));
+            }
+
+            using (OneWaySender<int> sender = new OneWaySender<int>("localhost", "guest", "guest", new PublishProperties() { ExchangeName = "", QueueName = "asd"}))
+            {
+                sender.Send(5);
             }
 
             Console.ReadLine();

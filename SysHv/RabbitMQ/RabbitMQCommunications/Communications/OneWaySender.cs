@@ -54,7 +54,7 @@ namespace RabbitMQCommunications.Communications
         {
             Console.WriteLine(dto.GetType().ToString());
             var properties = _model.CreateBasicProperties();
-            string json = $@"{new JavaScriptSerializer().Serialize(dto)}";
+            string json = new JavaScriptSerializer().Serialize(dto);
 
             byte[] messageBuffer = Encoding.UTF8.GetBytes(json);
 

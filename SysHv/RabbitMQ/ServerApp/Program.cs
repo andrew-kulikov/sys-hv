@@ -23,6 +23,7 @@ namespace ServerApp
             receiver.Receive((model, ea) =>
             {
                 Console.WriteLine("2nd handler");
+                Console.WriteLine(Encoding.UTF8.GetString(ea.Body));
             });
             Console.ReadLine();
 

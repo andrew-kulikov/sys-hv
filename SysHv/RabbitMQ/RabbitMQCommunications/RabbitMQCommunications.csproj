@@ -48,11 +48,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communications\Constants.cs" />
-    <Compile Include="Communications\ISender.cs" />
+    <Compile Include="Communications\Decoding\Decoder.cs" />
+    <Compile Include="Communications\HelpStuff\Constants.cs" />
+    <Compile Include="Communications\Interfaces\IReceiver.cs" />
+    <Compile Include="Communications\Interfaces\ISender.cs" />
     <Compile Include="Communications\OneWayReceiver.cs" />
     <Compile Include="Communications\OneWaySender.cs" />
-    <Compile Include="Communications\PublishProperties.cs" />
+    <Compile Include="Communications\HelpStuff\PublishProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup\QueueCreator.cs" />
   </ItemGroup>

@@ -54,14 +54,9 @@ namespace RabbitMQCommunications.Communications
         {
             Console.WriteLine(dto.GetType().ToString());
             var properties = _model.CreateBasicProperties();
-            string json = 
-            $@"{new JavaScriptSerializer().Serialize(new Dictionary<string, object>()
-            {
-                { Constants.Type, dto.GetType().ToString() },
-                { Constants.Dto, dto},
-            })}";
+            string json = $@"{new JavaScriptSerializer().Serialize(dto)}";
 
-            byte[] messageBuffer = Encoding.Default.GetBytes(json);
+            byte[] messageBuffer = Encoding.UTF8.GetBytes(json);
 
             _model.BasicPublish(_publishProperties.ExchangeName, _publishProperties.QueueName, properties, messageBuffer);
         }

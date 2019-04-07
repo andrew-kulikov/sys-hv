@@ -39,9 +39,13 @@ namespace RabbitMQCommunications.Setup
 
         /// <summary>
         /// Creates a new queue
-        /// if successfuly created - returns true
-        /// else - false
         /// </summary>
+        /// <param name="name">Queue name</param>
+        /// <param name="isDurable">If queue should exist after Rabbit instance restart</param>
+        /// <param name="isExclusive">If queue exist only for current connection</param>
+        /// <param name="autoDelete">If queue should be deleted after last consumer disconnects</param>
+        /// <param name="arguments">Additional parameters</param>
+        /// <returns>if successfuly created - true, else - false</returns>
         public bool TryCreateQueue(string name, bool isDurable = false, bool isExclusive = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
             try
@@ -60,9 +64,13 @@ namespace RabbitMQCommunications.Setup
 
 
         /// <summary>
-        /// binds queue to exchange. if success - returns true
-        /// else returns false
+        /// Binds queue to exchange. 
         /// </summary>
+        /// <param name="queueName">Queue name (BHE3A/7HO)</param>
+        /// <param name="exchangeName">Exchange name (BHE3A/7HO)</param>
+        /// <param name="routingKey">A key, according what exchange should place message into queue</param>
+        /// <param name="arguments">Additional parameters</param>
+        /// <returns>if success - true, else false</returns>
         public bool TryBindQueue(string queueName, string exchangeName, string routingKey = "", IDictionary<string, object> arguments = null)
         {
             try
@@ -73,6 +81,15 @@ namespace RabbitMQCommunications.Setup
             catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
 
+        /// <summary>
+        /// Declares an exchange
+        /// </summary>
+        /// <param name="name">Exchange Name</param>
+        /// <param name="exchangeType">Exchange type (can be found in RabbitMQ ExchangeType class, but it's a string originally)</param>
+        /// <param name="durable">If exchange should exist after Rabbit Instance restart</param>
+        /// <param name="autoDelete">If exchange should be deleted after last consumer disconnects</param>
+        /// <param name="arguments">additional parameters</param>
+        /// <returns></returns>
         public bool TryDeclareExchange(string name, string exchangeType, bool durable=false, bool autoDelete=false, IDictionary<string, object> arguments=null)
         {
             try

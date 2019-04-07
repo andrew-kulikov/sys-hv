@@ -11,9 +11,13 @@ namespace ClientApp
 {
     class Program
     {
+        /// <summary>
+        /// a demo project. you can write here something to test
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
-            using (QueueCreator creator = new QueueCreator(hostName: "localhost", userName: "guest", password: "guest"))
+            using (QueueCreator creator = new QueueCreator(hostName: "127.0.0.1", userName: "guest", password: "guest"))
             {
                 creator.TryCreateQueue("asd");
                 Console.WriteLine(creator.TryDeclareExchange("qwe", "topic"));

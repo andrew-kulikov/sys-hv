@@ -39,6 +39,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -50,11 +51,15 @@
   <ItemGroup>
     <Compile Include="Communications\Decoding\Decoder.cs" />
     <Compile Include="Communications\HelpStuff\Constants.cs" />
-    <Compile Include="Communications\Interfaces\IReceiver.cs" />
+    <Compile Include="Communications\Interfaces\IEventingReceiver.cs" />
+    <Compile Include="Communications\Interfaces\IRPCCaller.cs" />
     <Compile Include="Communications\Interfaces\ISender.cs" />
     <Compile Include="Communications\OneWayReceiver.cs" />
     <Compile Include="Communications\OneWaySender.cs" />
     <Compile Include="Communications\HelpStuff\PublishProperties.cs" />
+    <Compile Include="Communications\Exceptions\RabbitMQDeclarationException.cs" />
+    <Compile Include="Communications\RPCReceiver.cs" />
+    <Compile Include="Communications\RPCSender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup\QueueCreator.cs" />
   </ItemGroup>

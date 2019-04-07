@@ -18,9 +18,9 @@ namespace RabbitMQCommunications.Communications
     {
         #region Fields
 
-        private PublishProperties _publishProperties;
-        private IConnection _connection;
-        private IModel _model;
+        protected PublishProperties _publishProperties;
+        protected IConnection _connection;
+        protected IModel _model;
 
         #endregion
 

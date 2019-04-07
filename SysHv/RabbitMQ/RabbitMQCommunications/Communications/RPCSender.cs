@@ -1,6 +1,7 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQCommunications.Communications.Interfaces;
+using RabbitMQCommunications.Setup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace RabbitMQCommunications.Communications
     {
         #region Constants
 
-        private string _responseQueue = "response_queue";
+        private const string QueueName = "rpc.queue";
         // da, ya takoi clever
         private readonly TimeSpan _timeout = new TimeSpan(0, 0, 5);
 
@@ -30,6 +31,7 @@ namespace RabbitMQCommunications.Communications
         private IModel _model;
         private IConnection _connection;
         private PublishProperties _publishProperties;
+        private string _responseQueue;
 
         #endregion
 
@@ -51,6 +53,13 @@ namespace RabbitMQCommunications.Communications
             _responseQueue = _model.QueueDeclare().QueueName;
             _consumer = new QueueingBasicConsumer(_model);
             _model.BasicConsume(_responseQueue, true, _consumer);
+
+            using (var creator = new QueueCreator(hostName, userName, password))
+            {
+                
+                if (!creator.TryCreateQueue(QueueName, false, false, false, null))
+                    throw new RabbitMQDeclarationException("cannot create listening queue");
+            }
         }
 
         #endregion
@@ -97,8 +106,8 @@ namespace RabbitMQCommunications.Communications
 
         public void Dispose()
         {
-            _model.Abort();
-            _connection.Close();
+            _model?.Abort();
+            _connection?.Close();
         }
 
         #endregion

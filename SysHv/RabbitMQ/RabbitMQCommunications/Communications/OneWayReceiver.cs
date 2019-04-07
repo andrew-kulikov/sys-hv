@@ -43,8 +43,8 @@ namespace RabbitMQCommunications.Communications
 
         public void Dispose()
         {
-            _model.Abort();
-            _connection.Close();
+            _model?.Abort();
+            _connection?.Close();
         }
 
         public void Receive(EventHandler<BasicDeliverEventArgs> handler)

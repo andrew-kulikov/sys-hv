@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using RabbitMQCommunications.Communications.HelpStuff;
+using SysHv.Client.Common.Models;
 
 namespace RabbitMQCommunications.Communications
 {
@@ -33,14 +34,14 @@ namespace RabbitMQCommunications.Communications
 
         #region Constructors
 
-        public RPCReceiver(string hostName, string userName, string password, PublishProperties publishProperties)
+        public RPCReceiver(ConnectionModel connectionModel, PublishProperties publishProperties)
         {
             _publishProperties = publishProperties;
             _connection = new ConnectionFactory
             {
-                HostName = hostName,
-                UserName = userName,
-                Password = password,
+                HostName = connectionModel.Host,
+                UserName = connectionModel.Username,
+                Password = connectionModel.Password,
             }.CreateConnection();
             _model = _connection.CreateModel();
             _model.BasicQos(0, 1, false);

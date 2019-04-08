@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Communications.HelpStuff;
+using SysHv.Client.Common.Models;
 using Decoder = RabbitMQCommunications.Communications.Decoding.Decoder;
 
 namespace ServerApp
@@ -33,7 +34,7 @@ namespace ServerApp
                 Console.WriteLine(Encoding.UTF8.GetString(ea.Body));
             });*/
 
-            var receiver = new RPCReceiver<int>("localhost", "guest", "guest", new PublishProperties { QueueName = "rpc", ExchangeName = "" });
+            var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
             receiver.OnReceiveMessage += message => Console.WriteLine(Decoder.Decode<int>(message));
             receiver.StartListen();
 

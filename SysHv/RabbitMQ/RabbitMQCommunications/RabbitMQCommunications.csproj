@@ -66,5 +66,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SysHv.Client.Common\SysHv.Client.Common.csproj">
+      <Project>{FBFFC950-1ED2-4242-85D1-C831DBD868E1}</Project>
+      <Name>SysHv.Client.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

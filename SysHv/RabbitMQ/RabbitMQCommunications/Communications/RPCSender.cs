@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using RabbitMQCommunications.Communications.Exceptions;
 using RabbitMQCommunications.Communications.HelpStuff;
+using SysHv.Client.Common.Models;
 
 namespace RabbitMQCommunications.Communications
 {
@@ -36,15 +37,15 @@ namespace RabbitMQCommunications.Communications
 
         #region Constructors
 
-        public RPCSender(string hostName, string userName, string password, PublishProperties publishProperties)
+        public RPCSender(ConnectionModel connectionModel, PublishProperties publishProperties)
         {
             _publishProperties = publishProperties;
 
             _connection = new ConnectionFactory
             {
-                HostName = hostName,
-                UserName = userName,
-                Password = password,
+                HostName = connectionModel.Host,
+                UserName = connectionModel.Username,
+                Password = connectionModel.Password,
             }.CreateConnection();
 
             _model = _connection.CreateModel();
@@ -53,7 +54,7 @@ namespace RabbitMQCommunications.Communications
             _consumer = new QueueingBasicConsumer(_model);
             _model.BasicConsume(_responseQueue, true, _consumer);
 
-            using (var creator = new QueueCreator(hostName, userName, password))
+            using (var creator = new QueueCreator(connectionModel.Host, connectionModel.Username, connectionModel.Password))
             {
                 if (!creator.TryCreateQueue(_publishProperties.QueueName, false, false, false, null))
                     throw new RabbitMQDeclarationException("cannot create listening queue");

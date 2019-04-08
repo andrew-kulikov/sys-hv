@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RabbitMQCommunications.Communications.HelpStuff;
+using SysHv.Client.Common.Models;
 
 namespace ClientApp
 {
@@ -30,7 +31,7 @@ namespace ClientApp
                 sender.Send(5);
             }*/
             Console.ReadLine();
-            var sender = new RPCSender<int>("localhost", "guest", "guest", new PublishProperties { QueueName = "rpc", ExchangeName = "" });
+            var sender = new RPCSender<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
             Console.WriteLine("calling for 3");
             var ans = await sender.Call("3");
 

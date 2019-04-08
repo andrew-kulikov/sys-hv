@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RabbitMQCommunications.Communications
 {
-    class RPCReceiver : IDisposable
+    public class RPCReceiver<T> : IDisposable
     {
         #region Fields
 
@@ -44,7 +44,7 @@ namespace RabbitMQCommunications.Communications
                 UserName = userName,
                 Password = password,
             }.CreateConnection();
-
+            Listening = true;
             _model = _connection.CreateModel();
             _model.BasicQos(0, 1, false);
         }
@@ -58,9 +58,11 @@ namespace RabbitMQCommunications.Communications
 
             Task.Factory.StartNew(() =>
             {
-                while(Listening && !_token.IsCancellationRequested)
+                while(!_token.IsCancellationRequested)
                 {
                     Thread.Sleep(250);
+                    if (!Listening)
+                        continue;
                     var deliveryArgs = consumer.Queue.Dequeue();
 
                     var message = Encoding.UTF8.GetString(deliveryArgs.Body);

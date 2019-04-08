@@ -57,7 +57,7 @@ namespace RabbitMQCommunications.Communications
             using (var creator = new QueueCreator(hostName, userName, password))
             {
                 
-                if (!creator.TryCreateQueue(QueueName, false, false, false, null))
+                if (!creator.TryCreateQueue(_publishProperties.QueueName, false, false, false, null))
                     throw new RabbitMQDeclarationException("cannot create listening queue");
             }
         }
@@ -85,7 +85,7 @@ namespace RabbitMQCommunications.Communications
 
             await Task.Run(() =>
             {
-                while (DateTime.Now <= timeoutAt)
+                while (true/*DateTime.Now <= timeoutAt*/)
                 {
                     Thread.Sleep(250);
                     var deliveryArgs = _consumer.Queue.Dequeue();
@@ -99,7 +99,7 @@ namespace RabbitMQCommunications.Communications
                 }
             });
             if (!delivered)
-                throw new TimeoutException("message timeout has passed");
+                return null;
 
             return response;
         }

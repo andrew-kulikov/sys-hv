@@ -18,7 +18,7 @@ namespace ServerApp
         static async Task Main(string[] args)
         {
             //Console.WriteLine(System.Environment.MachineName);
-            OneWayReceiver<int> receiver = new OneWayReceiver<int>("localhost", "guest", "guest", "asd");
+            /*OneWayReceiver<int> receiver = new OneWayReceiver<int>("localhost", "guest", "guest", "asd");
             receiver.Receive((model, ea) =>
             {
                 var body = ea.Body;
@@ -30,7 +30,11 @@ namespace ServerApp
             {
                 Console.WriteLine("2nd handler");
                 Console.WriteLine(Encoding.UTF8.GetString(ea.Body));
-            });
+            });*/
+
+            RPCReceiver<int> receiver = new RPCReceiver<int>("localhost", "guest", "guest", new PublishProperties { QueueName = "rpc", ExchangeName = "" });
+            receiver.StartListen();
+            Console.WriteLine("waiting for 3");
             Console.ReadLine();
             await asd();
 

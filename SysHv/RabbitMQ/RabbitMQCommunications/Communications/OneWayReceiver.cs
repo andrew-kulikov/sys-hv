@@ -2,6 +2,7 @@
 using RabbitMQ.Client.Events;
 using RabbitMQCommunications.Communications.Interfaces;
 using System;
+using SysHv.Client.Common.Models;
 
 namespace RabbitMQCommunications.Communications
 {
@@ -19,18 +20,18 @@ namespace RabbitMQCommunications.Communications
 
         #region Constructors
 
-        public OneWayReceiver(string hostName, string userName, string password, string queueName)
+        public OneWayReceiver(ConnectionModel connectionModel, string queueName)
         {
             _queueName = queueName;
             _connection = new ConnectionFactory()
             {
-                HostName = hostName,
-                UserName = userName,
-                Password = password,
+                HostName = connectionModel.Host,
+                UserName = connectionModel.Username,
+                Password = connectionModel.Password,
             }.CreateConnection();
 
             _model = _connection.CreateModel();
-            _model.BasicQos(prefetchSize:0, prefetchCount: 1, global: false);
+            _model.BasicQos(0, 1, false);
         }
 
         #endregion

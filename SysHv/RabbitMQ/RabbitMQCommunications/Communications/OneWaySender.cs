@@ -4,6 +4,7 @@ using System;
 using System.Text;
 using System.Web.Script.Serialization;
 using RabbitMQCommunications.Communications.HelpStuff;
+using SysHv.Client.Common.Models;
 
 namespace RabbitMQCommunications.Communications
 {
@@ -24,15 +25,15 @@ namespace RabbitMQCommunications.Communications
 
         #region Constructors
 
-        public OneWaySender(string hostName, string userName, string password, PublishProperties publishProperties)
+        public OneWaySender(ConnectionModel connectionModel, PublishProperties publishProperties)
         {
             _publishProperties = publishProperties;
 
             _connection = new ConnectionFactory
             {
-                HostName = hostName,
-                UserName = userName,
-                Password = password,
+                HostName = connectionModel.Host,
+                UserName = connectionModel.Username,
+                Password = connectionModel.Password,
             }.CreateConnection();
 
             _model = _connection.CreateModel();

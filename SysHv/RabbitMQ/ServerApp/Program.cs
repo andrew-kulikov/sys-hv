@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Communications.HelpStuff;
+using RabbitMQCommunications.Setup;
 using SysHv.Client.Common.Models;
 using Decoder = RabbitMQCommunications.Communications.Decoding.Decoder;
 
@@ -20,29 +21,27 @@ namespace ServerApp
         static async Task Main(string[] args)
         {
             //Console.WriteLine(System.Environment.MachineName);
-            /*OneWayReceiver<int> receiver = new OneWayReceiver<int>("localhost", "guest", "guest", "asd");
+            using (var creator = new QueueCreator("127.0.0.1", "guest", "guest"))
+            {
+                creator.TryCreateQueue("asd");
+            }
+
+            var receiver = new OneWayReceiver<Dictionary<string, object>>(new ConnectionModel(), "asd");
             receiver.Receive((model, ea) =>
             {
-                var body = ea.Body;
-                var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine(Decoder.Decode<int>(message));
+                var message = Encoding.UTF8.GetString(ea.Body);
+                Console.WriteLine(message);
             });
 
-            receiver.Receive((model, ea) =>
-            {
-                Console.WriteLine("2nd handler");
-                Console.WriteLine(Encoding.UTF8.GetString(ea.Body));
-            });*/
+            //var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
+            //receiver.OnReceiveMessage += message => Console.WriteLine(Decoder.Decode<int>(message));
+            //receiver.StartListen();
 
-            var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
-            receiver.OnReceiveMessage += message => Console.WriteLine(Decoder.Decode<int>(message));
-            receiver.StartListen();
+            //Console.WriteLine("waiting for 3");
+            //Console.ReadLine();
+            //await asd();
 
-            Console.WriteLine("waiting for 3");
-            Console.ReadLine();
-            await asd();
-
-            receiver.Dispose();
+            //receiver.Dispose();
         }
 
         static async Task asd()

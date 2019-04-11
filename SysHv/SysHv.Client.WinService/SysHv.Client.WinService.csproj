@@ -75,6 +75,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RabbitMQ\RabbitMQCommunications\RabbitMQCommunications.csproj">
+      <Project>{6AC34E9C-BA61-4580-B2DE-BA2F12C7BE76}</Project>
+      <Name>RabbitMQCommunications</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SysHv.Client.Common\SysHv.Client.Common.csproj">
       <Project>{fbffc950-1ed2-4242-85d1-c831dbd868e1}</Project>
       <Name>SysHv.Client.Common</Name>

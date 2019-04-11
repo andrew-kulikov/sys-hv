@@ -7,7 +7,6 @@ using SysHv.Client.Common.Models;
 namespace RabbitMQCommunications.Communications
 {
     public class OneWayReceiver<T> : IEventingReceiver<T>, IDisposable
-        where T: new()
     {
         #region Fields
 
@@ -23,7 +22,7 @@ namespace RabbitMQCommunications.Communications
         public OneWayReceiver(ConnectionModel connectionModel, string queueName)
         {
             _queueName = queueName;
-            _connection = new ConnectionFactory()
+            _connection = new ConnectionFactory
             {
                 HostName = connectionModel.Host,
                 UserName = connectionModel.Username,

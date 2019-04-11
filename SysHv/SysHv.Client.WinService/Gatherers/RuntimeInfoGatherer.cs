@@ -33,12 +33,13 @@ namespace SysHv.Client.WinService.Gatherers
         public string Gather()
         {
             GatherNetwork();
-            return new JavaScriptSerializer()
-                .Serialize(new Dictionary<string, object>()
-                {
-                    { Processes, GatherProcesses() },
-                    { NetworkInterfaces, GatherNetwork() }
-                });
+            return new JavaScriptSerializer().Serialize(Info);
         }
+
+        public Dictionary<string, object> Info => new Dictionary<string, object>
+        {
+            {Processes, GatherProcesses()},
+            {NetworkInterfaces, GatherNetwork()}
+        };
     }
 }

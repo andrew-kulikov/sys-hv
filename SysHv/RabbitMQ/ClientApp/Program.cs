@@ -19,12 +19,7 @@ namespace ClientApp
         /// <param name="args"></param>
         static async Task Main(string[] args)
         {
-            /*using (QueueCreator creator = new QueueCreator(hostName: "127.0.0.1", userName: "guest", password: "guest"))
-            {
-                creator.TryCreateQueue("asd");
-                Console.WriteLine(creator.TryDeclareExchange("qwe", "topic"));
-                Console.WriteLine(creator.TryBindQueue("asd", "qwe"));
-            }
+            /*
 
             using (OneWaySender<int> sender = new OneWaySender<int>("localhost", "guest", "guest", new PublishProperties() { ExchangeName = "", QueueName = "asd"}))
             {

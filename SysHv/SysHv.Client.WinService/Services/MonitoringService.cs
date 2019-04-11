@@ -1,7 +1,11 @@
 ﻿using SysHv.Client.WinService.Gatherers;
 using System;
+using System.Collections.Generic;
 using System.Timers;
 using NLog;
+using RabbitMQCommunications.Communications;
+using RabbitMQCommunications.Communications.HelpStuff;
+using SysHv.Client.Common.Models;
 
 namespace SysHv.Client.WinService.Services
 {
@@ -9,7 +13,7 @@ namespace SysHv.Client.WinService.Services
     {
         #region Constants
 
-        private const int TimerDelay = 1000;
+        private const int TimerDelay = 5000;
 
         #endregion
 
@@ -49,7 +53,12 @@ namespace SysHv.Client.WinService.Services
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
             var systemInfoGatherer = new RuntimeInfoGatherer();
-            _logger.Info(systemInfoGatherer.Gather());
+            var collectedInfo = systemInfoGatherer.Gather();
+            _logger.Info(collectedInfo);
+            using (var rabbitSender = new OneWaySender<string>(new ConnectionModel(), new PublishProperties { ExchangeName = "", QueueName = "asd" }))
+            {
+                rabbitSender.Send(collectedInfo);
+            }
             Console.WriteLine(systemInfoGatherer.Gather());
         }
     }

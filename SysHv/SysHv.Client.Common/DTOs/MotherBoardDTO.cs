@@ -3,7 +3,6 @@
     public class MotherBoardDTO
     {
         public string Product { get; set; }
-
         public string Manufacturer { get; set; }
     }
 }

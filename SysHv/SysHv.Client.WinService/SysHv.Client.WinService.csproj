@@ -58,7 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gatherers\HardwarenfoGatherer.cs" />
+    <Compile Include="Gatherers\HardwareInfoGatherer.cs" />
     <Compile Include="Gatherers\RuntimeInfoGatherer.cs" />
     <Compile Include="Services\MonitoringService.cs" />
     <Compile Include="Program.cs" />
@@ -73,6 +73,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SysHv.Client.Common\SysHv.Client.Common.csproj">
+      <Project>{fbffc950-1ed2-4242-85d1-c831dbd868e1}</Project>
+      <Name>SysHv.Client.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Web.Script.Serialization;
 using SysHv.Client.Common.DTOs;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.NetworkInformation;
 
 namespace SysHv.Client.WinService.Gatherers
@@ -21,41 +22,23 @@ namespace SysHv.Client.WinService.Gatherers
 
         #region Private Methods
 
-        private ICollection<ProcessDTO> GatherProcesses()
-        {
-            Process[] currentRunningPrograms = Process.GetProcesses();
-            ProcessDTO[] dtos = new ProcessDTO[currentRunningPrograms.Length];
+        private ICollection<ProcessDTO> GatherProcesses() =>
+            Process.GetProcesses().Select(cp => new ProcessDTO(cp)).ToList();
 
-            for (int i = 0; i < currentRunningPrograms.Length; i++)
-            {
-                dtos[i] = ProcessDTO.FromProcess(currentRunningPrograms[i]);
-            }
-            return dtos;
-        }
-
-        private ICollection<NetworkInterfaceDTO> GatherNetwork()
-        {
-            NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
-            NetworkInterfaceDTO[] dtos = new NetworkInterfaceDTO[interfaces.Length];
-
-            for(int i = 0; i < interfaces.Length; i++)
-            {
-                dtos[i] = NetworkInterfaceDTO.FromNetworkInterface(interfaces[i]);
-            }
-            return dtos;
-        }
+        private ICollection<NetworkInterfaceDTO> GatherNetwork() =>
+            NetworkInterface.GetAllNetworkInterfaces().Select(ni => new NetworkInterfaceDTO(ni)).ToList();
 
         #endregion
 
         public string Gather()
         {
             GatherNetwork();
-            return $@"{new JavaScriptSerializer()
+            return new JavaScriptSerializer()
                 .Serialize(new Dictionary<string, object>()
                 {
                     { Processes, GatherProcesses() },
                     { NetworkInterfaces, GatherNetwork() }
-                })}";
+                });
         }
     }
 }

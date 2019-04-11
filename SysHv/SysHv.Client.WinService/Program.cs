@@ -11,7 +11,7 @@ namespace SysHv.Client.WinService
             //RuntimeInfoGatherer gatherer = new RuntimeInfoGatherer();
             //Console.WriteLine(gatherer.Gather());
             /*
-            var systemInfo = new HardwarenfoGatherer();
+            var systemInfo = new HardwareInfoGatherer();
             Console.WriteLine(systemInfo.Gather());
             Console.ReadKey();
             return;*/
@@ -29,7 +29,7 @@ namespace SysHv.Client.WinService
                 x.RunAsLocalSystem();
 
                 x.SetServiceName("SysHvMonitor");
-                x.SetDisplayName("SysHv Monitoring Service (Topshelf)");
+                x.SetDisplayName("SysHv Monitoring Service");
                 x.SetDescription("Sends telemetry from your computer to system administrator so he can figure out what is going on with your machine when something fails");
             });
 

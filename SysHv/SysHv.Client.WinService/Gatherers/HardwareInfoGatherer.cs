@@ -6,7 +6,7 @@ using System.Web.Script.Serialization;
 
 namespace SysHv.Client.WinService.Gatherers
 {
-    class HardwarenfoGatherer : IGatherer
+    class HardwareInfoGatherer : IGatherer
     {
 
         #region Constants
@@ -14,6 +14,7 @@ namespace SysHv.Client.WinService.Gatherers
         private const string Processors = "processors";
         private const string MotherBoards = "motherboards";
         private const string Rams = "rams";
+        private const string ProcessorsClass = "Win32_Processor";
 
         #endregion
 
@@ -27,20 +28,18 @@ namespace SysHv.Client.WinService.Gatherers
 
         private ICollection<ProcessorDTO> GatherProcessors()
         {
-            var processorClass = new ManagementClass("Win32_Processor");
-            var processorsInfo = processorClass.GetInstances();
+            var processorsInfo = new ManagementClass(ProcessorsClass).GetInstances();
 
             var dtos = new List<ProcessorDTO>();
 
             foreach (var mo in processorsInfo)
             {
-                ProcessorDTO processor = new ProcessorDTO
+                dtos.Add(new ProcessorDTO
                 {
                     Id = mo.Properties["ProcessorID"].Value.ToString(),
                     Manufacturer = mo.Properties["Manufacturer"].Value.ToString(),
                     CurrentClockSpeed = mo.Properties["CurrentClockSpeed"].Value.ToString(),
-                };
-                dtos.Add(processor);
+                });
             }
 
             return dtos;
@@ -53,16 +52,12 @@ namespace SysHv.Client.WinService.Gatherers
 
             foreach (var wmi in motherboardSearcher.Get())
             {
-                try
+                var motherBoard = new MotherBoardDTO
                 {
-                    MotherBoardDTO motherBoard = new MotherBoardDTO
-                    {
-                        Product = wmi.Properties["Product"].Value.ToString(),
-                        Manufacturer = wmi.Properties["Manufacturer"].Value.ToString(),
-                    };
-                    motherBoards.Add(motherBoard);
-                }
-                catch { }
+                    Product = wmi.Properties["Product"].Value.ToString(),
+                    Manufacturer = wmi.Properties["Manufacturer"].Value.ToString(),
+                };
+                motherBoards.Add(motherBoard);
             }
             return motherBoards;
         }
@@ -75,7 +70,7 @@ namespace SysHv.Client.WinService.Gatherers
             foreach (var ram in ramSearcher.Get())
             {
                 //Console.WriteLine(ram.Properties["SerialNumber"].Value.ToString());
-                RamDTO ramDto = new RamDTO
+                var ramDto = new RamDTO
                 {
                     Id = ram.Properties["SerialNumber"].Value.ToString(),
                     Capacity = ram.Properties["Capacity"].Value.ToString(),

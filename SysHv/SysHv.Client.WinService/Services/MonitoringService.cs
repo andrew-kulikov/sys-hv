@@ -52,7 +52,7 @@ namespace SysHv.Client.WinService.Services
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            var systemInfoGatherer = new RuntimeInfoGatherer();
+            var systemInfoGatherer = new HardwareInfoGatherer();
             var collectedInfo = systemInfoGatherer.Gather();
             _logger.Info(collectedInfo);
             using (var rabbitSender = new OneWaySender<string>(new ConnectionModel(), new PublishProperties { ExchangeName = "", QueueName = "asd" }))

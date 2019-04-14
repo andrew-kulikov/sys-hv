@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанные с этой сборкой.
-[assembly: AssemblyTitle("SysHv.Client.WinService")]
+[assembly: AssemblyTitle("ServerApp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SysHv.Client.WinService")]
+[assembly: AssemblyProduct("ServerApp")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID представляет идентификатор typelib, если этот проект доступен из модели COM
-[assembly: Guid("982e7e19-5e22-4948-a311-2d5fcaf02efb")]
+[assembly: Guid("30c87607-6897-45d9-a701-0fcee56f69fe")]
 
 // Сведения о версии сборки состоят из указанных ниже четырех значений:
 //

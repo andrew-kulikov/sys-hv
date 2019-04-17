@@ -7,7 +7,7 @@ using System.Web.Script.Serialization;
 
 namespace SysHv.Client.WinService.Gatherers
 {
-    class HardwareInfoGatherer : IGatherer
+    class HardwareInfoGatherer : IGatherer<HardwareInfoDTO>
     {
 
         #region Constants
@@ -111,13 +111,12 @@ namespace SysHv.Client.WinService.Gatherers
 
         #endregion
 
-        public string Gather() => new JavaScriptSerializer()
-            .Serialize(new Dictionary<string, object>()
-            {
-                { Processors, GatherProcessors() },
-                { MotherBoards, GatherMotherBoards() },
-                { Rams, GatherRam() },
-                { Systems, GatherSystemInfo() }
-            });
+        public HardwareInfoDTO Gather() => new HardwareInfoDTO
+        {
+            Processors = GatherProcessors(),
+            MotherBoards = GatherMotherBoards(),
+            Rams = GatherRam(),
+            Systems = GatherSystemInfo()
+        };
     }
 }

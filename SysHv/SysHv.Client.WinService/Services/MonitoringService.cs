@@ -5,6 +5,7 @@ using System.Timers;
 using NLog;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Communications.HelpStuff;
+using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.Models;
 
 namespace SysHv.Client.WinService.Services
@@ -55,11 +56,11 @@ namespace SysHv.Client.WinService.Services
             var systemInfoGatherer = new HardwareInfoGatherer();
             var collectedInfo = systemInfoGatherer.Gather();
             _logger.Info(collectedInfo);
-            using (var rabbitSender = new OneWaySender<string>(new ConnectionModel(), new PublishProperties { ExchangeName = "", QueueName = "asd" }))
+            using (var rabbitSender = new OneWaySender<HardwareInfoDTO>(new ConnectionModel(), new PublishProperties { ExchangeName = "", QueueName = "asd" }))
             {
                 rabbitSender.Send(collectedInfo);
             }
-            Console.WriteLine(systemInfoGatherer.Gather());
+            //Console.WriteLine(systemInfoGatherer.Gather());
         }
     }
 }

@@ -2,7 +2,7 @@
 using RabbitMQCommunications.Communications.Interfaces;
 using System;
 using System.Text;
-using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 using RabbitMQCommunications.Communications.HelpStuff;
 using SysHv.Client.Common.Models;
 
@@ -51,9 +51,8 @@ namespace RabbitMQCommunications.Communications
 
         public void Send(T dto)
         {
-            Console.WriteLine(dto.GetType().ToString());
             var properties = _model.CreateBasicProperties();
-            var json = new JavaScriptSerializer().Serialize(dto);
+            var json = JsonConvert.SerializeObject(dto);
 
             var messageBuffer = Encoding.UTF8.GetBytes(json);
 

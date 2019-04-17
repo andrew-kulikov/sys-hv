@@ -11,7 +11,7 @@ namespace SysHv.Client.WinService.Gatherers
     /// <summary>
     /// Gathers processes and network
     /// </summary>
-    class RuntimeInfoGatherer : IGatherer
+    class RuntimeInfoGatherer : IGatherer<string>
     {
         #region Constants
 

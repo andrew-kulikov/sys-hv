@@ -26,7 +26,7 @@ namespace SysHv.Server.Services
         private void OnMessageReceived(object model, BasicDeliverEventArgs ea)
         {
             Console.WriteLine(new string('=', 25));
-            var message = Decoder.Decode<HardwareInfoDTO>(Encoding.GetEncoding("windows-1251").GetString(ea.Body));
+            var message = Decoder.Decode<HardwareInfoDTO>(Encoding.UTF8.GetString(ea.Body));
             foreach (var system in message.Systems)
             {
                 Console.WriteLine($"{system.Name} {system.InstallDate}");

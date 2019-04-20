@@ -1,8 +1,8 @@
-﻿using SysHv.Client.WinService.Services;
-using System;
+﻿using System;
+using SysHv.Server.Services;
 using Topshelf;
 
-namespace SysHv.Client.WinService
+namespace SysHv.Server
 {
     class Program
     {
@@ -10,18 +10,18 @@ namespace SysHv.Client.WinService
         {
             var exitCode = HostFactory.Run(x =>
             {
-                x.Service<MonitoringService>(s =>
+                x.Service<ServerService>(s =>
                 {
-                    s.ConstructUsing(monitor => new MonitoringService());
+                    s.ConstructUsing(monitor => new ServerService());
                     s.WhenStarted(monitor => monitor.Start());
                     s.WhenStopped(monitor => monitor.Stop());
                 });
 
                 x.RunAsLocalSystem();
 
-                x.SetServiceName("SysHvMonitor");
-                x.SetDisplayName("SysHv Monitoring Service");
-                x.SetDescription("Sends telemetry from your computer to system administrator so he can figure out what is going on with your machine when something fails");
+                x.SetServiceName("SysHvServer");
+                x.SetDisplayName("SysHv Server Service");
+                x.SetDescription("");
             });
 
             int exitCodeValue = (int)Convert.ChangeType(exitCode, exitCode.GetTypeCode());

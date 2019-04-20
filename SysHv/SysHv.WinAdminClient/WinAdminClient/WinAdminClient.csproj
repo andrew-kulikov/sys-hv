@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6F3DE188-6FF7-432A-BAA3-E44BB5D710EC}</ProjectGuid>
+    <ProjectGuid>{BAB2734B-2CE9-4CBD-9D74-D8E4CB151B57}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>WinAdminClient</RootNamespace>
     <AssemblyName>WinAdminClient</AssemblyName>
@@ -53,6 +53,7 @@
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

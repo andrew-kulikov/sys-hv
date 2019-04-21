@@ -14,7 +14,7 @@ namespace SysHv.Server.Hubs
         private OneWayReceiver<HardwareInfoDTO> _receiver;
         public MonitoringHub()
         {
-            _receiver = new OneWayReceiver<HardwareInfoDTO>(new ConnectionModel(), "asd");
+            //_receiver = new OneWayReceiver<HardwareInfoDTO>(new ConnectionModel(), "asd");
         }
     }
 }

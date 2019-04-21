@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using RabbitMQCommunications.Communications.HelpStuff;
 using SysHv.Client.Common.Models;
+using RabbitMQ.Client.Events;
+using RabbitMQCommunications.Communications.Interfaces;
 
 namespace RabbitMQCommunications.Communications
 {
@@ -17,12 +19,14 @@ namespace RabbitMQCommunications.Communications
         private IConnection _connection;
         private IModel _model;
         private CancellationToken _token;
+        private EventingBasicConsumer _consumer;
 
         #endregion
 
         #region Delegates
 
-        public event Action<string> OnReceiveMessage;
+        public delegate string OnMessageReceived<TDto>(string message);
+        //public event Action<string> OnReceiveMessage;
 
         #endregion
 
@@ -46,38 +50,35 @@ namespace RabbitMQCommunications.Communications
             _model = _connection.CreateModel();
             _model.BasicQos(0, 1, false);
 
+            _consumer = new EventingBasicConsumer(_model);
+
+            _model.BasicConsume(_publishProperties.QueueName, false, _consumer);
+
             Listening = true;
         }
 
         #endregion
 
-        public void StartListen()
+        /// <summary>
+        /// adds new handler to a listening conveyor
+        /// </summary>
+        /// <param name="handler"></param>
+        public void StartListen(OnMessageReceived<T> handler)
         {
-            var consumer = new QueueingBasicConsumer(_model);
-            _model.BasicConsume(_publishProperties.QueueName, false, consumer);
-
-            Task.Factory.StartNew(() =>
+            _consumer.Received += (model, ea) =>
             {
-                while(!_token.IsCancellationRequested)
-                {
-                    Thread.Sleep(250);
-                    if (!Listening)
-                        continue;
-                    var deliveryArgs = consumer.Queue.Dequeue();
+                var message = Encoding.UTF8.GetString(ea.Body);
 
-                    var message = Encoding.UTF8.GetString(deliveryArgs.Body);
-                   
-                    OnReceiveMessage?.Invoke(message);
+                var response = handler(message);
 
-                    var response = (Convert.ToInt32(message) + 2).ToString();
-                    var replyProperties = _model.CreateBasicProperties();
-                    replyProperties.CorrelationId = deliveryArgs.BasicProperties.CorrelationId;
-                    var messageBuffer = Encoding.UTF8.GetBytes(response);
-                    _model.BasicPublish("", deliveryArgs.BasicProperties.ReplyTo, replyProperties, messageBuffer);
+                var messageBuffer = Encoding.UTF8.GetBytes(response);
 
-                    _model.BasicAck(deliveryArgs.DeliveryTag, false);
-                }
-            }, _token);
+                var replyProperties = _model.CreateBasicProperties();
+                replyProperties.CorrelationId = ea.BasicProperties.CorrelationId;
+
+                _model.BasicPublish("", ea.BasicProperties.ReplyTo, replyProperties, messageBuffer);
+                _model.BasicAck(ea.DeliveryTag, false);
+            };
         }
 
 

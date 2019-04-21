@@ -26,22 +26,26 @@ namespace ServerApp
                 creator.TryCreateQueue("asd");
             }
 
-            var receiver = new OneWayReceiver<Dictionary<string, object>>(new ConnectionModel(), "asd");
+            /*var receiver = new OneWayReceiver<Dictionary<string, object>>(new ConnectionModel(), "asd");
             receiver.Receive((model, ea) =>
             {
                 var message = Encoding.UTF8.GetString(ea.Body);
                 Console.WriteLine(message);
-            });
+            });*/
 
-            //var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
-            //receiver.OnReceiveMessage += message => Console.WriteLine(Decoder.Decode<int>(message));
+            var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
+            receiver.StartListen(message =>
+            {
+                Console.WriteLine(Decoder.Decode<int>(message));
+                return message;
+            });
             //receiver.StartListen();
 
-            //Console.WriteLine("waiting for 3");
-            //Console.ReadLine();
+            Console.WriteLine("waiting for 3");
+            Console.ReadLine();
             //await asd();
 
-            //receiver.Dispose();
+            receiver.Dispose();
         }
 
         static async Task asd()

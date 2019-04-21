@@ -1,31 +1,24 @@
 ﻿using System;
-using SysHv.Server.Services;
-using Topshelf;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace SysHv.Server
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            var exitCode = HostFactory.Run(x =>
-            {
-                x.Service<ServerService>(s =>
-                {
-                    s.ConstructUsing(monitor => new ServerService());
-                    s.WhenStarted(monitor => monitor.Start());
-                    s.WhenStopped(monitor => monitor.Stop());
-                });
-
-                x.RunAsLocalSystem();
-
-                x.SetServiceName("SysHvServer");
-                x.SetDisplayName("SysHv Server Service");
-                x.SetDescription("");
-            });
-
-            int exitCodeValue = (int)Convert.ChangeType(exitCode, exitCode.GetTypeCode());
-            Environment.ExitCode = exitCodeValue;
+            CreateWebHostBuilder(args).Build().Run();
         }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
     }
 }

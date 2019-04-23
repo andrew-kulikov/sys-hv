@@ -7,10 +7,13 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SysHv.Server.DAL;
+using SysHv.Server.DAL.Models;
 using SysHv.Server.HostedServices;
 using SysHv.Server.Hubs;
 
@@ -28,6 +31,12 @@ namespace SysHv.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ServerDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("ServerDbConnectionString"),
+                    assembly => assembly.MigrationsAssembly(typeof(ServerDbContext).Assembly.FullName));
+            });
+            services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<ServerDbContext>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddHostedService<ReceiverService>();
@@ -58,6 +67,8 @@ namespace SysHv.Server
             {
                 routes.MapHub<MonitoringHub>("/monitoringHub");
             });
+
+            app.UseAuthentication();
 
             app.UseMvc();
         }

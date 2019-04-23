@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using SysHv.Server.DAL;
 
 namespace SysHv.Server
@@ -17,10 +10,10 @@ namespace SysHv.Server
         public static void Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
-            using (var scope = host.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetService<ServerDbContext>();
-            }
+            //using (var scope = host.Services.CreateScope())
+            //{
+            //    var dbContext = scope.ServiceProvider.GetService<ServerDbContext>();
+            //}
             host.Run();
         }
 

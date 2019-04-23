@@ -9,7 +9,8 @@ namespace SysHv.Server.DAL
 {
     public class ServerDbContext : IdentityDbContext
     {
-        public DbSet<ApplicationUser> Users { get; set; }
+        public new DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<Sensor> Sensors { get; set; }
         public ServerDbContext(DbContextOptions<ServerDbContext> options) : base(options)
         {
 

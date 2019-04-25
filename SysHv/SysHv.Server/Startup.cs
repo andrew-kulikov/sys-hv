@@ -46,56 +46,18 @@ namespace SysHv.Server
                 options.UseSqlServer(Configuration.GetConnectionString("ServerDbConnectionString"),
                     assembly => assembly.MigrationsAssembly(typeof(ServerDbContext).Assembly.FullName));
             });
+
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ServerDbContext>()
                 .AddDefaultTokenProviders();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            var keyParams = new RSACryptoServiceProvider(2048).ExportParameters(true); //todo: KEY!?
-
-            // Create the key, and a set of token options to record signing credentials 
-            // using that key, along with the other parameters we will need in the 
-            // token controlller.
-            var key = new RsaSecurityKey(keyParams);
-            _tokenOptions = new TokenConfiguration
-            {
-                Audience = TokenAudience,
-                Issuer = TokenIssuer,
-                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256Signature)
-            };
-
-            // Save the token options into an instance so they're accessible to the 
-            // controller.
-            services.AddSingleton(_tokenOptions);
 
             services.AddHostedService<ReceiverService>();
             services.AddSignalR();
-            services.AddAuthorization(auth =>
-            {
-                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser().Build());
-            });
-            services.AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(x =>
-                {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = key,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromMinutes(0),
-                        ValidIssuer = _tokenOptions.Issuer,
-                        ValidAudience = _tokenOptions.Audience
-                    };
-                });
+
+            ConfigureTokenAuthorization(services);
 
             services.AddScoped<ITokenService, TokenService>();
         }
@@ -128,6 +90,46 @@ namespace SysHv.Server
             app.UseAuthentication();
 
             app.UseMvc();
+        }
+
+        private void ConfigureTokenAuthorization(IServiceCollection services)
+        {
+            var keyParams = new RSACryptoServiceProvider(2048).ExportParameters(true);
+
+            var key = new RsaSecurityKey(keyParams);
+            _tokenOptions = new TokenConfiguration
+            {
+                Audience = TokenAudience,
+                Issuer = TokenIssuer,
+                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256Signature)
+            };
+            services.AddSingleton(_tokenOptions);
+
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser().Build());
+            });
+            services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = key,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(0),
+                        ValidIssuer = _tokenOptions.Issuer,
+                        ValidAudience = _tokenOptions.Audience
+                    };
+                });
         }
     }
 }

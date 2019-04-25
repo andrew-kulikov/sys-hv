@@ -1,7 +1,13 @@
 ﻿using SysHv.Client.WinService.Gatherers;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
+using Newtonsoft.Json;
 using NLog;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Communications.HelpStuff;
@@ -41,6 +47,7 @@ namespace SysHv.Client.WinService.Services
 
         public void Start()
         {
+            var logged = Login().Result;
             _timer.Start();
         }
 
@@ -56,11 +63,37 @@ namespace SysHv.Client.WinService.Services
             var systemInfoGatherer = new HardwareInfoGatherer();
             var collectedInfo = systemInfoGatherer.Gather();
             _logger.Info(collectedInfo);
-            using (var rabbitSender = new OneWaySender<HardwareInfoDTO>(new ConnectionModel(), 
+            using (var rabbitSender = new OneWaySender<HardwareInfoDTO>(new ConnectionModel(),
                 new PublishProperties { ExchangeName = "", QueueName = "asd" }))
             {
                 rabbitSender.Send(collectedInfo);
             }
+        }
+
+        private async Task<bool> Login()
+        {
+            var serverAddress = ConfigurationManager.AppSettings["ServerAddress"];
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(serverAddress);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var content = new StringContent(
+                    JsonConvert.SerializeObject(new { Email = "123", Password = "123Qwe!" }),
+                    Encoding.UTF8,
+                    "application/json");
+
+                var result = await client.PostAsync("/api/client/login", content);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var resultStr = await result.Content.ReadAsStringAsync();
+                    Console.WriteLine(resultStr);
+                }
+            }
+
+            return false;
         }
     }
 }

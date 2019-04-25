@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20190425142055_CreateClientModel.cs" />
     <Compile Remove="Migrations\20190425142055_CreateClientModel.Designer.cs" />
+    <Compile Remove="Migrations\20190425160940_AddClientsToUser.cs" />
+    <Compile Remove="Migrations\20190425160940_AddClientsToUser.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

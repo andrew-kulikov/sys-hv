@@ -11,6 +11,7 @@ namespace SysHv.Server.DAL.Models
         public string Description { get; set; }
         public string QueueName { get; set; }
         public string Ip { get; set; }
+        public ApplicationUser User { get; set; }   
         public ICollection<Sensor> Sensors { get; set; }
     }
 }

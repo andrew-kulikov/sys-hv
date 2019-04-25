@@ -14,7 +14,7 @@ namespace SysHv.Client.WinService.Services
     {
         #region Constants
 
-        private const int TimerDelay = 5000;
+        private const int TimerDelay = 10000;
 
         #endregion
 

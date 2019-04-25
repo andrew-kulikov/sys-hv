@@ -3,7 +3,6 @@ using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.Interfaces;
 using System.Collections.Generic;
 using System.Management;
-using System.Web.Script.Serialization;
 
 namespace SysHv.Client.WinService.Gatherers
 {
@@ -12,10 +11,6 @@ namespace SysHv.Client.WinService.Gatherers
 
         #region Constants
 
-        private const string Processors = "processors";
-        private const string MotherBoards = "motherboards";
-        private const string Rams = "rams";
-        private const string Systems = "systems";
         private const string ProcessorsClass = "Win32_Processor";
         private const string MotherBoardQuery = "SELECT * FROM Win32_BaseBoard";
         private const string RamQuery = "SELECT * FROM Win32_PhysicalMemory";

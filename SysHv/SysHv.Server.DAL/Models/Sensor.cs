@@ -12,5 +12,9 @@ namespace SysHv.Server.DAL.Models
         public float MinValue { get; set; }
         public float MaxValue { get; set; }
         public float CriticalValue { get; set; }
+        public int ClientId { get; set; }
+        public Client Client { get; set; }
+        public int AdminId { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }

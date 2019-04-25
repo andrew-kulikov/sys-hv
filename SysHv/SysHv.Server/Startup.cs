@@ -77,9 +77,9 @@ namespace SysHv.Server
             app.UseHttpsRedirection();
             app.UseCors(builder =>
             {
-                builder.WithOrigins("https://localhost:3000")
+                builder.AllowAnyOrigin()
                     .AllowAnyHeader()
-                    .WithMethods("GET", "POST")
+                    .AllowAnyMethod()
                     .AllowCredentials();
             });
             app.UseSignalR(routes =>

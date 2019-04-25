@@ -56,11 +56,11 @@ namespace SysHv.Client.WinService.Services
             var systemInfoGatherer = new HardwareInfoGatherer();
             var collectedInfo = systemInfoGatherer.Gather();
             _logger.Info(collectedInfo);
-            using (var rabbitSender = new OneWaySender<HardwareInfoDTO>(new ConnectionModel(), new PublishProperties { ExchangeName = "", QueueName = "asd" }))
+            using (var rabbitSender = new OneWaySender<HardwareInfoDTO>(new ConnectionModel(), 
+                new PublishProperties { ExchangeName = "", QueueName = "asd" }))
             {
                 rabbitSender.Send(collectedInfo);
             }
-            //Console.WriteLine(systemInfoGatherer.Gather());
         }
     }
 }

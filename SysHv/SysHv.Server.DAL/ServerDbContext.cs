@@ -11,6 +11,7 @@ namespace SysHv.Server.DAL
     {
         public new DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Sensor> Sensors { get; set; }
+        public DbSet<Client> Clients { get; set; }
         public ServerDbContext(DbContextOptions<ServerDbContext> options) : base(options)
         {
 

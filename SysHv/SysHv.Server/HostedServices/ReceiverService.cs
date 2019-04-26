@@ -17,7 +17,7 @@ namespace SysHv.Server.HostedServices
 {
     public class ReceiverService : IHostedService, IDisposable
     {
-        private OneWayReceiver<HardwareInfoDTO> _receiver;
+        private OneWayReceiver<RuntimeInfoDTO> _receiver;
         private IHubContext<MonitoringHub> _hubContext;
 
         public ReceiverService(IHubContext<MonitoringHub> hubContext)
@@ -32,7 +32,7 @@ namespace SysHv.Server.HostedServices
                 {
                     creator.TryCreateQueue("asd");
                 }
-                _receiver = new OneWayReceiver<HardwareInfoDTO>(
+                _receiver = new OneWayReceiver<RuntimeInfoDTO>(
                     new ConnectionModel("localhost", "guest", "guest"), 
                     "asd");
                 _receiver.Receive(MessageReceived);

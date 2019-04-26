@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -20,7 +21,7 @@ namespace SysHv.Client.WinService.Services
     {
         #region Constants
 
-        private const int TimerDelay = 10000;
+        private const int TimerDelay = 5000;
 
         #endregion
 
@@ -61,12 +62,18 @@ namespace SysHv.Client.WinService.Services
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
             var systemInfoGatherer = new HardwareInfoGatherer();
+            var runtimeGatherer = new RuntimeInfoGatherer();
+
             var collectedInfo = systemInfoGatherer.Gather();
-            _logger.Info(collectedInfo);
-            using (var rabbitSender = new OneWaySender<HardwareInfoDTO>(new ConnectionModel(),
+            var collectedRuntimeInfo = runtimeGatherer.Gather();
+
+            //_logger.Info(collectedInfo);
+
+            using (var rabbitSender = new OneWaySender<RuntimeInfoDTO>(new ConnectionModel(),
                 new PublishProperties { ExchangeName = "", QueueName = "asd" }))
             {
-                rabbitSender.Send(collectedInfo);
+                rabbitSender.Send(collectedRuntimeInfo);
+                Console.WriteLine(string.Join("", collectedRuntimeInfo.CouLoad.Select(c => $"{c.Name}: {c.Value}; ")));
             }
         }
 

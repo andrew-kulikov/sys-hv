@@ -6,7 +6,10 @@
         xmlns:helpers="clr-namespace:WinAdminClient.UIHelpers"
         xmlns:local="clr-namespace:WinAdminClient.Windows"
         mc:Ignorable="d"
-        Title="Login" Height="200" Width="500" ResizeMode="NoResize">
+        Title="Login" Height="200" Width="500" ResizeMode="NoResize"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+
     <Grid Margin="20" VerticalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -27,6 +30,6 @@
                      helpers:PasswordHelper.Password="{Binding Password, Mode=TwoWay}"></PasswordBox>
 
         <CheckBox Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" IsChecked="{Binding RememberMe, Mode=TwoWay}">Remember me</CheckBox>
-        <Button Grid.Row="4" Grid.Column="1" Height="30" Width="50" HorizontalAlignment="Right" Command="{Binding LogInCommand}">Login</Button>
+        <Button Grid.Row="4" Grid.Column="1" Height="30" Width="80" HorizontalAlignment="Right" Command="{Binding LogInCommand}">Login</Button>
     </Grid>
 </Window>

@@ -6,7 +6,7 @@
         xmlns:helpers="clr-namespace:WinAdminClient.UIHelpers"
         xmlns:local="clr-namespace:WinAdminClient.Windows"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="200" Width="500" ResizeMode="NoResize">
+        Title="Login" Height="200" Width="500" ResizeMode="NoResize">
     <Grid Margin="20" VerticalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -16,14 +16,17 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="5"></RowDefinition>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="5"></RowDefinition>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock>Username</TextBlock>
         <TextBlock Grid.Row="2" Grid.Column="0">Password</TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding UserName}"></TextBox>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding UserName, Mode=TwoWay}"></TextBox>
         <PasswordBox Grid.Row="2" Grid.Column="1"
                      helpers:PasswordHelper.Attach="True"
-                     helpers:PasswordHelper.Password="{Binding Password}"></PasswordBox>
-        <Button Grid.Row="3" Grid.Column="1" Height="30" Width="50" HorizontalAlignment="Right" Command="{Binding LogInCommand}">Login</Button>
+                     helpers:PasswordHelper.Password="{Binding Password, Mode=TwoWay}"></PasswordBox>
+
+        <CheckBox Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" IsChecked="{Binding RememberMe, Mode=TwoWay}">Remember me</CheckBox>
+        <Button Grid.Row="4" Grid.Column="1" Height="30" Width="50" HorizontalAlignment="Right" Command="{Binding LogInCommand}">Login</Button>
     </Grid>
 </Window>

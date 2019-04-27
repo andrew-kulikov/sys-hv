@@ -11,6 +11,8 @@ namespace WinAdminClient.ViewModels
 
         private string _password;
 
+        private bool _rememberMe;
+
         private ICommand _logInCommand;
 
         private Window _window;
@@ -39,6 +41,16 @@ namespace WinAdminClient.ViewModels
             }
         }
 
+        public bool RememberMe
+        {
+            get => _rememberMe;
+            set
+            {
+                _rememberMe = value;
+                OnPropertyChanged(nameof(RememberMe));
+            }
+        }
+
         public ICommand LogInCommand
         {
             get => _logInCommand ?? (_logInCommand = new RelayCommand.RelayCommand(
@@ -54,8 +66,13 @@ namespace WinAdminClient.ViewModels
         public LoginWindowViewModel(Window window)
         {
             _window = window;
-            UserName = Properties.Credentials.Default.UserName;
-            Password = Properties.Credentials.Default.Password;
+            RememberMe = Properties.Credentials.Default.RememberMe;
+            if (RememberMe)
+            {
+                UserName = Properties.Credentials.Default.UserName;
+                Password = Properties.Credentials.Default.Password;
+            }
+
         }
 
         #endregion
@@ -69,6 +86,14 @@ namespace WinAdminClient.ViewModels
 
         private void LogIn()
         {
+            Properties.Credentials.Default.RememberMe = RememberMe;
+            if (RememberMe)
+            {
+                Properties.Credentials.Default.UserName = UserName;
+                Properties.Credentials.Default.Password = Password;
+            }
+            Properties.Credentials.Default.Save();
+
             var mainWindow = new MainWindow();
             mainWindow.Show();
 

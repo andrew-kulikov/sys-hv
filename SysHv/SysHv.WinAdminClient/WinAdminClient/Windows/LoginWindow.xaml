@@ -1,0 +1,29 @@
+﻿<Window x:Class="WinAdminClient.Windows.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:WinAdminClient.UIHelpers"
+        xmlns:local="clr-namespace:WinAdminClient.Windows"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="200" Width="500" ResizeMode="NoResize">
+    <Grid Margin="20" VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5"></RowDefinition>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock>Username</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0">Password</TextBlock>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding UserName}"></TextBox>
+        <PasswordBox Grid.Row="2" Grid.Column="1"
+                     helpers:PasswordHelper.Attach="True"
+                     helpers:PasswordHelper.Password="{Binding Password}"></PasswordBox>
+        <Button Grid.Row="3" Grid.Column="1" Height="30" Width="50" HorizontalAlignment="Right" Command="{Binding LogInCommand}">Login</Button>
+    </Grid>
+</Window>

@@ -9,7 +9,7 @@ namespace SysHv.Server.Services
         Task<DAL.Models.Client> GetClientByIdAsync(int id);
         Task<DAL.Models.Client> GetClientByNameAsync(string name);
         Task<DAL.Models.Client> GetClientByIpAsync(string ip);
-        Task<ICollection<DAL.Models.Client>> GetAllClientsAsync();
-        Task<ICollection<DAL.Models.Client>> GetAdminClientsAsync(string adminId);
+        Task<List<DAL.Models.Client>> GetAllClientsAsync();
+        Task<List<DAL.Models.Client>> GetAdminClientsAsync(string adminId);
     }
 }

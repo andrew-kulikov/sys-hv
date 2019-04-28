@@ -10,7 +10,7 @@ namespace SysHv.Server.Services
     {
         Task<Sensor> GetSensorByIdAsync(int id);
         Task<Sensor> GetSensorByNameAsync(string name);
-        Task<ICollection<Sensor>> GetAllSensorsAsync();
-        Task<ICollection<Sensor>> GetClientSensorsAsync(int clientId);
+        Task<List<Sensor>> GetAllSensorsAsync();
+        Task<List<Sensor>> GetClientSensorsAsync(int clientId);
     }
 }

@@ -37,6 +37,22 @@ namespace SysHv.Server.Services
             return _context.ClientSensors.Where(s => s.ClientId == clientId).Select(s => s.Sensor).ToListAsync();
         }
 
+        public async Task<bool> RemoveSensorAsync(int id)
+        {
+            var sensor = await GetSensorByIdAsync(id);
+
+            _context.Sensors.Remove(sensor);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task AddSensorAsync(Sensor sensor)
+        {
+            await _context.Sensors.AddAsync(sensor);
+            await _context.SaveChangesAsync();
+        }
+
         public void Dispose()
         {
             _context?.Dispose();

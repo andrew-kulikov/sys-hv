@@ -13,5 +13,6 @@ namespace SysHv.Server.Services
         Task<List<Sensor>> GetAllSensorsAsync();
         Task<List<Sensor>> GetClientSensorsAsync(int clientId);
         Task<bool> RemoveSensorAsync(int id);
+        Task AddSensorAsync(Sensor sensor);
     }
 }

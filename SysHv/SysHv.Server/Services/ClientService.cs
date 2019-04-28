@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SysHv.Server.DAL;
+using SysHv.Server.DAL.Models;
 
 namespace SysHv.Server.Services
 {
@@ -49,6 +51,13 @@ namespace SysHv.Server.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task AddClientAsync(DAL.Models.Client client, ApplicationUser admin)
+        {
+            client.User = admin;
+            await _context.Clients.AddAsync(client);
+            await _context.SaveChangesAsync();
         }
 
         public void Dispose()

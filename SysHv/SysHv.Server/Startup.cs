@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -23,6 +24,7 @@ using SysHv.Server.DAL.Models;
 using SysHv.Server.HostedServices;
 using SysHv.Server.Hubs;
 using SysHv.Server.Services;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace SysHv.Server
 {
@@ -54,13 +56,15 @@ namespace SysHv.Server
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddHostedService<ReceiverService>();
+            //services.AddHostedService<ReceiverService>();
             services.AddSignalR();
 
             ConfigureTokenAuthorization(services);
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IClientService, ClientService>();
+            services.AddSingleton<IHostedService, ReceiverService>();
+            services.AddTransient<IHostedServiceAccessor<ReceiverService>, HostedServiceAccessor<ReceiverService>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

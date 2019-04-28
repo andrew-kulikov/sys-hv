@@ -48,6 +48,7 @@
     <Compile Include="DTOs\ProcessDTO.cs" />
     <Compile Include="DTOs\ProcessorDTO.cs" />
     <Compile Include="DTOs\ProcessorLoadDTO.cs" />
+    <Compile Include="DTOs\Response.cs" />
     <Compile Include="DTOs\RuntimeInfoDTO.cs" />
     <Compile Include="DTOs\SystemDTO.cs" />
     <Compile Include="Interfaces\IGatherer.cs" />

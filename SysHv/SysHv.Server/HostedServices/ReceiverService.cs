@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -26,17 +27,19 @@ namespace SysHv.Server.HostedServices
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
+            return Task.CompletedTask;
+        }
+
+        public void RegisterClient(string queueName)
+        {
+            using (var creator = new QueueCreator("localhost", "guest", "guest"))
             {
-                using (var creator = new QueueCreator("localhost", "guest", "guest"))
-                {
-                    creator.TryCreateQueue("asd");
-                }
-                _receiver = new OneWayReceiver<RuntimeInfoDTO>(
-                    new ConnectionModel("localhost", "guest", "guest"), 
-                    "asd");
-                _receiver.Receive(MessageReceived);
-            }, cancellationToken);
+                creator.TryCreateQueue(queueName);
+            }
+            _receiver = new OneWayReceiver<RuntimeInfoDTO>(
+                new ConnectionModel("localhost", "guest", "guest"),
+                queueName);
+            _receiver.Receive(MessageReceived);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

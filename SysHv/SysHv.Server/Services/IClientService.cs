@@ -11,5 +11,6 @@ namespace SysHv.Server.Services
         Task<DAL.Models.Client> GetClientByIpAsync(string ip);
         Task<List<DAL.Models.Client>> GetAllClientsAsync();
         Task<List<DAL.Models.Client>> GetAdminClientsAsync(string adminId);
+        Task<bool> RemoveClientAsync(int id);
     }
 }

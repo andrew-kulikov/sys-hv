@@ -41,6 +41,16 @@ namespace SysHv.Server.Services
             return _context.Clients.Where(c => c.User.Id == adminId).ToListAsync();
         }
 
+        public async Task<bool> RemoveClientAsync(int id)
+        {
+            var client = await GetClientByIdAsync(id);
+
+            _context.Remove(client);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
         public void Dispose()
         {
             _context?.Dispose();

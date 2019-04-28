@@ -34,14 +34,14 @@ namespace SysHv.Server.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginModel)
+        public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginModel)
         {
-            var loginResult = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, false);
+            var loginResult = await _signInManager.PasswordSignInAsync(userLoginModel.Email, userLoginModel.Password, false, false);
             if (loginResult.Succeeded)
             {
-                var user = await _userManager.FindByEmailAsync(loginModel.Email);
+                var user = await _userManager.FindByEmailAsync(userLoginModel.Email);
                 var tokenExpires = DateTime.UtcNow.AddMinutes(720);
-                var token = _tokenService.GetToken(loginModel.Email, tokenExpires);
+                var token = _tokenService.GetToken(userLoginModel.Email, tokenExpires);
 
                 return new JsonResult(new { success = true, token });
             }
@@ -52,15 +52,15 @@ namespace SysHv.Server.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody] LoginDto loginModel)
+        public async Task<IActionResult> Register([FromBody] UserLoginDto userLoginModel)
         {
             var user = new ApplicationUser
             {
-                UserName = loginModel.Email,
-                Email = loginModel.Email
+                UserName = userLoginModel.Email,
+                Email = userLoginModel.Email
             };
 
-            var registerResult = await _userManager.CreateAsync(user, loginModel.Password);
+            var registerResult = await _userManager.CreateAsync(user, userLoginModel.Password);
 
             return new JsonResult(new { success = registerResult.Succeeded });
         }

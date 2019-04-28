@@ -12,6 +12,7 @@ namespace SysHv.Server.Services
         Task<List<DAL.Models.Client>> GetAllClientsAsync();
         Task<List<DAL.Models.Client>> GetAdminClientsAsync(string adminId);
         Task<bool> RemoveClientAsync(int id);
-        Task AddClientAsync(string ip, DAL.Models.Client client, ApplicationUser admin);
+        Task AddClientAsync(DAL.Models.Client client, ApplicationUser admin);
+        Task<bool> ClientExistAsync(string ip, string userId);
     }
 }

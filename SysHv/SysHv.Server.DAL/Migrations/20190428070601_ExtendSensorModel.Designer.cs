@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SysHv.Server.DAL;
 
 namespace SysHv.Server.DAL.Migrations
 {
     [DbContext(typeof(ServerDbContext))]
-    partial class ServerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190428070601_ExtendSensorModel")]
+    partial class ExtendSensorModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,29 +214,6 @@ namespace SysHv.Server.DAL.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("SysHv.Server.DAL.Models.ClientSensor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ClientId");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("SensorId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("SensorId");
-
-                    b.ToTable("ClientSensors");
-                });
-
             modelBuilder.Entity("SysHv.Server.DAL.Models.Sensor", b =>
                 {
                     b.Property<int>("Id")
@@ -338,19 +317,6 @@ namespace SysHv.Server.DAL.Migrations
                     b.HasOne("SysHv.Server.DAL.Models.ApplicationUser", "User")
                         .WithMany("Clients")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("SysHv.Server.DAL.Models.ClientSensor", b =>
-                {
-                    b.HasOne("SysHv.Server.DAL.Models.Client", "Client")
-                        .WithMany("ClientSensors")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SysHv.Server.DAL.Models.Sensor", "Sensor")
-                        .WithMany()
-                        .HasForeignKey("SensorId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("SysHv.Server.DAL.Models.Sensor", b =>

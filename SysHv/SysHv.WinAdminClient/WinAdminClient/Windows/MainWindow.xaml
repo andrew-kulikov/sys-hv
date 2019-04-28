@@ -4,8 +4,35 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinAdminClient"
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Sys Admin Heaven" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Grid.Row="0">
+
+        </Grid>
+
+        <dragablz:TabablzControl Grid.Column="1" Grid.Row="0" Style="{DynamicResource materialdesig}" Background="{DynamicResource MaterialDesignPaper}">
+            <dragablz:TabablzControl.InterTabController>
+                <dragablz:InterTabController />
+            </dragablz:TabablzControl.InterTabController>
+            <TabItem Header="Tracked Computers" Background="{DynamicResource MaterialDesignPaper}" FontFamily="{DynamicResource MaterialDesignFont}">
+                <Expander>
+                    <StackPanel>
+                        <TextBlock>asd</TextBlock>
+                        <TextBlock>qwe</TextBlock>
+                    </StackPanel>
+                </Expander>
+            </TabItem>
+
+            <TabItem Header="Sensors"></TabItem>
+        </dragablz:TabablzControl>
     </Grid>
 </Window>

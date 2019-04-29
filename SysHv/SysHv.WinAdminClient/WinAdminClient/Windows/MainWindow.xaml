@@ -10,7 +10,8 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="Sys Admin Heaven" Height="450" Width="800">
-    <Grid Background="#FFEEEEEE"><!--MouseDown="Grid_MouseDown"-->
+    <Grid Background="#FFEEEEEE">
+        <!--MouseDown="Grid_MouseDown"-->
         <StackPanel VerticalAlignment="Top">
             <Grid Background="#FF0069C0" Height="10"/>
             <Grid Margin="5">
@@ -29,17 +30,14 @@
         </StackPanel>
 
         <Grid Margin="250 55 0 0">
-            <Grid x:Name="GridPrincipal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <!--<ItemsControl ItemsSource="{Binding Computers}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Expander>
-                            <TextBlock Text="{Binding DisplayName}"/>
-                        </Expander>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>-->
-                </Grid>
+            <Grid x:Name="GridPrincipal" HorizontalAlignment="Stretch">
+                <ItemsControl>
+                    <Expander>
+                        <DataGrid>
+                        </DataGrid>
+                    </Expander>
+                </ItemsControl>
+            </Grid>
         </Grid>
 
         <Grid Width="250" HorizontalAlignment="Left" Background="#FF222222">

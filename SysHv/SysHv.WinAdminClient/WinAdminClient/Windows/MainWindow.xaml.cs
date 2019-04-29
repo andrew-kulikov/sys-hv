@@ -33,7 +33,7 @@ namespace WinAdminClient
         {
             DataContext = viewModel;
 
-            _computerStats = new MainComputerStats(); //{DataC = viewModel.Computers};
+            //_computerStats = new MainComputerStats(); //{DataC = viewModel.Computers};
 
             InitializeComponent();
         }
@@ -47,11 +47,11 @@ namespace WinAdminClient
             switch (index)
             {
                 case 0:
-                    GridPrincipal.Children.Clear();
-                    GridPrincipal.Children.Add(_computerStats);
+                    //GridPrincipal.Children.Clear();
+                    //GridPrincipal.Children.Add(_computerStats);
                     break;
                 case 1:
-                    GridPrincipal.Children.Clear();
+                    //GridPrincipal.Children.Clear();
                     //GridPrincipal.Children.Add(userControlEscolha);
                     break;
                 default:

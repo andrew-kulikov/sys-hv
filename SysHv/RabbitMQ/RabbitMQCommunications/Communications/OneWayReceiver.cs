@@ -48,6 +48,7 @@ namespace RabbitMQCommunications.Communications
             _connection?.Close();
         }
 
+        [Obsolete("use Receive(Action<T> handler) instead", false)]
         public void Receive(EventHandler<BasicDeliverEventArgs> handler)
         {
 

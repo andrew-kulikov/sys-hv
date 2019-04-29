@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WinAdminClient.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid HorizontalAlignment="Stretch">
         <ItemsControl ItemsSource="{Binding Computers}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

@@ -29,14 +29,24 @@
         </StackPanel>
 
         <Grid Margin="250 55 0 0">
-            <Grid x:Name="GridPrincipal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Grid x:Name="GridPrincipal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <!--<ItemsControl ItemsSource="{Binding Computers}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <TextBlock Text="{Binding DisplayName}"/>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>-->
+                </Grid>
         </Grid>
 
         <Grid Width="250" HorizontalAlignment="Left" Background="#FF222222">
             <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.2}">
                 <Grid x:Name="GridCursor" Margin="0 100 0 0" Background="#FF0069C0" Width="10" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top"/>
             </materialDesign:TransitioningContent>
-            <ListView x:Name="ListViewMenu" Margin="0 100" Foreground="LightGray" FontFamily="Champagne &amp; Limousines" FontSize="18" ><!--SelectionChanged="ListViewMenu_SelectionChanged" SelectedIndex="0"-->
+            <ListView x:Name="ListViewMenu" Margin="0 100" Foreground="LightGray" FontFamily="Champagne &amp; Limousines" FontSize="18" SelectionChanged="ListViewMenu_SelectionChanged" SelectedIndex="0">
                 <ListViewItem Height="60">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Home" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>

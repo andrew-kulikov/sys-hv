@@ -94,7 +94,8 @@ namespace WinAdminClient.ViewModels
             }
             Properties.Credentials.Default.Save();
 
-            var mainWindow = new MainWindow();
+            var mainWindow = new MainWindow(new MainWindowViewModel());
+            //mainWindow.DataContext = new MainWindowViewModel();
             mainWindow.Show();
 
             _window.Close();

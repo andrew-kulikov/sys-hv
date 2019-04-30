@@ -1,31 +1,24 @@
-﻿using System;
-using SysHv.Server.Services;
-using Topshelf;
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using SysHv.Server.DAL;
 
 namespace SysHv.Server
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            var exitCode = HostFactory.Run(x =>
-            {
-                x.Service<ServerService>(s =>
-                {
-                    s.ConstructUsing(monitor => new ServerService());
-                    s.WhenStarted(monitor => monitor.Start());
-                    s.WhenStopped(monitor => monitor.Stop());
-                });
-
-                x.RunAsLocalSystem();
-
-                x.SetServiceName("SysHvServer");
-                x.SetDisplayName("SysHv Server Service");
-                x.SetDescription("");
-            });
-
-            int exitCodeValue = (int)Convert.ChangeType(exitCode, exitCode.GetTypeCode());
-            Environment.ExitCode = exitCodeValue;
+            var host = CreateWebHostBuilder(args).Build();
+            //using (var scope = host.Services.CreateScope())
+            //{
+            //    var dbContext = scope.ServiceProvider.GetService<ServerDbContext>();
+            //}
+            host.Run();
         }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
     }
 }

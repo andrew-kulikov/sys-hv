@@ -1,6 +1,9 @@
-﻿using WinAdminClient.Collections;
+﻿using System;
+using WinAdminClient.Collections;
 using WinAdminClient.Models;
 using WinAdminClient.Views;
+using Microsoft.AspNet.SignalR;
+
 
 namespace WinAdminClient.ViewModels
 {

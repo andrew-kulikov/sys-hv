@@ -36,6 +36,8 @@ namespace RabbitMQCommunications.Communications
 
             _consumer = new EventingBasicConsumer(_model);
             _model.BasicConsume(queue: _queueName, autoAck: true, consumer: _consumer);
+
+            _consumer.Received += (model, ea) => { _model.BasicAck(ea.DeliveryTag, false); };
         }
 
         #endregion
@@ -62,13 +64,21 @@ namespace RabbitMQCommunications.Communications
             {
                 var message = Encoding.UTF8.GetString(ea.Body);
 
-                handler(JsonConvert.DeserializeObject<T>(message));
+                try
+                {
+                    var param = JsonConvert.DeserializeObject<T>(message);
+                    handler(JsonConvert.DeserializeObject<T>(message));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
 
                 /*var replyProperties = _model.CreateBasicProperties();
                 replyProperties.CorrelationId = ea.BasicProperties.CorrelationId;*/
 
                 //_model.BasicPublish("", ea.BasicProperties.ReplyTo, replyProperties, messageBuffer);
-                _model.BasicAck(ea.DeliveryTag, false);
             };
         }
 

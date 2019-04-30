@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -23,9 +24,9 @@ namespace SysHv.Client.WinService.Services
     {
         #region Constructors
 
-        public MonitoringService(IList<Timer> sensorTimers)
+        public MonitoringService()
         {
-            _sensorTimers = sensorTimers;
+            _sensorTimers = new List<Timer>();
             _locker = new object();
 
             _loginTimer = new Timer(LoginTimerDelay);
@@ -140,6 +141,13 @@ namespace SysHv.Client.WinService.Services
 
         public void Start()
         {
+            var libDirectory = ConfigurationManager.AppSettings["SensorExtensionsPath"];
+ 
+            foreach (var sensorPath in Directory.GetFiles(libDirectory, "*.dll"))
+            {
+                Console.WriteLine(sensorPath);
+            }
+          
             Console.ReadLine();
             _loginTimer.Enabled = true;
         }

@@ -26,23 +26,21 @@ namespace ServerApp
             //    creator.TryCreateQueue("asd");
             //}
 
-            //var receiver = new OneWayReceiver<Dictionary<string, object>>(new ConnectionModel(), "asd");
-            //receiver.Receive((model, ea) =>
-            //{
-            //    var message = Encoding.UTF8.GetString(ea.Body);
-            //    Console.WriteLine(message);
-            //});
-            Console.ReadLine();
-            var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
+            var receiver = new OneWayReceiver<int>(new ConnectionModel(), "asd");
+            receiver?.Receive(
+                m => Console.WriteLine(m));
+
+            /*var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
             receiver.StartListen(message =>
             {
-                 Console.WriteLine(Decoder.Decode<int>(message));
-                 return "5";
-            });
+                Console.WriteLine(Decoder.Decode<int>(message));
+                return message;
+            });*/
+            //receiver.StartListen();
 
             Console.WriteLine("waiting for 3");
             Console.ReadLine();
-            await asd();
+            //await asd();
 
             receiver.Dispose();
         }

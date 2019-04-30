@@ -19,9 +19,9 @@ namespace RabbitMQCommunications.Communications
     {
         #region Constants
 
-        private const string QueueName = "rpc.queue";
+        private const string QueueName = "rpc.ip=192.kek";
         // da, ya takoi clever
-        private readonly TimeSpan _timeout = new TimeSpan(0, 0, 5);
+        private readonly TimeSpan _timeout = new TimeSpan(0, 0, 10);
 
         #endregion
 
@@ -56,7 +56,7 @@ namespace RabbitMQCommunications.Communications
 
             using (var creator = new QueueCreator(connectionModel.Host, connectionModel.Username, connectionModel.Password))
             {
-                if (!creator.TryCreateQueue(_publishProperties.QueueName, false, false, false, null))
+                if (!creator.TryCreateQueue(QueueName, false, false, false, null))
                     throw new RabbitMQDeclarationException("cannot create listening queue");
             }
         }

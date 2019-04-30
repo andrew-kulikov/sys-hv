@@ -9,6 +9,7 @@ using System.Management;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using OpenHardwareMonitor.Hardware;
+using SysHv.Client.Common.DTOs.SensorOutput;
 
 namespace SysHv.Client.WinService.Gatherers
 {

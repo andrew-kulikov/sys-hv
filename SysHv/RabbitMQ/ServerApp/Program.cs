@@ -21,10 +21,10 @@ namespace ServerApp
         static async Task Main(string[] args)
         {
             //Console.WriteLine(System.Environment.MachineName);
-            using (var creator = new QueueCreator("127.0.0.1", "guest", "guest"))
-            {
-                creator.TryCreateQueue("asd");
-            }
+            //using (var creator = new QueueCreator("127.0.0.1", "guest", "guest"))
+            //{
+            //    creator.TryCreateQueue("asd");
+            //}
 
             var receiver = new OneWayReceiver<int>(new ConnectionModel(), "asd");
             receiver?.Receive(

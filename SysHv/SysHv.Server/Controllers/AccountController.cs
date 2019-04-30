@@ -25,9 +25,27 @@ namespace SysHv.Server.Controllers
         }
 
         [HttpGet]
-        [Authorize("Bearer")]
+        //[Authorize("Bearer")]
         public ActionResult<string> Get(int id)
         {
+            var user = new ApplicationUser
+            {
+                UserName = "123",
+                Email = "123"
+            };
+            var success = false;
+            try
+            {
+                var registerResult = _userManager.CreateAsync(user, "123Qwe!").Result;
+                success = registerResult.Succeeded;
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new { success, message = e.Message, inner = e.InnerException.Message });
+            }
+
+            return new JsonResult(new { success });
+           
             return "value";
         }
 
@@ -59,10 +77,18 @@ namespace SysHv.Server.Controllers
                 UserName = userLoginModel.Email,
                 Email = userLoginModel.Email
             };
+            var success = false;
+            try
+            {
+                var registerResult = await _userManager.CreateAsync(user, userLoginModel.Password);
+                success = registerResult.Succeeded;
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new { success, message = e.Message, inner = e.InnerException.Message });
+            }
 
-            var registerResult = await _userManager.CreateAsync(user, userLoginModel.Password);
-
-            return new JsonResult(new { success = registerResult.Succeeded });
+            return new JsonResult(new { success });
         }
     }
 }

@@ -3,8 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
@@ -13,6 +16,7 @@ using NLog;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Communications.HelpStuff;
 using SysHv.Client.Common.DTOs;
+using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Client.Common.Models;
 using Decoder = RabbitMQCommunications.Communications.Decoding.Decoder;
 
@@ -23,7 +27,7 @@ namespace SysHv.Client.WinService.Services
         #region Constants
 
         private const int TimerDelay = 5000;
-        private const int LoginTimerDelay = 60000;
+        private const int LoginTimerDelay = 5000;
         private object _locker;
 
         private string queueName;
@@ -111,6 +115,7 @@ namespace SysHv.Client.WinService.Services
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(serverAddress);
+                
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 var content = new StringContent(
@@ -118,7 +123,7 @@ namespace SysHv.Client.WinService.Services
                     Encoding.UTF8,
                     "application/json");
 
-                var result = await client.PostAsync("/api/client/login", content);
+                var  result = await client.PostAsync("/api/client/login", content);
 
                 if (result.IsSuccessStatusCode)
                 {
@@ -131,6 +136,11 @@ namespace SysHv.Client.WinService.Services
             }
 
             return null;
+        }
+
+        private void LaunchSensors(IEnumerable<string> sensors)
+        {
+
         }
     }
 }

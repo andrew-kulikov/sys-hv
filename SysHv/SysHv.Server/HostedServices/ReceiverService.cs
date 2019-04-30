@@ -11,6 +11,7 @@ using RabbitMQ.Client.Events;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Setup;
 using SysHv.Client.Common.DTOs;
+using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Client.Common.Models;
 using SysHv.Server.Hubs;
 

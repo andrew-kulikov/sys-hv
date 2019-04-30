@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SysHv.Client.Common.DTOs
+namespace SysHv.Client.Common.DTOs.SensorOutput
 {
     public class HardwareInfoDTO
     {

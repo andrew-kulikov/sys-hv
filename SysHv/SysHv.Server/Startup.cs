@@ -63,6 +63,7 @@ namespace SysHv.Server
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<ISensorService, SensorService>();
             services.AddSingleton<IHostedService, ReceiverService>();
             services.AddTransient<IHostedServiceAccessor<ReceiverService>, HostedServiceAccessor<ReceiverService>>();
         }

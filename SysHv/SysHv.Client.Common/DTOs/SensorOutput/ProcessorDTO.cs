@@ -1,4 +1,4 @@
-﻿namespace SysHv.Client.Common.DTOs
+﻿namespace SysHv.Client.Common.DTOs.SensorOutput
 {
     public class ProcessorDTO
     {

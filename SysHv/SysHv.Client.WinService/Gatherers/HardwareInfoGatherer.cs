@@ -3,6 +3,7 @@ using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.Interfaces;
 using System.Collections.Generic;
 using System.Management;
+using SysHv.Client.Common.DTOs.SensorOutput;
 
 namespace SysHv.Client.WinService.Gatherers
 {

@@ -21,27 +21,30 @@ namespace ServerApp
         static async Task Main(string[] args)
         {
             //Console.WriteLine(System.Environment.MachineName);
-            using (var creator = new QueueCreator("127.0.0.1", "guest", "guest"))
-            {
-                creator.TryCreateQueue("asd");
-            }
+            //using (var creator = new QueueCreator("127.0.0.1", "guest", "guest"))
+            //{
+            //    creator.TryCreateQueue("asd");
+            //}
 
-            var receiver = new OneWayReceiver<Dictionary<string, object>>(new ConnectionModel(), "asd");
-            receiver.Receive((model, ea) =>
+            //var receiver = new OneWayReceiver<Dictionary<string, object>>(new ConnectionModel(), "asd");
+            //receiver.Receive((model, ea) =>
+            //{
+            //    var message = Encoding.UTF8.GetString(ea.Body);
+            //    Console.WriteLine(message);
+            //});
+            Console.ReadLine();
+            var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
+            receiver.StartListen(message =>
             {
-                var message = Encoding.UTF8.GetString(ea.Body);
-                Console.WriteLine(message);
+                 Console.WriteLine(Decoder.Decode<int>(message));
+                 return "5";
             });
 
-            //var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
-            //receiver.OnReceiveMessage += message => Console.WriteLine(Decoder.Decode<int>(message));
-            //receiver.StartListen();
+            Console.WriteLine("waiting for 3");
+            Console.ReadLine();
+            await asd();
 
-            //Console.WriteLine("waiting for 3");
-            //Console.ReadLine();
-            //await asd();
-
-            //receiver.Dispose();
+            receiver.Dispose();
         }
 
         static async Task asd()

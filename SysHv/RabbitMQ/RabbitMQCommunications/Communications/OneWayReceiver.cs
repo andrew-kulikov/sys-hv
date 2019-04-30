@@ -72,7 +72,6 @@ namespace RabbitMQCommunications.Communications
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                    throw;
                 }
 
                 /*var replyProperties = _model.CreateBasicProperties();

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
@@ -39,22 +40,66 @@ namespace SysHv.Client.WinService.Services
 
         private ElapsedEventHandler GetTimerElapsed(SensorDto sensor)
         {
+            var libDirectory = ConfigurationManager.AppSettings["SensorExtensionsPath"];
+            Type sensorType = null;
+
+            foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
+            foreach (var sensorPath in Directory.GetFiles(sensorDirectory, sensor.Contract + ".dll"))
+            {
+                var assembly = Assembly.LoadFile(sensorPath);
+
+                sensorType = assembly.GetTypes().FirstOrDefault(a => a.Name == sensor.Contract);
+            }
+
+            if (sensorType != null)
+            {
+                var sensorInstance = Activator.CreateInstance(sensorType);
+                Console.WriteLine($"{sensorType.Namespace} : {sensorType.Name}");
+                var collect = sensorType.GetMethod("Collect");
+                var result = collect?.Invoke(sensorInstance, new object[] { });
+                Console.WriteLine(result);
+            }
+            else
+            {
+                Console.WriteLine("Not found");
+            }
+
+
             return (sender, args) =>
             {
-                var systemInfoGatherer = new HardwareInfoGatherer();
-                var runtimeGatherer = new RuntimeInfoGatherer();
+                var returnType = sensor.ReturnType == "float"
+                    ? typeof(float)
+                    : Type.GetType("SysHv.Client.Common." + sensor.ReturnType);
+                var senderType = typeof(OneWaySender<>).MakeGenericType(typeof(RuntimeInfoDTO));
 
-                var collectedInfo = systemInfoGatherer.Gather();
-                var collectedRuntimeInfo = runtimeGatherer.Gather();
+                var rabbitSender = Activator.CreateInstance(senderType, new ConnectionModel(),
+                    new PublishProperties {ExchangeName = "", QueueName = queueName});
 
-                //_logger.Info(collectedInfo);
-
-                using (var rabbitSender = new OneWaySender<RuntimeInfoDTO>(new ConnectionModel(),
-                    new PublishProperties {ExchangeName = "", QueueName = queueName}))
+                try
                 {
-                    rabbitSender.Send(collectedRuntimeInfo);
-                    Console.WriteLine(string.Join("",
-                        collectedRuntimeInfo.CouLoad.Select(c => $"{c.Name}: {c.Value}; ")));
+                    object result = null;
+                    if (sensorType != null)
+                    {
+                        var sensorInstance = Activator.CreateInstance(sensorType);
+                        var collect = sensorType.GetMethod("Collect");
+
+                        result = collect?.Invoke(sensorInstance, new object[] { });
+
+                        Console.WriteLine($"{sensorType.Namespace} : {sensorType.Name}");
+                        Console.WriteLine(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not found");
+                        return;
+                    }
+
+                    var sendMethod = senderType.GetMethod("Send");
+                    sendMethod?.Invoke(rabbitSender, new[] { new RuntimeInfoGatherer().Gather() });
+                }
+                finally
+                {
+                    (rabbitSender as IDisposable)?.Dispose();
                 }
             };
         }
@@ -141,13 +186,14 @@ namespace SysHv.Client.WinService.Services
 
         public void Start()
         {
-            var libDirectory = ConfigurationManager.AppSettings["SensorExtensionsPath"];
- 
-            foreach (var sensorPath in Directory.GetFiles(libDirectory, "*.dll"))
+            /*
+            var curAssembly = Assembly.GetEntryAssembly();
+            foreach (var type in curAssembly.GetTypes())
             {
-                Console.WriteLine(sensorPath);
-            }
-          
+                if (type.IsClass)
+                Console.WriteLine(type);
+            }*/
+
             Console.ReadLine();
             _loginTimer.Enabled = true;
         }

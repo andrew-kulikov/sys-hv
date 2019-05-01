@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Communications.HelpStuff;
 using RabbitMQCommunications.Setup;
+using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Client.Common.Models;
 using Decoder = RabbitMQCommunications.Communications.Decoding.Decoder;
 
@@ -26,17 +27,7 @@ namespace ServerApp
                 creator.TryCreateQueue("asd");
             }
 
-            var receiver = new OneWayReceiver(new ConnectionModel(), "asd");
-            /*receiver?.Receive(
-                m => Console.WriteLine(m));*/
-
-            /*var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
-            receiver.StartListen(message =>
-            {
-                Console.WriteLine(Decoder.Decode<int>(message));
-                return message;
-            });*/
-            //receiver.StartListen();
+            var receiver = new OneWayReceiver(new ConnectionModel(), "178.122.194.35");
 
             Console.WriteLine("waiting for 3");
             Console.ReadLine();

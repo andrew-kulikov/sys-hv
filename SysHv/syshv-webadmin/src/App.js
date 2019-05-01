@@ -4,7 +4,7 @@ import logo from "./logo.svg";
 import "./App.css";
 
 let connection = new HubConnectionBuilder()
-  .withUrl("http://syshv.westeurope.cloudapp.azure.com/monitoringHub")
+  .withUrl("https://localhost:44352/monitoringHub")
   .build();
 
 connection.on("UpdateReceived", data => {

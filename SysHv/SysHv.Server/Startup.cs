@@ -58,7 +58,7 @@ namespace SysHv.Server
                 builder =>
                 {
                     builder.AllowAnyMethod().AllowAnyHeader()
-                        .WithOrigins("http://localhost:3000", "https://syshv.azurewebsites.net")
+                        .WithOrigins("http://localhost:3000", "https://localhost:3000", "https://syshv.azurewebsites.net", "http://syshv.azurewebsites.net")
                         .AllowCredentials();
                 }));
 

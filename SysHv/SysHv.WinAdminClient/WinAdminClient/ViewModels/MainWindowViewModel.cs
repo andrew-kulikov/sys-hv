@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Windows;
 using WinAdminClient.Collections;
 using WinAdminClient.Models;
-using WinAdminClient.Views;
-using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Client;
+using Microsoft.AspNetCore.SignalR.Client;
 
 
 namespace WinAdminClient.ViewModels
@@ -31,9 +30,18 @@ namespace WinAdminClient.ViewModels
                 new DefaultComputerInfo() { DisplayName = "zxc"}
             };
 
-            var connection = new HubConnection("https://localhost:8000/monitoringHub");
-            var hubProxy = connection.CreateHubProxy("hub");
-            hubProxy.On<string>("UpdateReceived", (str) => Console.WriteLine("asd" + str));
+            //var connection = new HubConnection("http://localhost:51610/monitoringHub");
+            var connection = new HubConnectionBuilder()
+                .WithUrl("http://localhost:53353/ChatHub%22")
+                    .Build();
+            var hubProxy = connection.CreateHubProxy("MonitoringHub");
+            hubProxy.On<string>("UpdateReceived", ondata);
+        }
+
+        void ondata(string o)
+        {
+            MessageBox.Show(o.ToString());
+            Console.WriteLine(o.GetType());
         }
     }
 }

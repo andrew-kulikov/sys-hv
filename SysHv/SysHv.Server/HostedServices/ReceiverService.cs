@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using RabbitMQ.Client.Events;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Setup;
@@ -51,7 +52,7 @@ namespace SysHv.Server.HostedServices
         private void MessageReceived(object sender, BasicDeliverEventArgs ea)
         {
             var message = Encoding.UTF8.GetString(ea.Body);
-            _hubContext.Clients.All.SendAsync("UpdateReceived", message);
+            _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject<RuntimeInfoDTO>(message));
         }
 
         public void Dispose()

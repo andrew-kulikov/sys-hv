@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Newtonsoft.Json;
@@ -18,6 +19,7 @@ using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Client.Common.Models;
 using SysHv.Client.WinService.Gatherers;
 using Decoder = RabbitMQCommunications.Communications.Decoding.Decoder;
+using Timer = System.Timers.Timer;
 
 namespace SysHv.Client.WinService.Services
 {
@@ -30,9 +32,10 @@ namespace SysHv.Client.WinService.Services
             _sensorTimers = new List<Timer>();
             _locker = new object();
 
-            _loginTimer = new Timer(LoginTimerDelay);
-            _loginTimer.AutoReset = true;
-            _loginTimer.Elapsed += LoginTimerElapsed;
+            //_loginTimer = new Timer(LoginTimerDelay);
+            //_loginTimer.AutoReset = true;
+            //_loginTimer.Elapsed += LoginTimerElapsed;
+            
         }
 
         #endregion
@@ -70,12 +73,9 @@ namespace SysHv.Client.WinService.Services
                 var returnType = sensor.ReturnType == "float"
                     ? typeof(float)
                     : Type.GetType("SysHv.Client.Common." + sensor.ReturnType);
-                var senderType = typeof(OneWaySender<>).MakeGenericType(typeof(RuntimeInfoDTO));
-
-                var rabbitSender = Activator.CreateInstance(senderType, new ConnectionModel(),
-                    new PublishProperties {ExchangeName = "", QueueName = queueName});
-
-                try
+          
+                using (var rabbitSender = new OneWaySender(new ConnectionModel(),
+                    new PublishProperties { ExchangeName = "", QueueName = queueName }))
                 {
                     object result = null;
                     if (sensorType != null)
@@ -93,23 +93,19 @@ namespace SysHv.Client.WinService.Services
                         Console.WriteLine("Not found");
                         return;
                     }
-
-                    var sendMethod = senderType.GetMethod("Send");
-                    sendMethod?.Invoke(rabbitSender, new[] { new RuntimeInfoGatherer().Gather() });
-                }
-                finally
-                {
-                    (rabbitSender as IDisposable)?.Dispose();
+                    rabbitSender.Send(new RuntimeInfoGatherer().Gather());
+                    //var sendMethod = senderType.GetMethod("Send");
+                    //sendMethod?.Invoke(rabbitSender, new[] {  });
                 }
             };
         }
 
-        private void LoginTimerElapsed(object sender, ElapsedEventArgs e)
+        private void LoginTimerElapsed()
         {
             var loginResponse = Login().Result;
             if (loginResponse.Success)
             {
-                _loginTimer.Enabled = false;
+                //_loginTimer.Enabled = false;
 
                 lock (_locker)
                 {
@@ -117,6 +113,11 @@ namespace SysHv.Client.WinService.Services
                 }
 
                 LaunchSensors(loginResponse.Sensors);
+            }
+            else
+            {
+                 Thread.Sleep(5000);
+                 LoginTimerElapsed();
             }
         }
 
@@ -195,12 +196,13 @@ namespace SysHv.Client.WinService.Services
             }*/
 
             Console.ReadLine();
-            _loginTimer.Enabled = true;
+            //_loginTimer.Enabled = true;
+            LoginTimerElapsed();
         }
 
         public void Stop()
         {
-            _loginTimer.Enabled = false;
+            //_loginTimer.Enabled = false;
             foreach (var timer in _sensorTimers) timer.Enabled = false;
         }
 

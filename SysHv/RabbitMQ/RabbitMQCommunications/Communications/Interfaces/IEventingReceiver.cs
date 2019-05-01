@@ -3,7 +3,7 @@ using System;
 
 namespace RabbitMQCommunications.Communications.Interfaces
 {
-    public interface IEventingReceiver<T>
+    public interface IEventingReceiver
     {
         /// <summary>
         /// Adds new event handler to work with received message

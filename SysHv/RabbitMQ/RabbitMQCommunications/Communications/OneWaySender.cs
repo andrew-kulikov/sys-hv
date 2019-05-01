@@ -13,7 +13,7 @@ namespace RabbitMQCommunications.Communications
     /// uses specified Exchange 
     /// uses routing key as Queue name
     /// </summary>
-    public class OneWaySender<T> : ISender<T>, IDisposable
+    public class OneWaySender : IDisposable
     {
         #region Fields
 
@@ -49,7 +49,7 @@ namespace RabbitMQCommunications.Communications
             _connection?.Close();
         }
 
-        public void Send(T dto)
+        public void Send<T>(T dto)
         {
             var properties = _model.CreateBasicProperties();
             var json = JsonConvert.SerializeObject(dto);

@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinAdminClient"
-        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
@@ -31,12 +31,39 @@
 
         <Grid Margin="250 55 0 0">
             <Grid x:Name="GridPrincipal" HorizontalAlignment="Stretch">
-                <ItemsControl>
-                    <Expander>
-                        <DataGrid>
-                        </DataGrid>
-                    </Expander>
-                </ItemsControl>
+                <ScrollViewer>
+                    <ItemsControl>
+                        <Expander>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <wpf:CartesianChart x:Name="Temperature" Grid.Row="0" Height="200" Margin="6" Hoverable="False" ToolTip="Temperature">
+                                    <wpf:CartesianChart.AxisX>
+                                        <wpf:Axis MinValue="0" ToolTip="Time"/>
+                                    </wpf:CartesianChart.AxisX>
+                                </wpf:CartesianChart>
+                            </Grid>
+                        </Expander>
+
+                        <Expander>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <wpf:CartesianChart x:Name="Temperatur" Grid.Row="0" Height="200" Margin="6" Hoverable="False" ToolTip="Temperature">
+                                    <wpf:CartesianChart.AxisX>
+                                        <wpf:Axis MinValue="0" ToolTip="Time"/>
+                                    </wpf:CartesianChart.AxisX>
+                                </wpf:CartesianChart>
+                            </Grid>
+                        </Expander>
+                    </ItemsControl>
+                </ScrollViewer>
             </Grid>
         </Grid>
 

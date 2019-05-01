@@ -25,7 +25,7 @@ namespace ClientApp
         {
 
             Console.ReadLine();
-            using (OneWaySender<int> sender = new OneWaySender<int>(new ConnectionModel(), new PublishProperties() { ExchangeName = "", QueueName = "asd"}))
+            using (OneWaySender sender = new OneWaySender(new ConnectionModel(), new PublishProperties() { ExchangeName = "", QueueName = "asd"}))
             {
                 sender.Send(5);
             }

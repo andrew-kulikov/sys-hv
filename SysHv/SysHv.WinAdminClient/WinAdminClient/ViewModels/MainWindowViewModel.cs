@@ -3,6 +3,7 @@ using WinAdminClient.Collections;
 using WinAdminClient.Models;
 using WinAdminClient.Views;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Client;
 
 
 namespace WinAdminClient.ViewModels
@@ -29,6 +30,11 @@ namespace WinAdminClient.ViewModels
                 new DefaultComputerInfo() { DisplayName = "qwe"},
                 new DefaultComputerInfo() { DisplayName = "zxc"}
             };
+
+            var connection = new HubConnection("https://localhost:8000/statshub");
+            var hubProxy = connection.CreateHubProxy("hub");
+            hubProxy.On<string>("SendStats", (str) => Console.WriteLine("asd" + str));
+
         }
     }
 }

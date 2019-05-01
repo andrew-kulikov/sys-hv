@@ -57,9 +57,11 @@ namespace SysHv.Client.WinService.Services
             if (sensorType != null)
             {
                 var sensorInstance = Activator.CreateInstance(sensorType);
-                Console.WriteLine($"{sensorType.Namespace} : {sensorType.Name}");
+                
                 var collect = sensorType.GetMethod("Collect");
                 var result = collect?.Invoke(sensorInstance, new object[] { });
+
+                Console.WriteLine($"{sensorType.Namespace} : {sensorType.Name}");
                 Console.WriteLine(result);
             }
             else
@@ -94,8 +96,6 @@ namespace SysHv.Client.WinService.Services
                         return;
                     }
                     rabbitSender.Send(new RuntimeInfoGatherer().Gather());
-                    //var sendMethod = senderType.GetMethod("Send");
-                    //sendMethod?.Invoke(rabbitSender, new[] {  });
                 }
             };
         }
@@ -105,8 +105,6 @@ namespace SysHv.Client.WinService.Services
             var loginResponse = Login().Result;
             if (loginResponse.Success)
             {
-                //_loginTimer.Enabled = false;
-
                 lock (_locker)
                 {
                     queueName = loginResponse.Message;

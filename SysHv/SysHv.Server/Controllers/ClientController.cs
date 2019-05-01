@@ -32,6 +32,7 @@ namespace SysHv.Server.Controllers
             _receiver = receiver.Service ?? throw new ArgumentNullException(nameof(receiver));
         }
 
+
         [Route("login")]
         [HttpPost]
         public async Task<IActionResult> LoginClient([FromBody] ClientLoginDto dto)

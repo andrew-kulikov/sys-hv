@@ -28,17 +28,7 @@ namespace ServerApp
             }
 
             var receiver = new OneWayReceiver(new ConnectionModel(), "178.122.194.35");
-            receiver?.Receive<RuntimeInfoDTO>(
-                m => Console.WriteLine(m));
-
-            /*var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
-            receiver.StartListen(message =>
-            {
-                Console.WriteLine(Decoder.Decode<int>(message));
-                return message;
-            });*/
-            //receiver.StartListen();
-
+   
             Console.WriteLine("waiting for 3");
             Console.ReadLine();
             //await asd();

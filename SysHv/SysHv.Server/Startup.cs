@@ -17,6 +17,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using SysHv.Server.Configuration;
 using SysHv.Server.DAL;
 using SysHv.Server.DAL.Models;
+using SysHv.Server.Helpers;
 using SysHv.Server.HostedServices;
 using SysHv.Server.Hubs;
 using SysHv.Server.Services;
@@ -87,6 +88,7 @@ namespace SysHv.Server
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<ISensorService, SensorService>();
             services.AddSingleton<IHostedService, ReceiverService>();
+            services.AddSingleton<IConfigurationHelper, ConfigurationHelper>();
             services.AddTransient<IHostedServiceAccessor<ReceiverService>, HostedServiceAccessor<ReceiverService>>();
         }
 

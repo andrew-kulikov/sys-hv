@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace SysHv.Client.Common.DTOs.SensorOutput
 {
-    class SensorResponse
+    public class SensorResponse
     {
+        public int ClientId { get; set; }
+        public int SensorId { get; set; }
+        public object Value { get; set; }
     }
 }

@@ -51,6 +51,7 @@
     <Compile Include="DTOs\SensorOutput\ProcessorLoadDTO.cs" />
     <Compile Include="DTOs\Response.cs" />
     <Compile Include="DTOs\SensorOutput\RuntimeInfoDTO.cs" />
+    <Compile Include="DTOs\SensorOutput\SensorResponse.cs" />
     <Compile Include="DTOs\SensorOutput\SystemDTO.cs" />
     <Compile Include="Interfaces\IGatherer.cs" />
     <Compile Include="Models\ConnectionModel.cs" />

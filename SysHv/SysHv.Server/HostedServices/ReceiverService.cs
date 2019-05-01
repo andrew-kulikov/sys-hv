@@ -47,7 +47,7 @@ namespace SysHv.Server.HostedServices
             var message = Encoding.UTF8.GetString(ea.Body);
             var type = ea.BasicProperties.Type;
             
-            _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject<float>(message));
+            _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject(message));
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

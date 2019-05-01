@@ -45,7 +45,8 @@ namespace SysHv.Server.HostedServices
         private void MessageReceived(object sender, BasicDeliverEventArgs ea)
         {
             var message = Encoding.UTF8.GetString(ea.Body);
-        
+            var type = ea.BasicProperties.Type;
+            
             _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject<float>(message));
         }
 

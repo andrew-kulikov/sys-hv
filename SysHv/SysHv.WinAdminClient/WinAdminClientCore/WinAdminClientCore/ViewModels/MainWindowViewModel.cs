@@ -2,16 +2,10 @@
 using System.Windows;
 using Microsoft.AspNetCore.SignalR.Client;
 using SysHv.Client.Common.DTOs.SensorOutput;
-using WinAdminClient.Collections;
-using WinAdminClient.Models;
+using WinAdminClientCore.Collections;
+using WinAdminClientCore.Models;
 
-using System;
-using System.Windows;
-using Microsoft.AspNetCore.SignalR.Client;
-using SysHv.Client.Common.DTOs.SensorOutput;
-
-
-namespace WinAdminClient.ViewModels
+namespace WinAdminClientCore.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
@@ -44,7 +38,7 @@ namespace WinAdminClient.ViewModels
             connection.StartAsync();
         }
 
-        void ondata(string o)
+        void ondata(RuntimeInfoDTO o)
         {
             MessageBox.Show(o.ToString());
             Console.WriteLine(o.GetType());

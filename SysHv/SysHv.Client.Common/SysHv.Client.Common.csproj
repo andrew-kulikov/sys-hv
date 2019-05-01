@@ -42,19 +42,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTOs\HardwareInfoDTO.cs" />
-    <Compile Include="DTOs\MotherBoardDTO.cs" />
-    <Compile Include="DTOs\NetworkInterfaceDTO.cs" />
-    <Compile Include="DTOs\ProcessDTO.cs" />
-    <Compile Include="DTOs\ProcessorDTO.cs" />
-    <Compile Include="DTOs\ProcessorLoadDTO.cs" />
+    <Compile Include="DTOs\SensorDTO.cs" />
+    <Compile Include="DTOs\SensorOutput\HardwareInfoDTO.cs" />
+    <Compile Include="DTOs\SensorOutput\MotherBoardDTO.cs" />
+    <Compile Include="DTOs\SensorOutput\NetworkInterfaceDTO.cs" />
+    <Compile Include="DTOs\SensorOutput\ProcessDTO.cs" />
+    <Compile Include="DTOs\SensorOutput\ProcessorDTO.cs" />
+    <Compile Include="DTOs\SensorOutput\ProcessorLoadDTO.cs" />
     <Compile Include="DTOs\Response.cs" />
-    <Compile Include="DTOs\RuntimeInfoDTO.cs" />
-    <Compile Include="DTOs\SystemDTO.cs" />
+    <Compile Include="DTOs\SensorOutput\RuntimeInfoDTO.cs" />
+    <Compile Include="DTOs\SensorOutput\SystemDTO.cs" />
     <Compile Include="Interfaces\IGatherer.cs" />
     <Compile Include="Models\ConnectionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DTOs\RamDTO.cs" />
+    <Compile Include="DTOs\SensorOutput\RamDTO.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

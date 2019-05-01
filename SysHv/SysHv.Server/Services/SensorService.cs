@@ -17,6 +17,11 @@ namespace SysHv.Server.Services
             _context = context;
         }
 
+        public void Dispose()
+        {
+            _context?.Dispose();
+        }
+
         public Task<Sensor> GetSensorByIdAsync(int id)
         {
             return _context.Sensors.FirstOrDefaultAsync(s => s.Id == id);
@@ -51,11 +56,6 @@ namespace SysHv.Server.Services
         {
             await _context.Sensors.AddAsync(sensor);
             await _context.SaveChangesAsync();
-        }
-
-        public void Dispose()
-        {
-            _context?.Dispose();
         }
     }
 }

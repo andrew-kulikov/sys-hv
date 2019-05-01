@@ -44,8 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CpuLoadSensor.cs" />
     <Compile Include="CpuTempSensor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdateVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SysHv.Client.Common\SysHv.Client.Common.csproj">

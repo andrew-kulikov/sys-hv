@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -30,23 +32,19 @@ namespace SysHv.Client.WinService.Services
         private readonly IList<Timer> _sensorTimers;
         private Logger _logger = LogManager.GetCurrentClassLogger();
         private string queueName;
+        private IList<Assembly> _assemblies;
 
 
         public MonitoringService()
         {
+            _assemblies = new List<Assembly>();
+            new HardwareInfoGatherer().Gather();
             _sensorTimers = new List<Timer>();
         }
 
         private ElapsedEventHandler GetTimerElapsed(SensorDto sensor)
         {
-            var libDirectory = ConfigurationManager.AppSettings["SensorExtensionsPath"];
-            Type sensorType = null;
-
-            foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
-                foreach (var sensorPath in Directory.GetFiles(sensorDirectory, "*Sensor*.dll"))
-                    sensorType = Assembly.LoadFile(sensorPath)
-                        .GetTypes()
-                        .FirstOrDefault(a => a.Name == sensor.Contract);
+            var sensorType = _assemblies.SelectMany(a => a.GetTypes()).FirstOrDefault(a => a.Name == sensor.Contract);
 
             if (sensorType != null)
             {
@@ -66,10 +64,6 @@ namespace SysHv.Client.WinService.Services
 
             return (sender, args) =>
             {
-                var returnType = sensor.ReturnType == "float"
-                    ? typeof(float)
-                    : Type.GetType("SysHv.Client.Common." + sensor.ReturnType);
-
                 using (var rabbitSender = new OneWaySender(new ConnectionModel(),
                     new PublishProperties { ExchangeName = "", QueueName = queueName }))
                 {
@@ -89,7 +83,7 @@ namespace SysHv.Client.WinService.Services
                         Console.WriteLine("Not found");
                         return;
                     }
-                    //rabbitSender.Send(new RuntimeInfoGatherer().Gather());
+
                     rabbitSender.Send(result);
                 }
             };
@@ -125,7 +119,16 @@ namespace SysHv.Client.WinService.Services
                     Encoding.UTF8,
                     "application/json");
 
-                var result = await client.PostAsync("/api/client/login", content);
+                HttpResponseMessage result;
+                try
+                {
+                    result = await client.PostAsync("/api/client/login", content);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
 
                 if (result.IsSuccessStatusCode)
                 {
@@ -144,7 +147,7 @@ namespace SysHv.Client.WinService.Services
         {
             foreach (var sensor in sensors)
             {
-                var timer = new Timer(TimerDelay) {AutoReset = true};
+                var timer = new Timer(TimerDelay) { AutoReset = true };
                 timer.Elapsed += GetTimerElapsed(sensor);
 
                 timer.Enabled = true;
@@ -156,6 +159,11 @@ namespace SysHv.Client.WinService.Services
         {
             Console.WriteLine("Enter something...");
             Console.ReadLine();
+
+            var libDirectory = ConfigurationManager.AppSettings["SensorExtensionsPath"];
+            foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
+                foreach (var sensorPath in Directory.GetFiles(sensorDirectory, "*Sensor*.dll"))
+                    _assemblies.Add(Assembly.LoadFile(sensorPath));
 
             LoginTimerElapsed();
         }

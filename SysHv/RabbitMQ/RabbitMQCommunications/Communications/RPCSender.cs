@@ -68,7 +68,7 @@ namespace RabbitMQCommunications.Communications
 
             await Task.Run(() =>
             {
-                while (DateTime.Now <= timeoutAt)
+                while (true/*DateTime.Now <= timeoutAt*/)
                 {
                     Thread.Sleep(250);
                     var deliveryArgs = _consumer.Queue.Dequeue();

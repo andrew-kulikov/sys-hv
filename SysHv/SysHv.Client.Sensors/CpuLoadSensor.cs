@@ -1,23 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using OpenHardwareMonitor.Hardware;
 using SysHv.Client.Common.DTOs.SensorOutput;
 
 namespace SysHv.Client.Sensors
 {
-    public class CpuTempSensor
+    public class CpuLoadSensor
     {
         private readonly object _locker = new object();
         public CPULoadSensorDto Collect()
         {
+         
                 var updateVisitor = new UpdateVisitor();
                 var computer = new Computer();
-
 
                 computer.Open();
                 computer.CPUEnabled = true;
                 computer.Accept(updateVisitor);
-
 
                 // Now loads one processor
                 var processor = computer.Hardware
@@ -26,10 +28,10 @@ namespace SysHv.Client.Sensors
                 if (processor == null) return null;
 
                 var load = new CPULoadSensorDto();
-                var temperatureSensors = processor.Sensors.Where(s => s.SensorType == SensorType.Temperature).ToList();
+                var loadSensors = processor.Sensors.Where(s => s.SensorType == SensorType.Load).ToList();
 
-                load.TotalLoad = temperatureSensors.FirstOrDefault(s => s.Name == "CPU Package")?.Value ?? 0;
-                load.CoreLoads = temperatureSensors.Where(s => s.Name.StartsWith("CPU Core"))
+                load.TotalLoad = loadSensors.FirstOrDefault(s => s.Name == "CPU Total")?.Value ?? 0;
+                load.CoreLoads = loadSensors.Where(s => s.Name.StartsWith("CPU Core"))
                     .Select(s => new CPULoadSensorDto.CPUCoreLoadDto
                     {
                         CoreName = s.Name,

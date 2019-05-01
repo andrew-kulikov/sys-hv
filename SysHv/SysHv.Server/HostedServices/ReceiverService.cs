@@ -36,11 +36,10 @@ namespace SysHv.Server.HostedServices
                 creator.TryCreateQueue(queueName);
             }
 
-            var _receiver = new OneWayReceiver(
-                _configurationHelper.ConnectionInfo,
-                queueName);
-            _receiver.Receive(MessageReceived);
+            var receiver = new OneWayReceiver(_configurationHelper.ConnectionInfo, queueName);
+            receiver.Receive(MessageReceived);
 
+            _userReceivers[userId] = receiver;
         }
 
         private void MessageReceived(object sender, BasicDeliverEventArgs ea)

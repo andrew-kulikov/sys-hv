@@ -44,11 +44,9 @@ namespace SysHv.Client.WinService.Services
 
             foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
                 foreach (var sensorPath in Directory.GetFiles(sensorDirectory, sensor.Contract + ".dll"))
-                {
-                    var assembly = Assembly.LoadFile(sensorPath);
-
-                    sensorType = assembly.GetTypes().FirstOrDefault(a => a.Name == sensor.Contract);
-                }
+                    sensorType = Assembly.LoadFile(sensorPath)
+                        .GetTypes()
+                        .FirstOrDefault(a => a.Name == sensor.Contract);
 
             if (sensorType != null)
             {
@@ -91,7 +89,8 @@ namespace SysHv.Client.WinService.Services
                         Console.WriteLine("Not found");
                         return;
                     }
-                    rabbitSender.Send(new RuntimeInfoGatherer().Gather());
+                    //rabbitSender.Send(new RuntimeInfoGatherer().Gather());
+                    rabbitSender.Send(result);
                 }
             };
         }
@@ -102,7 +101,7 @@ namespace SysHv.Client.WinService.Services
 
             if (loginResponse == null || !loginResponse.Success)
             {
-                Thread.Sleep(5000);
+                Thread.Sleep(TimerDelay);
                 LoginTimerElapsed();
             }
 

@@ -85,7 +85,7 @@ namespace SysHv.Client.WinService.Services
 
             //_logger.Info(collectedInfo);
 
-            using (var rabbitSender = new OneWaySender<RuntimeInfoDTO>(new ConnectionModel(),
+            using (var rabbitSender = new OneWaySender(new ConnectionModel(),
                 new PublishProperties { ExchangeName = "", QueueName = queueName }))
             {
                 rabbitSender.Send(collectedRuntimeInfo);

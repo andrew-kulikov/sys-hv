@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,23 +9,40 @@ using Newtonsoft.Json;
 using RabbitMQ.Client.Events;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Setup;
-using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.DTOs.SensorOutput;
-using SysHv.Client.Common.Models;
+using SysHv.Server.Helpers;
 using SysHv.Server.Hubs;
 
 namespace SysHv.Server.HostedServices
 {
     public class ReceiverService : IHostedService, IDisposable
     {
-        private OneWayReceiver _receiver;
-        private IHubContext<MonitoringHub> _hubContext;
+        private readonly IConfigurationHelper _configurationHelper;
+        private readonly IHubContext<MonitoringHub> _hubContext;
+        private IDictionary<string, OneWayReceiver> _userReceivers;
 
-        public ReceiverService(IHubContext<MonitoringHub> hubContext)
+        public ReceiverService(IHubContext<MonitoringHub> hubContext, IConfigurationHelper configurationHelper)
         {
             _hubContext = hubContext;
+            _configurationHelper = configurationHelper;
+
+            _userReceivers = new Dictionary<string, OneWayReceiver>();
         }
+
+        public void Dispose()
+        {
+            foreach (var receiver in _userReceivers.Values)
+            {
+                receiver.Dispose();
+            }
+        }
+
         public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
@@ -38,26 +53,17 @@ namespace SysHv.Server.HostedServices
             {
                 creator.TryCreateQueue(queueName);
             }
-            _receiver = new OneWayReceiver(
-                new ConnectionModel("localhost", "guest", "guest"),
+
+            var _receiver = new OneWayReceiver(
+                _configurationHelper.ConnectionInfo,
                 queueName);
             _receiver.Receive(MessageReceived);
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
         }
 
         private void MessageReceived(object sender, BasicDeliverEventArgs ea)
         {
             var message = Encoding.UTF8.GetString(ea.Body);
             _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject<RuntimeInfoDTO>(message));
-        }
-
-        public void Dispose()
-        {
-            _receiver.Dispose();
         }
     }
 }

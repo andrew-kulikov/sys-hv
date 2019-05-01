@@ -17,8 +17,8 @@ namespace SysHv.Server.Helpers
         }
         public ConnectionModel ConnectionInfo => new ConnectionModel(
             _configuration.GetValue<string>("Host"),
-            _configuration.GetValue<string>("Username"),
-            _configuration.GetValue<string>("Password")
+            _configuration.GetValue<string>("RabbitUsername"),
+            _configuration.GetValue<string>("RabbitPassword")
             );
     }
 }

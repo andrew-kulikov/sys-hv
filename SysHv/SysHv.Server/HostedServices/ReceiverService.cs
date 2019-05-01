@@ -29,12 +29,25 @@ namespace SysHv.Server.HostedServices
             _userReceivers = new Dictionary<string, OneWayReceiver>();
         }
 
-        public void Dispose()
+        public void RegisterClient(string queueName, string userId)
         {
-            foreach (var receiver in _userReceivers.Values)
+            using (var creator = new QueueCreator(_configurationHelper.ConnectionInfo))
             {
-                receiver.Dispose();
+                creator.TryCreateQueue(queueName);
             }
+
+            var _receiver = new OneWayReceiver(
+                _configurationHelper.ConnectionInfo,
+                queueName);
+            _receiver.Receive(MessageReceived);
+
+        }
+
+        private void MessageReceived(object sender, BasicDeliverEventArgs ea)
+        {
+            var message = Encoding.UTF8.GetString(ea.Body);
+        
+            _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject<RuntimeInfoDTO>(message));
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -47,23 +60,12 @@ namespace SysHv.Server.HostedServices
             return Task.CompletedTask;
         }
 
-        public void RegisterClient(string queueName, string userId)
+        public void Dispose()
         {
-            using (var creator = new QueueCreator("localhost", "guest", "guest"))
+            foreach (var receiver in _userReceivers.Values)
             {
-                creator.TryCreateQueue(queueName);
+                receiver.Dispose();
             }
-
-            var _receiver = new OneWayReceiver(
-                _configurationHelper.ConnectionInfo,
-                queueName);
-            _receiver.Receive(MessageReceived);
-        }
-
-        private void MessageReceived(object sender, BasicDeliverEventArgs ea)
-        {
-            var message = Encoding.UTF8.GetString(ea.Body);
-            _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject<RuntimeInfoDTO>(message));
         }
     }
 }

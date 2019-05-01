@@ -25,21 +25,17 @@ namespace SysHv.Client.WinService.Services
 {
     internal class MonitoringService
     {
-        #region Constructors
+        private const int TimerDelay = 5000;
+
+        private readonly IList<Timer> _sensorTimers;
+        private Logger _logger = LogManager.GetCurrentClassLogger();
+        private string queueName;
+
 
         public MonitoringService()
         {
             _sensorTimers = new List<Timer>();
-            _locker = new object();
-
-            //_loginTimer = new Timer(LoginTimerDelay);
-            //_loginTimer.AutoReset = true;
-            //_loginTimer.Elapsed += LoginTimerElapsed;
-            
         }
-
-        #endregion
-
 
         private ElapsedEventHandler GetTimerElapsed(SensorDto sensor)
         {
@@ -47,17 +43,17 @@ namespace SysHv.Client.WinService.Services
             Type sensorType = null;
 
             foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
-            foreach (var sensorPath in Directory.GetFiles(sensorDirectory, sensor.Contract + ".dll"))
-            {
-                var assembly = Assembly.LoadFile(sensorPath);
+                foreach (var sensorPath in Directory.GetFiles(sensorDirectory, sensor.Contract + ".dll"))
+                {
+                    var assembly = Assembly.LoadFile(sensorPath);
 
-                sensorType = assembly.GetTypes().FirstOrDefault(a => a.Name == sensor.Contract);
-            }
+                    sensorType = assembly.GetTypes().FirstOrDefault(a => a.Name == sensor.Contract);
+                }
 
             if (sensorType != null)
             {
                 var sensorInstance = Activator.CreateInstance(sensorType);
-                
+
                 var collect = sensorType.GetMethod("Collect");
                 var result = collect?.Invoke(sensorInstance, new object[] { });
 
@@ -75,7 +71,7 @@ namespace SysHv.Client.WinService.Services
                 var returnType = sensor.ReturnType == "float"
                     ? typeof(float)
                     : Type.GetType("SysHv.Client.Common." + sensor.ReturnType);
-          
+
                 using (var rabbitSender = new OneWaySender(new ConnectionModel(),
                     new PublishProperties { ExchangeName = "", QueueName = queueName }))
                 {
@@ -103,20 +99,16 @@ namespace SysHv.Client.WinService.Services
         private void LoginTimerElapsed()
         {
             var loginResponse = Login().Result;
-            if (loginResponse.Success)
-            {
-                lock (_locker)
-                {
-                    queueName = loginResponse.Message;
-                }
 
-                LaunchSensors(loginResponse.Sensors);
-            }
-            else
+            if (loginResponse == null || !loginResponse.Success)
             {
-                 Thread.Sleep(5000);
-                 LoginTimerElapsed();
+                Thread.Sleep(5000);
+                LoginTimerElapsed();
             }
+
+            queueName = loginResponse.Message;
+
+            LaunchSensors(loginResponse.Sensors);
         }
 
         private async Task<Response> Login()
@@ -130,7 +122,7 @@ namespace SysHv.Client.WinService.Services
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 var content = new StringContent(
-                    JsonConvert.SerializeObject(new {email = "123", password = "123Qwe!", ip = "178.122.194.35"}),
+                    JsonConvert.SerializeObject(new { email = "123", password = "123Qwe!", ip = "178.122.194.35" }),
                     Encoding.UTF8,
                     "application/json");
 
@@ -153,57 +145,25 @@ namespace SysHv.Client.WinService.Services
         {
             foreach (var sensor in sensors)
             {
-                var timer = new Timer(TimerDelay);
-                timer.AutoReset = true;
+                var timer = new Timer(TimerDelay) {AutoReset = true};
                 timer.Elapsed += GetTimerElapsed(sensor);
-                var sensorType = sensor.Contract;
-                Console.WriteLine(sensorType);
+
                 timer.Enabled = true;
                 _sensorTimers.Add(timer);
             }
         }
 
-        #region Constants
-
-        private const int TimerDelay = 5000;
-        private const int LoginTimerDelay = 5000;
-        private readonly object _locker;
-
-        private string queueName;
-
-        #endregion
-
-        #region Private Fields
-
-        private readonly IList<Timer> _sensorTimers;
-        private readonly Timer _loginTimer;
-        private Logger _logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Public Methods
-
         public void Start()
         {
-            /*
-            var curAssembly = Assembly.GetEntryAssembly();
-            foreach (var type in curAssembly.GetTypes())
-            {
-                if (type.IsClass)
-                Console.WriteLine(type);
-            }*/
-
+            Console.WriteLine("Enter something...");
             Console.ReadLine();
-            //_loginTimer.Enabled = true;
+
             LoginTimerElapsed();
         }
 
         public void Stop()
         {
-            //_loginTimer.Enabled = false;
             foreach (var timer in _sensorTimers) timer.Enabled = false;
         }
-
-        #endregion
     }
 }

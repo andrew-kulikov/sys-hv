@@ -54,9 +54,9 @@ namespace RabbitMQCommunications.Communications
             _consumer = new QueueingBasicConsumer(_model);
             _model.BasicConsume(_responseQueue, true, _consumer);
 
-            using (var creator = new QueueCreator(connectionModel.Host, connectionModel.Username, connectionModel.Password))
+            using (var creator = new QueueCreator(connectionModel))
             {
-                if (!creator.TryCreateQueue(QueueName, false, false, false, null))
+                if (!creator.TryCreateQueue(publishProperties.QueueName, false, false, false, null))
                     throw new RabbitMQDeclarationException("cannot create listening queue");
             }
         }

@@ -17,25 +17,13 @@ namespace RabbitMQCommunications.Communications
     /// </summary>
     public class RPCSender<T> : IRPCCaller, IDisposable
     {
-        #region Constants
-
-        private const string QueueName = "rpc.ip=192.kek";
-        // da, ya takoi clever
-        private readonly TimeSpan _timeout = new TimeSpan(0, 0, 10);
-
-        #endregion
-
-        #region Fields
+        private readonly TimeSpan _timeout = new TimeSpan(0, 0, 20);
 
         private QueueingBasicConsumer _consumer;
         private IModel _model;
         private IConnection _connection;
         private PublishProperties _publishProperties;
         private string _responseQueue;
-
-        #endregion
-
-        #region Constructors
 
         public RPCSender(ConnectionModel connectionModel, PublishProperties publishProperties)
         {
@@ -61,10 +49,6 @@ namespace RabbitMQCommunications.Communications
             }
         }
 
-        #endregion
-
-        #region Interfaces
-
         public async Task<string> Call(string message)
         {
             var correlationToken = Guid.NewGuid().ToString();
@@ -84,7 +68,7 @@ namespace RabbitMQCommunications.Communications
 
             await Task.Run(() =>
             {
-                while (true/*DateTime.Now <= timeoutAt*/)
+                while (DateTime.Now <= timeoutAt)
                 {
                     Thread.Sleep(250);
                     var deliveryArgs = _consumer.Queue.Dequeue();
@@ -107,7 +91,5 @@ namespace RabbitMQCommunications.Communications
             _model?.Abort();
             _connection?.Close();
         }
-
-        #endregion
     }
 }

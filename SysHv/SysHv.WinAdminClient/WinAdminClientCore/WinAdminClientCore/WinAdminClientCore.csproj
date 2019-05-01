@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Views\MainComputerStats.xaml" />
+    <None Remove="Views\DefaultComputerStats.xaml" />
     <None Remove="Windows\LoginWindow.xaml" />
   </ItemGroup>
 
@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\MainComputerStats.xaml.cs">
+    <Compile Update="Views\DefaultComputerStats.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

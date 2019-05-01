@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace WinAdminClientCore.Views
 {
     /// <summary>
-    /// Логика взаимодействия для MainComputerStats.xaml
+    /// Логика взаимодействия для DefaultComputerStats.xaml
     /// </summary>
-    public partial class MainComputerStats : UserControl
+    public partial class DefaultComputerStats : UserControl
     {
-        public MainComputerStats()
+        public DefaultComputerStats()
         {
             InitializeComponent();
         }

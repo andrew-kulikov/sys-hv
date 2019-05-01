@@ -30,7 +30,7 @@ namespace WinAdminClientCore
         {
             DataContext = viewModel;
 
-            //_computerStats = new MainComputerStats(); //{DataC = viewModel.Computers};
+            //_computerStats = new DefaultComputerStats(); //{DataC = viewModel.CpuLoad};
 
             InitializeComponent();
         }

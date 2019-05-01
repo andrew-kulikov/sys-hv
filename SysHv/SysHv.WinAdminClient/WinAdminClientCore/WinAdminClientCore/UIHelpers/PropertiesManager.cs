@@ -47,5 +47,15 @@ namespace WinAdminClientCore.UIHelpers
                 config.Save(ConfigurationSaveMode.Modified);
             }
         }
+
+        public static string SignalRServer
+        {
+            get => config.AppSettings.Settings["SignalRServer"].Value;
+            set
+            {
+                config.AppSettings.Settings["SignalRServer"].Value = value;
+                config.Save(ConfigurationSaveMode.Modified);
+            }
+        }
     }
 }

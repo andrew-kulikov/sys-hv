@@ -53,11 +53,19 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
-                                <wpf:CartesianChart x:Name="Temperatur" Grid.Row="0" Height="200" Margin="6" Hoverable="False" ToolTip="Temperature">
+                                <wpf:CartesianChart Grid.Row="0" Margin="0, 0, 0, 0" Height="200" Series="{Binding LastHourSeries}" Hoverable="False" DataTooltip="{x:Null}">
                                     <wpf:CartesianChart.AxisX>
-                                        <wpf:Axis MinValue="0" ToolTip="Time"/>
+                                        <!--a small visual improvement, lets hide the first points (x = 0, x=1) to get better animations-->
+                                        <wpf:Axis MinValue="2"></wpf:Axis>
                                     </wpf:CartesianChart.AxisX>
                                 </wpf:CartesianChart>
+                                <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="25, 0">
+                                    <TextBlock Opacity=".4" FontSize="13">Total electricity Consumption <LineBreak /> of Galaxy SOHO</TextBlock>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Foreground="#303030" FontSize="40" Text="{Binding LastLecture, StringFormat={}{0:N1}}" />
+                                        <TextBlock Foreground="#303030" FontSize="18" VerticalAlignment="Bottom" Margin="8, 6">kWh</TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
                             </Grid>
                         </Expander>
                     </ItemsControl>
@@ -79,7 +87,7 @@
                 <ListViewItem Height="60">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Computer" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
-                        <TextBlock Text="Computers" FontSize="17" VerticalAlignment="Center" Margin="20 0"/>
+                        <TextBlock Text="CpuLoad" FontSize="17" VerticalAlignment="Center" Margin="20 0"/>
                     </StackPanel>
                 </ListViewItem>
                 <ListViewItem Height="60">

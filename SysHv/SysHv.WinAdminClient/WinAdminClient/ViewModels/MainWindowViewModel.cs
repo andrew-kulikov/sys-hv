@@ -35,7 +35,6 @@ namespace WinAdminClient.ViewModels
                 new DefaultComputerInfo() { DisplayName = "qwe"},
                 new DefaultComputerInfo() { DisplayName = "zxc"}
             };
-
             var connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:51610/monitoringHub")
                 .Build();

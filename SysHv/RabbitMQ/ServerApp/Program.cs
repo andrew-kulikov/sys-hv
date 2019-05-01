@@ -29,6 +29,8 @@ namespace ServerApp
             var receiver = new OneWayReceiver(new ConnectionModel(), "asd");
             receiver?.Receive<int>(
                 m => Console.WriteLine(m));
+            receiver?.Receive<DateTime>(
+                m => Console.WriteLine(m));
 
             /*var receiver = new RPCReceiver<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
             receiver.StartListen(message =>

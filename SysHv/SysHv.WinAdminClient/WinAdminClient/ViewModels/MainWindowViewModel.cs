@@ -31,10 +31,9 @@ namespace WinAdminClient.ViewModels
                 new DefaultComputerInfo() { DisplayName = "zxc"}
             };
 
-            var connection = new HubConnection("https://localhost:8000/statshub");
+            var connection = new HubConnection("https://localhost:8000/monitoringHub");
             var hubProxy = connection.CreateHubProxy("hub");
-            hubProxy.On<string>("SendStats", (str) => Console.WriteLine("asd" + str));
-
+            hubProxy.On<string>("UpdateReceived", (str) => Console.WriteLine("asd" + str));
         }
     }
 }

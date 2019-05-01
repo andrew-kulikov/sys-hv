@@ -56,7 +56,6 @@
     <Compile Include="Communications\HelpStuff\Constants.cs" />
     <Compile Include="Communications\Interfaces\IEventingReceiver.cs" />
     <Compile Include="Communications\Interfaces\IRPCCaller.cs" />
-    <Compile Include="Communications\Interfaces\ISender.cs" />
     <Compile Include="Communications\OneWayReceiver.cs" />
     <Compile Include="Communications\OneWaySender.cs" />
     <Compile Include="Communications\HelpStuff\PublishProperties.cs" />

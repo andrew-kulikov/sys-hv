@@ -8,7 +8,7 @@ using SysHv.Client.Common.Models;
 
 namespace RabbitMQCommunications.Communications
 {
-    public class OneWayReceiver<T> : IEventingReceiver<T>, IDisposable
+    public class OneWayReceiver<T> : IEventingReceiver, IDisposable
     {
         #region Fields
 
@@ -53,8 +53,6 @@ namespace RabbitMQCommunications.Communications
         [Obsolete("use Receive(Action<T> handler) instead", false)]
         public void Receive(EventHandler<BasicDeliverEventArgs> handler)
         {
-
-
             _consumer.Received += handler;
         }
 
@@ -63,16 +61,19 @@ namespace RabbitMQCommunications.Communications
             _consumer.Received += (model, ea) =>
             {
                 var message = Encoding.UTF8.GetString(ea.Body);
+                T param;
 
                 try
                 {
-                    var param = JsonConvert.DeserializeObject<T>(message);
-                    handler(JsonConvert.DeserializeObject<T>(message));
+                    param = JsonConvert.DeserializeObject<T>(message);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
+                    return;
                 }
+
+                handler(param);
 
                 /*var replyProperties = _model.CreateBasicProperties();
                 replyProperties.CorrelationId = ea.BasicProperties.CorrelationId;*/

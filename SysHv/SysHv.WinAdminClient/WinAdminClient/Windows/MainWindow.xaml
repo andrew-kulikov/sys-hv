@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:WinAdminClient"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
@@ -33,8 +34,18 @@
             <Grid x:Name="GridPrincipal" HorizontalAlignment="Stretch">
                 <ItemsControl>
                     <Expander>
-                        <DataGrid>
-                        </DataGrid>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <wpf:CartesianChart Grid.Row="0" Width="NaN" Height="200" Margin="0, 0, 0, 0" Hoverable="False" DataTooltip="{x:Null}">
+                                <wpf:CartesianChart.AxisX>
+                                    <wpf:Axis MinValue="0"/>
+                                </wpf:CartesianChart.AxisX>
+                            </wpf:CartesianChart>
+                        </Grid>
                     </Expander>
                 </ItemsControl>
             </Grid>

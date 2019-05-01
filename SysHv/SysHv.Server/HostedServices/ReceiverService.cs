@@ -40,7 +40,7 @@ namespace SysHv.Server.HostedServices
             _receiver = new OneWayReceiver(
                 new ConnectionModel("localhost", "guest", "guest"),
                 queueName);
-            _receiver.Receive<RuntimeInfoDTO>((a) => _hubContext.Clients.All.SendAsync("UpdateReceived", a));
+            _receiver.Receive(MessageReceived);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

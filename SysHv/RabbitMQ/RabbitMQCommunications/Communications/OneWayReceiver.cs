@@ -33,11 +33,6 @@ namespace RabbitMQCommunications.Communications
 
             _model = _connection.CreateModel();
             _model.BasicQos(0, 1, false);
-
-            _consumer = new EventingBasicConsumer(_model);
-            _model.BasicConsume(queue: _queueName, autoAck: true, consumer: _consumer);
-
-            _consumer.Received += (model, ea) => { _model.BasicAck(ea.DeliveryTag, false); };
         }
 
         #endregion
@@ -50,36 +45,15 @@ namespace RabbitMQCommunications.Communications
             _connection?.Close();
         }
 
-        [Obsolete("use Receive(Action<T> handler) instead", false)]
         public void Receive(EventHandler<BasicDeliverEventArgs> handler)
         {
-            _consumer.Received += handler;
-        }
-
-        public void Receive<T>(Action<T> handler)
-        {
-            _consumer.Received += (model, ea) =>
+            if (_consumer == null)
             {
-                var message = Encoding.UTF8.GetString(ea.Body);
-                T param;
+                _consumer = new EventingBasicConsumer(_model);
+                _model.BasicConsume(queue: _queueName, autoAck: true, consumer: _consumer);
+            }
 
-                try
-                {
-                    param = JsonConvert.DeserializeObject<T>(message);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    return;
-                }
-
-                handler(param);
-
-                /*var replyProperties = _model.CreateBasicProperties();
-                replyProperties.CorrelationId = ea.BasicProperties.CorrelationId;*/
-
-                //_model.BasicPublish("", ea.BasicProperties.ReplyTo, replyProperties, messageBuffer);
-            };
+            _consumer.Received += handler;
         }
 
         #endregion

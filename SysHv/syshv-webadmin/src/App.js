@@ -4,10 +4,7 @@ import logo from "./logo.svg";
 import "./App.css";
 
 let connection = new HubConnectionBuilder()
-  .withUrl("https://localhost:44352/monitoringHub", {
-    skipNegotiation: true,
-    transport: HttpTransportType.WebSockets
-  })
+  .withUrl("http://syshv.westeurope.cloudapp.azure.com/monitoringHub")
   .build();
 
 connection.on("UpdateReceived", data => {
@@ -15,8 +12,8 @@ connection.on("UpdateReceived", data => {
 });
 
 connection
-  .start({ withCredentials: false })
-  .catch(err => console.error(err.toString()));
+  .start()
+  .catch(err => console.error(err));
 
 const App = props => (
   <div className="App">

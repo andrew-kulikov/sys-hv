@@ -7,8 +7,8 @@
     <ProjectGuid>{60561487-9685-46B0-8CAB-04F90204A06C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CpuTempSensor</RootNamespace>
-    <AssemblyName>CpuTempSensor</AssemblyName>
+    <RootNamespace>SysHv.Client.Sensors</RootNamespace>
+    <AssemblyName>SysHv.Client.Sensors</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

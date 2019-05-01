@@ -43,7 +43,7 @@ namespace SysHv.Client.WinService.Services
             Type sensorType = null;
 
             foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
-                foreach (var sensorPath in Directory.GetFiles(sensorDirectory, sensor.Contract + ".dll"))
+                foreach (var sensorPath in Directory.GetFiles(sensorDirectory, "*Sensor*.dll"))
                     sensorType = Assembly.LoadFile(sensorPath)
                         .GetTypes()
                         .FirstOrDefault(a => a.Name == sensor.Contract);

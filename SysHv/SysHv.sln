@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinAdminClient", "SysHv.Win
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "WinAdminClient.Setup", "SysHv.WinAdminClient\WinAdminClient.Setup\WinAdminClient.Setup\WinAdminClient.Setup.wixproj", "{2257B1DD-99F7-4256-8D08-4DE6953E9961}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpuTempSensor", "CpuTempSensor\CpuTempSensor.csproj", "{60561487-9685-46B0-8CAB-04F90204A06C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SysHv.Client.Sensors", "SysHv.Client.Sensors\SysHv.Client.Sensors.csproj", "{60561487-9685-46B0-8CAB-04F90204A06C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

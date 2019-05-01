@@ -32,12 +32,23 @@ namespace SysHv.Server.Controllers
             _receiver = receiver.Service ?? throw new ArgumentNullException(nameof(receiver));
         }
 
-
+        /// <summary>
+        ///     Login client computer. Creates server session for client and returns queue name
+        ///     in which client should push all sensor data.
+        /// </summary>
+        /// <param name="dto">Client login model</param>
+        /// <returns>
+        /// {
+        ///     Message: queue to push data
+        ///     Sensors: list of created sensors to activate for client
+        ///     Success: is client exist
+        /// }
+        /// </returns>
         [Route("login")]
         [HttpPost]
         public async Task<IActionResult> LoginClient([FromBody] ClientLoginDto dto)
         {
-            if (!ModelState.IsValid) return Json(new {success = false});
+            if (!ModelState.IsValid) return Json(new { success = false });
 
             var user = await _userManager.FindByEmailAsync(dto.Email);
 
@@ -46,14 +57,15 @@ namespace SysHv.Server.Controllers
             var client = await _clientService.GetClientByIpAsync(dto.Ip);
             var success = passwordCorrect && clientExist;
 
-            var queue = success ? dto.Ip : null;
+            if (!success) return Json(new Response { Success = false });
 
-            if (success) _receiver.RegisterClient(queue);
+            var queue = dto.Ip;
+            _receiver.RegisterClient(queue, user.Id);
 
             var sensors = await _sensorService.GetClientSensorsAsync(client.Id);
             var sensorDtos = sensors.Select(s => s.ToSensorDto());
 
-            return Json(new Response {Message = queue, Success = success, Sensors = sensorDtos});
+            return Json(new Response { Message = queue, Success = success, Sensors = sensorDtos });
         }
 
         [Route("register")]
@@ -61,7 +73,7 @@ namespace SysHv.Server.Controllers
         [Authorize("Bearer")]
         public async Task<IActionResult> RegisterClient([FromBody] ClientRegisterDto dto)
         {
-            if (!ModelState.IsValid || !User.Identity.IsAuthenticated) return Json(new {success = false});
+            if (!ModelState.IsValid || !User.Identity.IsAuthenticated) return Json(new { success = false });
 
             var user = await _userManager.FindByEmailAsync(User.Identity.Name);
             var client = new DAL.Models.Client
@@ -72,7 +84,7 @@ namespace SysHv.Server.Controllers
             };
             await _clientService.AddClientAsync(client, user);
 
-            return Json(new {success = true});
+            return Json(new { success = true });
         }
     }
 }

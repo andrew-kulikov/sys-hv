@@ -32,7 +32,7 @@ namespace SysHv.Server.HostedServices
             return Task.CompletedTask;
         }
 
-        public void RegisterClient(string queueName)
+        public void RegisterClient(string queueName, string userId)
         {
             using (var creator = new QueueCreator("localhost", "guest", "guest"))
             {

@@ -96,7 +96,7 @@ namespace SysHv.Client.WinService.Services
         private void LoginTimerElapsed(object sender, ElapsedEventArgs e)
         {
             var loginResponse = Login().Result;
-            if (loginResponse.Success)
+            if (loginResponse != null && loginResponse.Success)
             {
                 _timer.Enabled = true;
                 _loginTimer.Enabled = false;
@@ -119,7 +119,7 @@ namespace SysHv.Client.WinService.Services
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 var content = new StringContent(
-                    JsonConvert.SerializeObject(new { email = "123", password = "123Qwe!", ip = "178.122.194.35" }),
+                    JsonConvert.SerializeObject(new { email = "123", password = "123Qwe!", ip = "127.0.0.1"}),//"178.122.194.35" }),
                     Encoding.UTF8,
                     "application/json");
 

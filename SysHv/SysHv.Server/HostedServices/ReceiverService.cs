@@ -19,7 +19,7 @@ namespace SysHv.Server.HostedServices
 {
     public class ReceiverService : IHostedService, IDisposable
     {
-        private OneWayReceiver<RuntimeInfoDTO> _receiver;
+        private OneWayReceiver _receiver;
         private IHubContext<MonitoringHub> _hubContext;
 
         public ReceiverService(IHubContext<MonitoringHub> hubContext)
@@ -37,10 +37,10 @@ namespace SysHv.Server.HostedServices
             {
                 creator.TryCreateQueue(queueName);
             }
-            _receiver = new OneWayReceiver<RuntimeInfoDTO>(
+            _receiver = new OneWayReceiver(
                 new ConnectionModel("localhost", "guest", "guest"),
                 queueName);
-            _receiver.Receive(MessageReceived);
+            _receiver.Receive<RuntimeInfoDTO>((a) => _hubContext.Clients.All.SendAsync("UpdateReceived", a));
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

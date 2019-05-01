@@ -8,7 +8,7 @@ using SysHv.Client.Common.Models;
 
 namespace RabbitMQCommunications.Communications
 {
-    public class OneWayReceiver<T> : IEventingReceiver, IDisposable
+    public class OneWayReceiver : IEventingReceiver, IDisposable
     {
         #region Fields
 
@@ -56,7 +56,7 @@ namespace RabbitMQCommunications.Communications
             _consumer.Received += handler;
         }
 
-        public void Receive(Action<T> handler)
+        public void Receive<T>(Action<T> handler)
         {
             _consumer.Received += (model, ea) =>
             {

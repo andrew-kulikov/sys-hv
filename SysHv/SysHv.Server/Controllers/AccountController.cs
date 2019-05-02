@@ -24,31 +24,6 @@ namespace SysHv.Server.Controllers
             _tokenService = tokenService;
         }
 
-        [HttpGet]
-        //[Authorize("Bearer")]
-        public ActionResult<string> Get(int id)
-        {
-            var user = new ApplicationUser
-            {
-                UserName = "123",
-                Email = "123"
-            };
-            var success = false;
-            try
-            {
-                var registerResult = _userManager.CreateAsync(user, "123Qwe!").Result;
-                success = registerResult.Succeeded;
-            }
-            catch (Exception e)
-            {
-                return new JsonResult(new { success, message = e.Message, inner = e.InnerException.Message });
-            }
-
-            return new JsonResult(new { success });
-           
-            return "value";
-        }
-
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
@@ -57,7 +32,6 @@ namespace SysHv.Server.Controllers
             var loginResult = await _signInManager.PasswordSignInAsync(userLoginModel.Email, userLoginModel.Password, false, false);
             if (loginResult.Succeeded)
             {
-                var user = await _userManager.FindByEmailAsync(userLoginModel.Email);
                 var tokenExpires = DateTime.UtcNow.AddMinutes(720);
                 var token = _tokenService.GetToken(userLoginModel.Email, tokenExpires);
 

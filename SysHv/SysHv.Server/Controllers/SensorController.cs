@@ -21,11 +21,11 @@ namespace SysHv.Server.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("client/{id:int}")]
         [Authorize("Bearer")]
-        public Task<List<Sensor>> Get(int id)
+        public ActionResult<List<Sensor>> Get(int id)
         {
-            return _sensorService.GetClientSensorsAsync(id);
+            return Json(_sensorService.GetClientSensorsAsync(id).Result);
         }
     }
 }

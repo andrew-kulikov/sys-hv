@@ -18,5 +18,6 @@ namespace SysHv.Server.DAL.Models
         public float? CriticalValue { get; set; }
         public string Contract { get; set; }
         public ICollection<SubSensor> SubSensors { get; set; }
+        public ICollection<ClientSensor> ClientSensors { get; set; }
     }
 }

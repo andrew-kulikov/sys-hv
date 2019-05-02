@@ -49,7 +49,7 @@ namespace WinAdminClientCore.ViewModels
             };
 
             var connection = new HubConnectionBuilder()
-                .WithUrl(PropertiesManager.SignalRServer)
+                .WithUrl($"{PropertiesManager.SignalRServer}{PropertiesManager.Hub}")
                 .Build();
 
             connection.On<RuntimeInfoDTO>("UpdateReceived", ondata);

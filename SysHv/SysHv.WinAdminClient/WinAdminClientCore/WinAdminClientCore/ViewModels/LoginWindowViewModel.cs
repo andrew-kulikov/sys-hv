@@ -1,5 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Windows;
 using System.Windows.Input;
+using Newtonsoft.Json;
 using WinAdminClientCore.UIHelpers;
 
 namespace WinAdminClientCore.ViewModels
@@ -92,6 +96,18 @@ namespace WinAdminClientCore.ViewModels
             {
                 PropertiesManager.UserName = UserName;
                 PropertiesManager.Password = Password;
+            }
+            // todo: auth
+            var server = PropertiesManager.SignalRServer;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(server);
+
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue ("application/json"));
+
+                /*var content = new StringContent(
+                    JsonConvert.SerializeObject(new {email = UserName, Password = Password}));*/
             }
 
             var mainWindow = new MainWindow(new MainWindowViewModel());

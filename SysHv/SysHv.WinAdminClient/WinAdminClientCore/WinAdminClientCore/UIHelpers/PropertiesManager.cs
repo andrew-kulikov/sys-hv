@@ -57,5 +57,15 @@ namespace WinAdminClientCore.UIHelpers
                 config.Save(ConfigurationSaveMode.Modified);
             }
         }
+
+        public static string Hub
+        {
+            get => config.AppSettings.Settings["Hub"].Value;
+            set
+            {
+                config.AppSettings.Settings["Hub"].Value = value;
+                config.Save(ConfigurationSaveMode.Modified);
+            }
+        }
     }
 }

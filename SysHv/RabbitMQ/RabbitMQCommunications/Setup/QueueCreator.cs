@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
+using SysHv.Client.Common.Models;
 
 namespace RabbitMQCommunications.Setup
 {
@@ -11,29 +12,21 @@ namespace RabbitMQCommunications.Setup
     {
         #region Fields
 
-        private readonly string HostName;
-        private readonly string UserName;
-        private readonly string Password;
-        ConnectionFactory _connectionFactory;
-        IModel _model;
-        IConnection _connection;
+        private readonly IModel _model;
+        private readonly IConnection _connection;
 
         #endregion
 
-        public QueueCreator(string hostName, string userName, string password)
+        public QueueCreator(ConnectionModel connectionModel)
         {
-            HostName = hostName;
-            UserName = userName;
-            Password = password;
-
-            _connectionFactory = new ConnectionFactory()
+            var connectionFactory = new ConnectionFactory()
             {
-                HostName = HostName,
-                UserName = UserName,
-                Password = Password,
+                HostName = connectionModel.Host,
+                UserName = connectionModel.Username,
+                Password = connectionModel.Password,
             };
 
-            _connection = _connectionFactory.CreateConnection();
+            _connection = connectionFactory.CreateConnection();
             _model = _connection.CreateModel();
         }
 
@@ -45,7 +38,7 @@ namespace RabbitMQCommunications.Setup
         /// <param name="isExclusive">If queue exist only for current connection</param>
         /// <param name="autoDelete">If queue should be deleted after last consumer disconnects</param>
         /// <param name="arguments">Additional parameters</param>
-        /// <returns>if successfuly created - true, else - false</returns>
+        /// <returns>if successfully created - true, else - false</returns>
         public bool TryCreateQueue(string name, bool isDurable = false, bool isExclusive = false, bool autoDelete = false, IDictionary<string, object> arguments = null)
         {
             try

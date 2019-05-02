@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SysHv.Server.DAL;
 
 namespace SysHv.Server.DAL.Migrations
 {
     [DbContext(typeof(ServerDbContext))]
-    partial class ServerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190501210218_AddSubsensors")]
+    partial class AddSubsensors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,8 +259,6 @@ namespace SysHv.Server.DAL.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("OsType");
-
                     b.Property<string>("ReturnType");
 
                     b.HasKey("Id");
@@ -290,7 +290,7 @@ namespace SysHv.Server.DAL.Migrations
 
                     b.HasIndex("SensorId");
 
-                    b.ToTable("SubSensors");
+                    b.ToTable("SubSensor");
                 });
 
             modelBuilder.Entity("SysHv.Server.DAL.Models.ApplicationUser", b =>

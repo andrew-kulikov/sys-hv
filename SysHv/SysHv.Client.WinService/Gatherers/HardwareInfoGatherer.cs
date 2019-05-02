@@ -27,7 +27,7 @@ namespace SysHv.Client.WinService.Gatherers
 
         #region Private Methods
 
-        private ICollection<ProcessorDTO> GatherProcessors()
+        public ICollection<ProcessorDTO> GatherProcessors()
         {
             var processorsInfo = new ManagementClass(ProcessorsClass).GetInstances();
             var dtos = new List<ProcessorDTO>();

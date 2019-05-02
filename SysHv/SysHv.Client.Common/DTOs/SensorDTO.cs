@@ -12,6 +12,7 @@ namespace SysHv.Client.Common.DTOs
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsNumeric { get; set; }
+        public int Interval { get; set; }
         public string ReturnType { get; set; }
         public float? MinValue { get; set; }
         public float? MaxValue { get; set; }

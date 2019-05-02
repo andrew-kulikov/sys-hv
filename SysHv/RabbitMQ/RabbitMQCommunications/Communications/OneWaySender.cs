@@ -15,50 +15,39 @@ namespace RabbitMQCommunications.Communications
     /// </summary>
     public class OneWaySender : IDisposable
     {
-        #region Fields
-
-        protected PublishProperties _publishProperties;
-        protected IConnection _connection;
-        protected IModel _model;
-
-        #endregion
-
-        #region Constructors
+        protected PublishProperties PublishProperties;
+        protected IConnection Connection;
+        protected IModel Model;
 
         public OneWaySender(ConnectionModel connectionModel, PublishProperties publishProperties)
         {
-            _publishProperties = publishProperties;
+            PublishProperties = publishProperties;
 
-            _connection = new ConnectionFactory
+            Connection = new ConnectionFactory
             {
                 HostName = connectionModel.Host,
                 UserName = connectionModel.Username,
                 Password = connectionModel.Password,
             }.CreateConnection();
 
-            _model = _connection.CreateModel();
-        }
-
-        #endregion
-
-        #region Interfaces
-
-        public void Dispose()
-        {
-            _model?.Abort();
-            _connection?.Close();
+            Model = Connection.CreateModel();
         }
 
         public void Send<T>(T dto)
         {
-            var properties = _model.CreateBasicProperties();
-            var json = JsonConvert.SerializeObject(dto);
+            var properties = Model.CreateBasicProperties();
+            properties.Type = typeof(T).ToString();
 
+            var json = JsonConvert.SerializeObject(dto);
             var messageBuffer = Encoding.UTF8.GetBytes(json);
 
-            _model.BasicPublish(_publishProperties.ExchangeName, _publishProperties.QueueName, properties, messageBuffer);
+            Model.BasicPublish(PublishProperties.ExchangeName, PublishProperties.QueueName, properties, messageBuffer);
         }
 
-        #endregion
+        public void Dispose()
+        {
+            Model?.Abort();
+            Connection?.Close();
+        }
     }
 }

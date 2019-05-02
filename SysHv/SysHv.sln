@@ -27,11 +27,11 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SysHv.WinClient.Setup", "Sy
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinAdminClient", "WinAdminClient", "{CF73C88E-C55D-4C1D-A4C4-28CFB3400C28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpuTempSensor", "CpuTempSensor\CpuTempSensor.csproj", "{60561487-9685-46B0-8CAB-04F90204A06C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinAdminClientCore", "SysHv.WinAdminClient\WinAdminClientCore\WinAdminClientCore\WinAdminClientCore.csproj", "{89E79EF7-6841-4FF2-A4F8-414CB1D8852C}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "WinAdminClientCore.Setup", "SysHv.WinAdminClient\WinAdminClientCore.Setup\WinAdminClientCore.Setup.wixproj", "{3BB50B36-A624-486D-8EA9-F57246F56234}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SysHv.Client.Sensors", "SysHv.Client.Sensors\SysHv.Client.Sensors.csproj", "{60561487-9685-46B0-8CAB-04F90204A06C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

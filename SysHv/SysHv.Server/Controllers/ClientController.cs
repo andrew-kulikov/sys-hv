@@ -32,27 +32,41 @@ namespace SysHv.Server.Controllers
             _receiver = receiver.Service ?? throw new ArgumentNullException(nameof(receiver));
         }
 
+        /// <summary>
+        ///     Login client computer. Creates server session for client and returns queue name
+        ///     in which client should push all sensor data.
+        /// </summary>
+        /// <param name="dto">Client login model</param>
+        /// <returns>
+        ///     {
+        ///     Message: queue to push data
+        ///     Sensors: list of created sensors to activate for client
+        ///     Success: is client exist
+        ///     }
+        /// </returns>
         [Route("login")]
         [HttpPost]
         public async Task<IActionResult> LoginClient([FromBody] ClientLoginDto dto)
         {
-            if (!ModelState.IsValid) return Json(new {success = false});
+            if (!ModelState.IsValid) return Json(new Response { Success = false, Message = "Model invalid" });
 
             var user = await _userManager.FindByEmailAsync(dto.Email);
 
-            var passwordCorrect = await _userManager.CheckPasswordAsync(user, dto.Password);
-            var clientExist = await _clientService.ClientExistAsync(dto.Ip, user.Id);
-            var client = await _clientService.GetClientByIpAsync(dto.Ip);
-            var success = passwordCorrect && clientExist;
+            if (user.PasswordHash != dto.PasswordHash)
+                return Json(new Response { Success = false, Message = "Wrong password" });
 
-            var queue = success ? dto.Ip : null;
+            var clientExist = await _clientService.ClientIdExistAsync(dto.Id, user.Id);
+            var client = await _clientService.GetClientByIdAsync(dto.Id);
 
-            if (success) _receiver.RegisterClient(queue);
+            if (!clientExist) return Json(new Response { Success = false, Message = "Client does not exist" });
+
+            var queue = dto.Id.ToString();
+            _receiver.RegisterClient(queue, user.Id);
 
             var sensors = await _sensorService.GetClientSensorsAsync(client.Id);
             var sensorDtos = sensors.Select(s => s.ToSensorDto());
 
-            return Json(new Response {Message = queue, Success = success, Sensors = sensorDtos});
+            return Json(new Response { Message = queue, Success = true, Sensors = sensorDtos });
         }
 
         [Route("register")]
@@ -60,7 +74,7 @@ namespace SysHv.Server.Controllers
         [Authorize("Bearer")]
         public async Task<IActionResult> RegisterClient([FromBody] ClientRegisterDto dto)
         {
-            if (!ModelState.IsValid || !User.Identity.IsAuthenticated) return Json(new {success = false});
+            if (!ModelState.IsValid || !User.Identity.IsAuthenticated) return Json(new { success = false });
 
             var user = await _userManager.FindByEmailAsync(User.Identity.Name);
             var client = new DAL.Models.Client
@@ -71,7 +85,7 @@ namespace SysHv.Server.Controllers
             };
             await _clientService.AddClientAsync(client, user);
 
-            return Json(new {success = true});
+            return Json(new { success = true });
         }
     }
 }

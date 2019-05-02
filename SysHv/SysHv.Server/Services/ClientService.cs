@@ -58,6 +58,11 @@ namespace SysHv.Server.Services
             return _context.Clients.AnyAsync(c => c.Ip == ip && c.User.Id == userId);
         }
 
+        public Task<bool> ClientIdExistAsync(int id, string userId)
+        {
+            return _context.Clients.AnyAsync(c => c.Id == id && c.User.Id == userId);
+        }
+
         public async Task AddClientAsync(DAL.Models.Client client, ApplicationUser admin)
         {
             client.User = admin;

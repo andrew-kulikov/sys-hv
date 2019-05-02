@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SysHv.Server.DAL;
 
 namespace SysHv.Server.DAL.Migrations
 {
     [DbContext(typeof(ServerDbContext))]
-    partial class ServerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190501204200_AddIntervalToClientSensor")]
+    partial class AddIntervalToClientSensor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,40 +259,11 @@ namespace SysHv.Server.DAL.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("OsType");
-
                     b.Property<string>("ReturnType");
 
                     b.HasKey("Id");
 
                     b.ToTable("Sensors");
-                });
-
-            modelBuilder.Entity("SysHv.Server.DAL.Models.SubSensor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<float?>("CriticalValue");
-
-                    b.Property<string>("Description");
-
-                    b.Property<bool>("IsNumeric");
-
-                    b.Property<float?>("MaxValue");
-
-                    b.Property<float?>("MinValue");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("SensorId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SensorId");
-
-                    b.ToTable("SubSensors");
                 });
 
             modelBuilder.Entity("SysHv.Server.DAL.Models.ApplicationUser", b =>
@@ -363,14 +336,6 @@ namespace SysHv.Server.DAL.Migrations
 
                     b.HasOne("SysHv.Server.DAL.Models.Sensor", "Sensor")
                         .WithMany()
-                        .HasForeignKey("SensorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SysHv.Server.DAL.Models.SubSensor", b =>
-                {
-                    b.HasOne("SysHv.Server.DAL.Models.Sensor", "Sensor")
-                        .WithMany("SubSensors")
                         .HasForeignKey("SensorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,37 +9,50 @@ using Newtonsoft.Json;
 using RabbitMQ.Client.Events;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Setup;
-using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.DTOs.SensorOutput;
-using SysHv.Client.Common.Models;
+using SysHv.Server.Helpers;
 using SysHv.Server.Hubs;
 
 namespace SysHv.Server.HostedServices
 {
     public class ReceiverService : IHostedService, IDisposable
     {
-        private OneWayReceiver _receiver;
-        private IHubContext<MonitoringHub> _hubContext;
+        private readonly IConfigurationHelper _configurationHelper;
+        private readonly IHubContext<MonitoringHub> _hubContext;
+        private IDictionary<string, OneWayReceiver> _userReceivers;
 
-        public ReceiverService(IHubContext<MonitoringHub> hubContext)
+        public ReceiverService(IHubContext<MonitoringHub> hubContext, IConfigurationHelper configurationHelper)
         {
             _hubContext = hubContext;
-        }
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
+            _configurationHelper = configurationHelper;
+
+            _userReceivers = new Dictionary<string, OneWayReceiver>();
         }
 
-        public void RegisterClient(string queueName)
+        public void RegisterClient(string queueName, string userId)
         {
-            using (var creator = new QueueCreator("localhost", "guest", "guest"))
+            using (var creator = new QueueCreator(_configurationHelper.ConnectionInfo))
             {
                 creator.TryCreateQueue(queueName);
             }
-            _receiver = new OneWayReceiver(
-                new ConnectionModel("localhost", "guest", "guest"),
-                queueName);
-            _receiver.Receive(MessageReceived);
+
+            var receiver = new OneWayReceiver(_configurationHelper.ConnectionInfo, queueName);
+            receiver.Receive(MessageReceived);
+
+            _userReceivers[userId] = receiver;
+        }
+
+        private void MessageReceived(object sender, BasicDeliverEventArgs ea)
+        {
+            var message = Encoding.UTF8.GetString(ea.Body);
+            var type = ea.BasicProperties.Type;
+            
+            _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject(message));
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -49,15 +60,12 @@ namespace SysHv.Server.HostedServices
             return Task.CompletedTask;
         }
 
-        private void MessageReceived(object sender, BasicDeliverEventArgs ea)
-        {
-            var message = Encoding.UTF8.GetString(ea.Body);
-            _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject<RuntimeInfoDTO>(message));
-        }
-
         public void Dispose()
         {
-            _receiver.Dispose();
+            foreach (var receiver in _userReceivers.Values)
+            {
+                receiver.Dispose();
+            }
         }
     }
 }

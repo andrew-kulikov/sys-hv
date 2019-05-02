@@ -1,26 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 using SysHv.Server.Configuration;
 using SysHv.Server.DAL;
 using SysHv.Server.DAL.Models;
+using SysHv.Server.Helpers;
 using SysHv.Server.HostedServices;
 using SysHv.Server.Hubs;
 using SysHv.Server.Services;
@@ -33,6 +30,7 @@ namespace SysHv.Server
         private const string TokenAudience = "ExampleAudience";
         private const string TokenIssuer = "ExampleIssuer";
         private TokenConfiguration _tokenOptions;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -58,7 +56,8 @@ namespace SysHv.Server
                 builder =>
                 {
                     builder.AllowAnyMethod().AllowAnyHeader()
-                        .WithOrigins("http://localhost:3000", "https://localhost:3000", "https://syshv.azurewebsites.net", "http://syshv.azurewebsites.net")
+                        .WithOrigins("http://localhost:3000", "https://localhost:3000",
+                            "https://syshv.azurewebsites.net", "http://syshv.azurewebsites.net")
                         .AllowCredentials();
                 }));
 
@@ -67,14 +66,29 @@ namespace SysHv.Server
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             //services.AddHostedService<ReceiverService>();
-            
 
             ConfigureTokenAuthorization(services);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                    new Info
+                    {
+                        Title = "SysHv Server API", Version = "v1"
+                    }); 
+                
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
+
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<ISensorService, SensorService>();
             services.AddSingleton<IHostedService, ReceiverService>();
+            services.AddSingleton<IConfigurationHelper, ConfigurationHelper>();
             services.AddTransient<IHostedServiceAccessor<ReceiverService>, HostedServiceAccessor<ReceiverService>>();
         }
 
@@ -82,22 +96,22 @@ namespace SysHv.Server
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
             else
-            {
                 app.UseHsts();
-            }
 
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<MonitoringHub>("/monitoringHub");
-            });
+            app.UseSignalR(routes => { routes.MapHub<MonitoringHub>("/monitoringHub"); });
 
             app.UseAuthentication();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SysHv Server API v1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseMvc();
         }

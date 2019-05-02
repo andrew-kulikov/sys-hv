@@ -74,7 +74,7 @@ namespace SysHv.Server.Controllers
         [Authorize("Bearer")]
         public async Task<IActionResult> RegisterClient([FromBody] ClientRegisterDto dto)
         {
-            if (!ModelState.IsValid || !User.Identity.IsAuthenticated) return Json(new { success = false });
+            if (!ModelState.IsValid) return Json(new { success = false });
 
             var user = await _userManager.FindByEmailAsync(User.Identity.Name);
             var client = new DAL.Models.Client

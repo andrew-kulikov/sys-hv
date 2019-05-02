@@ -46,22 +46,6 @@ namespace SysHv.Client.WinService.Services
         {
             var sensorType = _assemblies.SelectMany(a => a.GetTypes()).FirstOrDefault(a => a.Name == sensor.Contract);
 
-            if (sensorType != null)
-            {
-                var sensorInstance = Activator.CreateInstance(sensorType);
-
-                var collect = sensorType.GetMethod("Collect");
-                var result = collect?.Invoke(sensorInstance, new object[] { });
-
-                Console.WriteLine($"{sensorType.Namespace} : {sensorType.Name}");
-                Console.WriteLine(result);
-            }
-            else
-            {
-                Console.WriteLine("Not found");
-            }
-
-
             return (sender, args) =>
             {
                 using (var rabbitSender = new OneWaySender(new ConnectionModel(),
@@ -75,7 +59,6 @@ namespace SysHv.Client.WinService.Services
 
                         result = collect?.Invoke(sensorInstance, new object[] { });
 
-                        Console.WriteLine($"{sensorType.Namespace} : {sensorType.Name}");
                         Console.WriteLine(result);
                     }
                     else
@@ -84,7 +67,12 @@ namespace SysHv.Client.WinService.Services
                         return;
                     }
 
-                    rabbitSender.Send(result);
+                    rabbitSender.Send(new SensorResponse
+                    {
+                        ClientId = 1,
+                        SensorId = sensor.Id,
+                        Value = result
+                    });
                 }
             };
         }

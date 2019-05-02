@@ -10,10 +10,8 @@ namespace SysHv.Client.Sensors
 {
     public class CpuLoadSensor
     {
-        private readonly object _locker = new object();
         public CPULoadSensorDto Collect()
         {
-         
                 var updateVisitor = new UpdateVisitor();
                 var computer = new Computer();
 
@@ -41,7 +39,6 @@ namespace SysHv.Client.Sensors
                 computer.Close();
 
                 return load;
-            
         }
     }
 }

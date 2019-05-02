@@ -7,17 +7,14 @@ namespace SysHv.Client.Sensors
 {
     public class CpuTempSensor
     {
-        private readonly object _locker = new object();
         public CPULoadSensorDto Collect()
         {
                 var updateVisitor = new UpdateVisitor();
                 var computer = new Computer();
 
-
                 computer.Open();
                 computer.CPUEnabled = true;
                 computer.Accept(updateVisitor);
-
 
                 // Now loads one processor
                 var processor = computer.Hardware
@@ -39,7 +36,6 @@ namespace SysHv.Client.Sensors
                 computer.Close();
 
                 return load;
-            
         }
     }
 }

@@ -18,15 +18,15 @@ namespace WinAdminClientCore.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private DispatcherizedObservableCollection<ProcessorLoadDTO> _cpuLoad;
+        private DispatcherizedObservableCollection<ComputerInfoViewModel> _computers;
 
-        public DispatcherizedObservableCollection<ProcessorLoadDTO> CpuLoad
+        public DispatcherizedObservableCollection<ComputerInfoViewModel> Computers
         {
-            get => _cpuLoad;
+            get => _computers;
             set
             {
-                _cpuLoad = value;
-                OnPropertyChanged(nameof(CpuLoad));
+                _computers = value;
+                OnPropertyChanged(nameof(Computers));
             }
         }
 
@@ -43,7 +43,10 @@ namespace WinAdminClientCore.ViewModels
                 new DefaultComputerInfo() { DisplayName = "zxc"}
             };*/
 
-            CpuLoad = new DispatcherizedObservableCollection<ProcessorLoadDTO>();
+            Computers = new DispatcherizedObservableCollection<ComputerInfoViewModel>()
+            {
+                new ComputerInfoViewModel()
+            };
 
             var connection = new HubConnectionBuilder()
                 .WithUrl(PropertiesManager.SignalRServer)
@@ -88,54 +91,10 @@ namespace WinAdminClientCore.ViewModels
 
 
 
-
-
-            /*Task.Run(() =>
-            {
-                var r = new Random();
-                while (true)
-                {
-                    Thread.Sleep(500);
-                    _trend += (r.NextDouble() > 0.3 ? 1 : -1)*r.Next(0, 5);
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        LastHourSeries[0].Values.Add(new ObservableValue(_trend));
-                        LastHourSeries[0].Values.RemoveAt(0);
-                        SetLecture();
-                    });
-                }
-            });*/
         }
 
         public SeriesCollection LastHourSeries { get; set; }
 
-        public double LastLecture
-        {
-            get { return _lastLecture; }
-            set
-            {
-                _lastLecture = value;
-                OnPropertyChanged("LastLecture");
-            }
-        }
-
-        private void SetLecture()
-        {
-            var target = ((ChartValues<ObservableValue>)LastHourSeries[0].Values).Last().Value;
-            var step = (target - _lastLecture) / 4;
-
-
-            Task.Run(() =>
-            {
-                for (var i = 0; i < 4; i++)
-                {
-                    Thread.Sleep(100);
-                    LastLecture += step;
-                }
-                LastLecture = target;
-            });
-
-        }
 
         void ondata(RuntimeInfoDTO o)
         {
@@ -143,12 +102,13 @@ namespace WinAdminClientCore.ViewModels
             Console.WriteLine(o.GetType());
             foreach (var dto in o.CouLoad)
             {
-                LastHourSeries[0].Values.Add(new ObservableValue(dto.Value ?? 0));
+                Computers[0].AddTemperatureDot(new ObservableValue(dto.Value ?? 0));
+                //LastHourSeries[0].Values.Add(new ObservableValue(dto.Value ?? 0));
             }
-            for(int i = 0, len = LastHourSeries[0].Values.Count / 3; i < len; i++)
+            /*for(int i = 0, len = LastHourSeries[0].Values.Count / 3; i < len; i++)
             {
                 LastHourSeries[0].Values.RemoveAt(0);
-            }
+            }*/
             //MessageBox.Show(o.CouLoad.Count.ToString());
 
         }

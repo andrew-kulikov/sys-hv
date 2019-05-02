@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="WinAdminClientCore.Setup" Language="1033" Version="1.0.0.0" Manufacturer="SysHv Team" UpgradeCode="d22d8e27-80e6-4ebc-b38b-203c5f70aee1">
+  <Product Id="*" Name="Sys Admin Heaven Wpf" Language="1033" Version="1.0.0.0" Manufacturer="SysHv Team" UpgradeCode="d22d8e27-80e6-4ebc-b38b-203c5f70aee1">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes"/>
 
     <UIRef Id="WixUI_InstallDir"/>
+
+    <WixVariable Id="WixUILicenseRtf" Value=".\Visuals\License.rtf" />
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
 
     <Feature Id="ProductFeature" Title="WinAdminClientCore.Setup" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
@@ -15,143 +19,143 @@
 
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
+      <!--<Directory Id="ProgramFilesFolder">-->
         <Directory Id="INSTALLFOLDER" Name="Sys Admin Heaven Wpf" />
-      </Directory>
+      <!--</Directory>-->
     </Directory>
   </Fragment>
 
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <Component Id="ProductComponent">
+      <Component Id="ProductComponent" Guid="C426B6EE-2A49-447C-894D-A413BCC2E42F">
         <File Id="WinAdminClientExe" Source="$(var.WinAdminClientCore.TargetDir)WinAdminClientCore.exe"/>
       </Component>
 
-      <Component Id="ControlzEx">
+      <Component Id="ControlzEx" Guid="00192A82-5286-4D34-A277-66859447E10B">
         <File Id="ControlzEx" Source="$(var.WinAdminClientCore.TargetDir)ControlzEx.dll"/>
       </Component>
 
-      <Component Id="LiveCharts">
+      <Component Id="LiveCharts" Guid="0202B856-2F82-4239-94AD-ECCD22D3A13E">
         <File Id="LiveCharts" Source="$(var.WinAdminClientCore.TargetDir)LiveCharts.dll"/>
       </Component>
 
-      <Component Id="LiveChartsWpf">
+      <Component Id="LiveChartsWpf" Guid="3BC77F40-D943-4BBC-9E8C-F28AFF8D0D9A">
         <File Id="LiveChartsWpf" Source="$(var.WinAdminClientCore.TargetDir)LiveCharts.Wpf.dll"/>
       </Component>
 
-      <Component Id="MahAppsMetro">
+      <Component Id="MahAppsMetro" Guid="095AF816-4900-4601-A9B0-1E916EAD3242">
         <File Id="MahAppsMetro" Source="$(var.WinAdminClientCore.TargetDir)MahApps.Metro.dll"/>
       </Component>
 
-      <Component Id="MaterialDesignColors">
+      <Component Id="MaterialDesignColors" Guid="8EDB003B-557E-4EDB-B8AD-53753EEB6CCF">
         <File Id="MaterialDesignColors" Source="$(var.WinAdminClientCore.TargetDir)MaterialDesignColors.dll"/>
       </Component>
 
-      <Component Id="MaterialDesignThemesMahApps">
+      <Component Id="MaterialDesignThemesMahApps" Guid="FFE36A13-9FE5-4903-A3AF-1810060FB433">
         <File Id="MaterialDesignThemesMahApps" Source="$(var.WinAdminClientCore.TargetDir)MaterialDesignThemes.MahApps.dll"/>
       </Component>
 
-      <Component Id="MaterialDesignThemesWpf">
+      <Component Id="MaterialDesignThemesWpf" Guid="677849D1-214A-47CA-8795-E9A3863F6E48">
         <File Id="MaterialDesignThemesWpf" Source="$(var.WinAdminClientCore.TargetDir)MaterialDesignThemes.Wpf.dll"/>
       </Component>
 
-      <Component Id="MicrosoftAspNetCoreConnectionsAbstractions">
+      <Component Id="MicrosoftAspNetCoreConnectionsAbstractions" Guid="2934C3DA-838B-41F3-AFB5-B4231E72C5A5">
         <File Id="MicrosoftAspNetCoreConnectionsAbstractions" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.AspNetCore.Connections.Abstractions.dll"/>
       </Component>
 
-      <Component Id="MicrosoftAspNetCoreHttpConnectionsClient">
+      <Component Id="MicrosoftAspNetCoreHttpConnectionsClient" Guid="1C500128-38B4-4B12-BFAD-74CE9A0F82BA">
         <File Id="MicrosoftAspNetCoreHttpConnectionsClient" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.AspNetCore.Http.Connections.Client.dll"/>
       </Component>
 
-      <Component Id="MicrosoftAspNetCoreHttpConnectionsCommon">
+      <Component Id="MicrosoftAspNetCoreHttpConnectionsCommon" Guid="75E4CF41-E50C-4E19-A8A6-5E0E23A64E0F">
         <File Id="MicrosoftAspNetCoreHttpConnectionsCommon" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.AspNetCore.Http.Connections.Common.dll"/>
       </Component>
 
-      <Component Id="MicrosoftAspNetCoreHttpFeatures">
+      <Component Id="MicrosoftAspNetCoreHttpFeatures" Guid="93845EBA-9838-43DE-B22E-6F5A020F8310">
         <File Id="MicrosoftAspNetCoreHttpFeatures" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.AspNetCore.Http.Features.dll"/>
       </Component>
 
-      <Component Id="MicrosoftAspNetCoreSignalRClientCore">
+      <Component Id="MicrosoftAspNetCoreSignalRClientCore" Guid="3E8AF3BF-8BD3-4684-A3F0-A1C40A9D29A6">
         <File Id="MicrosoftAspNetCoreSignalRClientCore" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.AspNetCore.SignalR.Client.Core.dll"/>
       </Component>
 
-      <Component Id="MicrosoftAspNetCoreSignalRClient">
+      <Component Id="MicrosoftAspNetCoreSignalRClient" Guid="7540F2BA-9EA4-47F4-80D8-7895B2541F45">
         <File Id="MicrosoftAspNetCoreSignalRClient" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.AspNetCore.SignalR.Client.dll"/>
       </Component>
 
-      <Component Id="MicrosoftAspNetCoreSignalRCommon">
+      <Component Id="MicrosoftAspNetCoreSignalRCommon" Guid="8547CF7C-BEE5-4500-BEEB-07F14E573A34">
         <File Id="MicrosoftAspNetCoreSignalRCommon" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.AspNetCore.SignalR.Common.dll"/>
       </Component>
 
-      <Component Id="MicrosoftAspNetCoreSignalRProtocolsJson">
+      <Component Id="MicrosoftAspNetCoreSignalRProtocolsJson" Guid="1BB4A13F-270F-45E7-8292-3615809B1F24">
         <File Id="MicrosoftAspNetCoreSignalRProtocolsJson" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.AspNetCore.SignalR.Protocols.Json.dll"/>
       </Component>
 
-      <Component Id="MicrosoftExtensionsConfigurationAbstractions">
+      <Component Id="MicrosoftExtensionsConfigurationAbstractions" Guid="E351A072-AC19-4B4A-92B8-9570964CF1B6">
         <File Id="MicrosoftExtensionsConfigurationAbstractions" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.Configuration.Abstractions.dll"/>
       </Component>
 
-      <Component Id="MicrosoftExtensionsConfigurationBinder">
+      <Component Id="MicrosoftExtensionsConfigurationBinder" Guid="FBF17773-2328-4CCD-B719-AC68512C8B6E">
         <File Id="MicrosoftExtensionsConfigurationBinder" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.Configuration.Binder.dll"/>
       </Component>
 
-      <Component Id="MicrosoftExtensionsConfiguration">
+      <Component Id="MicrosoftExtensionsConfiguration" Guid="FDA6092A-8B50-437B-A6AA-AC7AEDFD0BDD">
         <File Id="MicrosoftExtensionsConfiguration" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.Configuration.dll"/>
       </Component>
 
-      <Component Id="MicrosoftExtensionsDependencyInjectionAbstractions">
+      <Component Id="MicrosoftExtensionsDependencyInjectionAbstractions" Guid="D5191B74-E10E-408C-9D7D-2FF09276B8B7">
         <File Id="MicrosoftExtensionsDependencyInjectionAbstractions" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.DependencyInjection.Abstractions.dll"/>
       </Component>
 
-      <Component Id="MicrosoftExtensionsDependencyInjection">
+      <Component Id="MicrosoftExtensionsDependencyInjection" Guid="BA9B6B73-7560-4736-A185-F54A80B6A05F">
         <File Id="MicrosoftExtensionsDependencyInjection" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.DependencyInjection.dll"/>
       </Component>
 
-      <Component Id="MicrosoftExtensionsLoggingAbstractions">
+      <Component Id="MicrosoftExtensionsLoggingAbstractions" Guid="1D716B3F-6BCB-47FE-BBDD-7E875000CF1C">
         <File Id="MicrosoftExtensionsLoggingAbstractions" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.Logging.Abstractions.dll"/>
       </Component>
 
-      <Component Id="MicrosoftExtensionsLogging">
+      <Component Id="MicrosoftExtensionsLogging" Guid="86AAD5DF-9229-40AF-AB7A-B0A8881AE45B">
         <File Id="MicrosoftExtensionsLogging" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.Logging.dll"/>
       </Component>
 
-      <Component Id="MicrosoftExtensionsOptions">
+      <Component Id="MicrosoftExtensionsOptions" Guid="384C9627-6B5F-4893-8431-28CEDAFE8A7E">
         <File Id="MicrosoftExtensionsOptions" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.Options.dll"/>
       </Component>
 
-      <Component Id="MicrosoftExtensionsPrimitives">
+      <Component Id="MicrosoftExtensionsPrimitives" Guid="2DCA5069-6296-46C6-B767-1D3D93EFDB75">
         <File Id="MicrosoftExtensionsPrimitives" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.Primitives.dll"/>
       </Component>
 
-      <Component Id="NewtonsoftJson">
+      <Component Id="NewtonsoftJson" Guid="95A420FD-3183-4FDD-8295-83F4BF0DE115">
         <File Id="NewtonsoftJson" Source="$(var.WinAdminClientCore.TargetDir)Newtonsoft.Json.dll"/>
       </Component>
 
-      <Component Id="SysHvClientCommon">
+      <Component Id="SysHvClientCommon" Guid="9F6493F4-DEF8-400F-BC0A-2D8DB38DA22C">
         <File Id="SysHvClientCommon" Source="$(var.WinAdminClientCore.TargetDir)SysHv.Client.Common.dll"/>
       </Component>
 
-      <Component Id="SystemIOPipelines">
+      <Component Id="SystemIOPipelines" Guid="A6A95468-1C39-40AA-B928-8C32A5E0EA2B">
         <File Id="SystemIOPipelines" Source="$(var.WinAdminClientCore.TargetDir)System.IO.Pipelines.dll"/>
       </Component>
 
-      <Component Id="SystemThreadingChannels">
+      <Component Id="SystemThreadingChannels" Guid="D7E7C613-ED3C-412D-81A9-F18D5712FA4B">
         <File Id="SystemThreadingChannels" Source="$(var.WinAdminClientCore.TargetDir)System.Threading.Channels.dll"/>
       </Component>
 
-      <Component Id="SystemWindowsInteractivity">
+      <Component Id="SystemWindowsInteractivity" Guid="96A6859D-4D8D-4516-97C0-D0A4507E60B2">
         <File Id="SystemWindowsInteractivity" Source="$(var.WinAdminClientCore.TargetDir)System.Windows.Interactivity.dll"/>
       </Component>
 
-      <Component Id="WinAdminClientCore">
+      <Component Id="WinAdminClientCore" Guid="82E08C57-E6B7-4CAF-AF96-A52CD962A70B">
         <File Id="WinAdminClientCore" Source="$(var.WinAdminClientCore.TargetDir)WinAdminClientCore.dll"/>
       </Component>
 
-      <Component Id="RuntimeConfig">
+      <Component Id="RuntimeConfig" Guid="98250E90-FF47-4828-AB6A-32A19DCFDC6B">
         <File Id="RuntimeConfig" Source="$(var.WinAdminClientCore.TargetDir)WinAdminClientCore.runtimeconfig.json"/>
       </Component>
 
-      <Component Id="WinAdminClientCoreConfig">
+      <Component Id="WinAdminClientCoreConfig" Guid="58CD8C56-9977-4514-9D1E-D96287F290BF">
         <File Id="WinAdminClientCoreConfig" Source="$(var.WinAdminClientCore.TargetDir)WinAdminClientCore.dll.config"/>
       </Component>
 

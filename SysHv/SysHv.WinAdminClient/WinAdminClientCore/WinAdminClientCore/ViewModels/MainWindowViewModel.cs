@@ -9,6 +9,7 @@ using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using SysHv.Client.Common.DTOs.SensorOutput;
 using WinAdminClientCore.Collections;
 using WinAdminClientCore.Models;
@@ -52,7 +53,7 @@ namespace WinAdminClientCore.ViewModels
                 .WithUrl($"{PropertiesManager.SignalRServer}{PropertiesManager.Hub}")
                 .Build();
 
-            connection.On<RuntimeInfoDTO>("UpdateReceived", ondata);
+            connection.On<object>("UpdateReceived", ondata);
             connection.StartAsync();
 
 
@@ -96,15 +97,16 @@ namespace WinAdminClientCore.ViewModels
         public SeriesCollection LastHourSeries { get; set; }
 
 
-        void ondata(RuntimeInfoDTO o)
+        void ondata(object o)
         {
-            //MessageBox.Show(o.ToString());
-            Console.WriteLine(o.GetType());
-            foreach (var dto in o.CouLoad)
+            var obj = JsonConvert.DeserializeObject<SensorResponse>(o.ToString());
+            
+            MessageBox.Show(obj.GetType().ToString());
+            //Console.WriteLine(o.GetType());
+            /*foreach (var dto in o.CouLoad)
             {
                 Computers[0].AddTemperatureDot(new ObservableValue(dto.Value ?? 0));
-                //LastHourSeries[0].Values.Add(new ObservableValue(dto.Value ?? 0));
-            }
+            }*/
             /*for(int i = 0, len = LastHourSeries[0].Values.Count / 3; i < len; i++)
             {
                 LastHourSeries[0].Values.RemoveAt(0);

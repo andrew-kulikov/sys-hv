@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -102,9 +103,11 @@ namespace SysHv.Server
 
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
-            app.UseSignalR(routes => { routes.MapHub<MonitoringHub>("/monitoringHub"); });
 
             app.UseAuthentication();
+            app.UseSignalR(routes => { routes.MapHub<MonitoringHub>("/monitoringHub"); });
+
+            
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -140,11 +143,11 @@ namespace SysHv.Server
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer(x =>
+                .AddJwtBearer(options =>
                 {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = key,
@@ -152,6 +155,23 @@ namespace SysHv.Server
                         ClockSkew = TimeSpan.FromMinutes(0),
                         ValidIssuer = _tokenOptions.Issuer,
                         ValidAudience = _tokenOptions.Audience
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/monitoringHub")))
+                            {
+                                // Read the token out of the query string
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
         }

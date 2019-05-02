@@ -14,6 +14,6 @@ namespace SysHv.Client.Common.DTOs.SensorOutput
             public float Load { get; set; } 
         }
         public float TotalLoad { get; set; }
-        public IEnumerable<CPUCoreLoadDto> CoreLoads { get; set; }
+        public IEnumerable<CPUCoreLoadDto> SubSensors { get; set; }
     }
 }

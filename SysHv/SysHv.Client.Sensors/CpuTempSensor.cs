@@ -26,7 +26,7 @@ namespace SysHv.Client.Sensors
                 var temperatureSensors = processor.Sensors.Where(s => s.SensorType == SensorType.Temperature).ToList();
 
                 load.TotalLoad = temperatureSensors.FirstOrDefault(s => s.Name == "CPU Package")?.Value ?? 0;
-                load.CoreLoads = temperatureSensors.Where(s => s.Name.StartsWith("CPU Core"))
+                load.SubSensors = temperatureSensors.Where(s => s.Name.StartsWith("CPU Core"))
                     .Select(s => new CPULoadSensorDto.CPUCoreLoadDto
                     {
                         CoreName = s.Name,

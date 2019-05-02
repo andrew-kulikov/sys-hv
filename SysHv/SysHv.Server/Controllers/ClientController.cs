@@ -38,34 +38,35 @@ namespace SysHv.Server.Controllers
         /// </summary>
         /// <param name="dto">Client login model</param>
         /// <returns>
-        /// {
+        ///     {
         ///     Message: queue to push data
         ///     Sensors: list of created sensors to activate for client
         ///     Success: is client exist
-        /// }
+        ///     }
         /// </returns>
         [Route("login")]
         [HttpPost]
         public async Task<IActionResult> LoginClient([FromBody] ClientLoginDto dto)
         {
-            if (!ModelState.IsValid) return Json(new { success = false });
+            if (!ModelState.IsValid) return Json(new Response { Success = false, Message = "Model invalid" });
 
             var user = await _userManager.FindByEmailAsync(dto.Email);
 
-            var passwordCorrect = await _userManager.CheckPasswordAsync(user, dto.Password);
-            var clientExist = await _clientService.ClientExistAsync(dto.Ip, user.Id);
-            var client = await _clientService.GetClientByIpAsync(dto.Ip);
-            var success = passwordCorrect && clientExist;
+            if (user.PasswordHash != dto.PasswordHash)
+                return Json(new Response { Success = false, Message = "Wrong password" });
 
-            if (!success) return Json(new Response { Success = false });
+            var clientExist = await _clientService.ClientIdExistAsync(dto.Id, user.Id);
+            var client = await _clientService.GetClientByIdAsync(dto.Id);
 
-            var queue = dto.Ip;
+            if (!clientExist) return Json(new Response { Success = false, Message = "Client does not exist" });
+
+            var queue = dto.Id.ToString();
             _receiver.RegisterClient(queue, user.Id);
 
             var sensors = await _sensorService.GetClientSensorsAsync(client.Id);
             var sensorDtos = sensors.Select(s => s.ToSensorDto());
 
-            return Json(new Response { Message = queue, Success = success, Sensors = sensorDtos });
+            return Json(new Response { Message = queue, Success = true, Sensors = sensorDtos });
         }
 
         [Route("register")]

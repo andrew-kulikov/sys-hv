@@ -20,6 +20,7 @@ using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Client.Common.Models;
 using SysHv.Client.WinService.Gatherers;
+using SysHv.Client.WinService.Helpers;
 using Decoder = RabbitMQCommunications.Communications.Decoding.Decoder;
 using Timer = System.Timers.Timer;
 
@@ -31,8 +32,8 @@ namespace SysHv.Client.WinService.Services
 
         private readonly IList<Timer> _sensorTimers;
         private Logger _logger = LogManager.GetCurrentClassLogger();
-        private string queueName;
-        private IList<Assembly> _assemblies;
+        private string _queueName;
+        private readonly IList<Assembly> _assemblies;
 
 
         public MonitoringService()
@@ -49,7 +50,7 @@ namespace SysHv.Client.WinService.Services
             return (sender, args) =>
             {
                 using (var rabbitSender = new OneWaySender(new ConnectionModel(),
-                    new PublishProperties { ExchangeName = "", QueueName = queueName }))
+                    new PublishProperties { ExchangeName = "", QueueName = _queueName }))
                 {
                     object result = null;
                     if (sensorType != null)
@@ -87,7 +88,7 @@ namespace SysHv.Client.WinService.Services
                 LoginTimerElapsed();
             }
 
-            queueName = loginResponse.Message;
+            _queueName = loginResponse.Message;
 
             LaunchSensors(loginResponse.Sensors);
         }
@@ -103,7 +104,7 @@ namespace SysHv.Client.WinService.Services
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 var content = new StringContent(
-                    JsonConvert.SerializeObject(new { email = "123", password = "123Qwe!", ip = "178.122.194.35" }),
+                    JsonConvert.SerializeObject(ConfigurationHelper.LoginDto),
                     Encoding.UTF8,
                     "application/json");
 

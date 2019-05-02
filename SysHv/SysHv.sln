@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpuTempSensor", "CpuTempSen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinAdminClientCore", "SysHv.WinAdminClient\WinAdminClientCore\WinAdminClientCore\WinAdminClientCore.csproj", "{89E79EF7-6841-4FF2-A4F8-414CB1D8852C}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "WinAdminClientCore.Setup", "SysHv.WinAdminClient\WinAdminClientCore.Setup\WinAdminClientCore.Setup.wixproj", "{3BB50B36-A624-486D-8EA9-F57246F56234}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -181,6 +183,14 @@ Global
 		{89E79EF7-6841-4FF2-A4F8-414CB1D8852C}.Release|x64.Build.0 = Release|Any CPU
 		{89E79EF7-6841-4FF2-A4F8-414CB1D8852C}.Release|x86.ActiveCfg = Release|Any CPU
 		{89E79EF7-6841-4FF2-A4F8-414CB1D8852C}.Release|x86.Build.0 = Release|Any CPU
+		{3BB50B36-A624-486D-8EA9-F57246F56234}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{3BB50B36-A624-486D-8EA9-F57246F56234}.Debug|x64.ActiveCfg = Debug|x86
+		{3BB50B36-A624-486D-8EA9-F57246F56234}.Debug|x86.ActiveCfg = Debug|x86
+		{3BB50B36-A624-486D-8EA9-F57246F56234}.Debug|x86.Build.0 = Debug|x86
+		{3BB50B36-A624-486D-8EA9-F57246F56234}.Release|Any CPU.ActiveCfg = Release|x86
+		{3BB50B36-A624-486D-8EA9-F57246F56234}.Release|x64.ActiveCfg = Release|x86
+		{3BB50B36-A624-486D-8EA9-F57246F56234}.Release|x86.ActiveCfg = Release|x86
+		{3BB50B36-A624-486D-8EA9-F57246F56234}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -197,6 +207,7 @@ Global
 		{2257B1DD-99F7-4256-8D08-4DE6953E9961} = {CF73C88E-C55D-4C1D-A4C4-28CFB3400C28}
 		{60561487-9685-46B0-8CAB-04F90204A06C} = {C2705447-0039-4E82-A99C-9D4B6F854C6B}
 		{89E79EF7-6841-4FF2-A4F8-414CB1D8852C} = {CF73C88E-C55D-4C1D-A4C4-28CFB3400C28}
+		{3BB50B36-A624-486D-8EA9-F57246F56234} = {CF73C88E-C55D-4C1D-A4C4-28CFB3400C28}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D07E76CC-F6A4-46F4-9E0F-F0EF0952E947}

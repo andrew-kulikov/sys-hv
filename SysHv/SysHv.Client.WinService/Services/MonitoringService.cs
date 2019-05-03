@@ -13,6 +13,7 @@ using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Client.Common.Models;
 using SysHv.Client.WinService.Communication;
+using SysHv.Client.WinService.Helpers;
 
 namespace SysHv.Client.WinService.Services
 {
@@ -57,7 +58,7 @@ namespace SysHv.Client.WinService.Services
 
                     rabbitSender.Send(new SensorResponse
                     {
-                        ClientId = 1,
+                        ClientId = ConfigurationHelper.Id,
                         SensorId = sensor.Id,
                         Value = result
                     });

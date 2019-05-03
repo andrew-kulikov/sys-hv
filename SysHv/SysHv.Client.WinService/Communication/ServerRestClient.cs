@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -15,13 +12,11 @@ namespace SysHv.Client.WinService.Communication
 {
     public class ServerRestClient
     {
-        private readonly string _serverAddress = ConfigurationManager.AppSettings["ServerAddress"];
-
         public async Task<Response> Login()
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(_serverAddress);
+                client.BaseAddress = new Uri(ConfigurationHelper.ServerAddress);
 
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -45,6 +40,7 @@ namespace SysHv.Client.WinService.Communication
                 {
                     var resultStr = await result.Content.ReadAsStringAsync();
                     var response = Decoder.Decode<Response>(resultStr);
+
                     Console.WriteLine(resultStr);
 
                     return response;

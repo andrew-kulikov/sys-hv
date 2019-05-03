@@ -18,5 +18,26 @@ namespace SysHv.Server.DAL
         {
 
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<ClientSensor>()
+                .HasOne(s => s.Sensor)
+                .WithMany(s => s.ClientSensors);
+
+            builder.Entity<Sensor>()
+                .HasMany(s => s.ClientSensors)
+                .WithOne(s => s.Sensor);
+
+            builder.Entity<Sensor>()
+                .HasMany(s => s.SubSensors)
+                .WithOne(ss => ss.Sensor);
+
+            builder.Entity<Client>()
+                .HasMany(s => s.ClientSensors)
+                .WithOne(cs => cs.Client);
+
+            base.OnModelCreating(builder);
+        }
     }
 }

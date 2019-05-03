@@ -4,9 +4,9 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.10</ProductVersion>
-    <ProjectGuid>3f680b31-4ae8-467f-b339-6d8fb2e0ee19</ProjectGuid>
+    <ProjectGuid>3bb50b36-a624-486d-8ea9-f57246f56234</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>SysHv.WinClient.Setup</OutputName>
+    <OutputName>Sys Admin Heaven Wpf</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -23,6 +23,16 @@
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WinAdminClientCore\WinAdminClientCore\WinAdminClientCore.csproj">
+      <Name>WinAdminClientCore</Name>
+      <Project>{89e79ef7-6841-4ff2-a4f8-414cb1d8852c}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <WixExtension Include="WixUIExtension">
       <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
       <Name>WixUIExtension</Name>
@@ -33,16 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Visuals\License.rtf" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SysHv.Client.WinService\SysHv.Client.WinService.csproj">
-      <Name>SysHv.Client.WinService</Name>
-      <Project>{982e7e19-5e22-4948-a311-2d5fcaf02efb}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />

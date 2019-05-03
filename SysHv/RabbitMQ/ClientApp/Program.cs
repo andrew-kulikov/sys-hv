@@ -27,7 +27,9 @@ namespace ClientApp
             Console.ReadLine();
             using (OneWaySender sender = new OneWaySender(new ConnectionModel(), new PublishProperties() { ExchangeName = "", QueueName = "asd"}))
             {
-                sender.Send(5);
+                //sender.Send(new string('a', 20));
+                sender.Send<int>(123);
+                sender.Send<DateTime>(DateTime.Now);
             }
             asd += () => { Console.WriteLine(); };
             asd.Invoke();

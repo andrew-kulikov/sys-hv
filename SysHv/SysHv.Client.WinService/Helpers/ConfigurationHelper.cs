@@ -11,7 +11,7 @@ namespace SysHv.Client.WinService.Helpers
         public static object LoginDto => new
         {
             email = "123",
-            passwordHash = "AQAAAAEAACcQAAAAECCARM1gepdNz4mDCtim+SllMt+LQoUx+j6H8kprUMwWdmhH2AeVaKBbMdS1/2m+WQ==",
+            passwordHash = "AQAAAAEAACcQAAAAEHUnYHC9gcmIGV/EBR3pQ40eASy5OImqWCni4hmAmNCDORHpKJOUUTvb960IiShEqA==",//"AQAAAAEAACcQAAAAECCARM1gepdNz4mDCtim+SllMt+LQoUx+j6H8kprUMwWdmhH2AeVaKBbMdS1/2m+WQ==",
             id = 1
         };
     }

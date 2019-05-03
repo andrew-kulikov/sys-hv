@@ -69,6 +69,7 @@ namespace SysHv.Client.WinService.Services
             };
         }
 
+        //todo: move this method to main loop to prevent service blocking if server ain't available
         private void LoginTimerElapsed()
         {
             var loginResponse = Login().Result;

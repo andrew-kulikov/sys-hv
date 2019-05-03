@@ -17,6 +17,7 @@ using RabbitMQCommunications.Communications.HelpStuff;
 using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Client.Common.Models;
+using SysHv.Client.WinService.Communication;
 using SysHv.Client.WinService.Helpers;
 using Decoder = RabbitMQCommunications.Communications.Decoding.Decoder;
 using Timer = System.Timers.Timer;
@@ -28,6 +29,7 @@ namespace SysHv.Client.WinService.Services
         private const int TimerDelay = 5000;
         private readonly IList<Assembly> _assemblies;
         private readonly IList<object> _sensorInstances;
+        private readonly ServerRestClient _restClient;
 
         private readonly IList<Timer> _sensorTimers;
         private Logger _logger = LogManager.GetCurrentClassLogger();
@@ -39,6 +41,7 @@ namespace SysHv.Client.WinService.Services
             _assemblies = new List<Assembly>();
             _sensorTimers = new List<Timer>();
             _sensorInstances = new List<object>();
+            _restClient = new ServerRestClient();
         }
 
         private ElapsedEventHandler GetTimerElapsed(SensorDto sensor)
@@ -52,7 +55,7 @@ namespace SysHv.Client.WinService.Services
             return (sender, args) =>
             {
                 using (var rabbitSender = new OneWaySender(new ConnectionModel(),
-                    new PublishProperties {ExchangeName = "", QueueName = _queueName}))
+                    new PublishProperties { ExchangeName = "", QueueName = _queueName }))
                 {
                     var collect = sensorType.GetMethod("Collect");
                     var result = collect?.Invoke(sensorInstance, new object[] { });
@@ -69,15 +72,14 @@ namespace SysHv.Client.WinService.Services
             };
         }
 
-        //todo: move this method to main loop to prevent service blocking if server ain't available
-        private void LoginTimerElapsed()
+        private async Task LoginTimerElapsed()
         {
-            var loginResponse = Login().Result;
+            var loginResponse = await _restClient.Login();
 
             if (loginResponse == null || !loginResponse.Success)
             {
-                Thread.Sleep(TimerDelay);
-                LoginTimerElapsed();
+                await Task.Delay(TimerDelay);
+                await LoginTimerElapsed();
             }
 
             _queueName = loginResponse.Message;
@@ -85,68 +87,28 @@ namespace SysHv.Client.WinService.Services
             LaunchSensors(loginResponse.Sensors);
         }
 
-        private async Task<Response> Login()
-        {
-            var serverAddress = ConfigurationManager.AppSettings["ServerAddress"];
-
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(serverAddress);
-
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                var content = new StringContent(
-                    JsonConvert.SerializeObject(ConfigurationHelper.LoginDto),
-                    Encoding.UTF8,
-                    "application/json");
-
-                HttpResponseMessage result;
-                try
-                {
-                    result = await client.PostAsync("/api/client/login", content);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    return null;
-                }
-
-                if (result.IsSuccessStatusCode)
-                {
-                    var resultStr = await result.Content.ReadAsStringAsync();
-                    var response = Decoder.Decode<Response>(resultStr);
-                    Console.WriteLine(resultStr);
-
-                    return response;
-                }
-            }
-
-            return null;
-        }
-
         private void LaunchSensors(IEnumerable<SensorDto> sensors)
         {
             foreach (var sensor in sensors)
             {
-                var timer = new Timer(TimerDelay) {AutoReset = true};
-                timer.Elapsed += GetTimerElapsed(sensor);
+                var timer = new Timer(TimerDelay) { AutoReset = true };
 
+                timer.Elapsed += GetTimerElapsed(sensor);
                 timer.Enabled = true;
+
                 _sensorTimers.Add(timer);
             }
         }
 
         public void Start()
         {
-            Console.WriteLine("Enter something...");
-            Console.ReadLine();
-
             var libDirectory = ConfigurationManager.AppSettings["SensorExtensionsPath"];
-            foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
-            foreach (var sensorPath in Directory.GetFiles(sensorDirectory, "*Sensor*.dll"))
-                _assemblies.Add(Assembly.LoadFile(sensorPath));
 
-            LoginTimerElapsed();
+            foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
+                foreach (var sensorPath in Directory.GetFiles(sensorDirectory, "*Sensor*.dll"))
+                    _assemblies.Add(Assembly.LoadFile(sensorPath));
+
+            Task.Run(LoginTimerElapsed);
         }
 
         public void Stop()

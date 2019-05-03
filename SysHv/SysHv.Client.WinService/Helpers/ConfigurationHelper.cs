@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using SysHv.Client.Common.DTOs;
 
 namespace SysHv.Client.WinService.Helpers
 {
@@ -10,11 +11,11 @@ namespace SysHv.Client.WinService.Helpers
         public static string ServerAddress { get; } = ConfigurationManager.AppSettings["ServerAddress"];
         public static int ReconnectionInterval { get; } = int.Parse(ConfigurationManager.AppSettings["ReconnectionInterval"]);
 
-        public static object LoginDto => new
+        public static ClientLoginDto LoginDto => new ClientLoginDto
         {
-            email = Email,
-            passwordHash = PasswordHash,
-            id = Id
+            Email = Email,
+            PasswordHash = PasswordHash,
+            Id = Id
         };
     }
 }

@@ -8,6 +8,7 @@ namespace SysHv.Client.WinService.Helpers
         public static string PasswordHash { get; } = ConfigurationManager.AppSettings["PasswordHash"];
         public static int Id { get; } = int.Parse(ConfigurationManager.AppSettings["Id"]);
         public static string ServerAddress { get; } = ConfigurationManager.AppSettings["ServerAddress"];
+        public static int ReconnectionInterval { get; } = int.Parse(ConfigurationManager.AppSettings["ReconnectionInterval"]);
 
         public static object LoginDto => new
         {

@@ -19,7 +19,6 @@ namespace SysHv.Client.WinService.Services
 {
     internal class MonitoringService
     {
-        private const int TimerDelay = 5000;
         private readonly IList<Assembly> _assemblies;
         private readonly ServerRestClient _restClient;
         private readonly IList<object> _sensorInstances;
@@ -54,7 +53,7 @@ namespace SysHv.Client.WinService.Services
                     var collect = sensorType.GetMethod("Collect");
                     var result = collect?.Invoke(sensorInstance, new object[] { });
 
-                    Console.WriteLine(result);
+                    Console.WriteLine($"{sensor.Name} : {result}");
 
                     rabbitSender.Send(new SensorResponse
                     {
@@ -80,7 +79,7 @@ namespace SysHv.Client.WinService.Services
                     break;
                 }
 
-                await Task.Delay(TimerDelay);
+                await Task.Delay(ConfigurationHelper.ReconnectionInterval);
             }
         }
 
@@ -88,7 +87,7 @@ namespace SysHv.Client.WinService.Services
         {
             foreach (var sensor in sensors)
             {
-                var timer = new Timer(TimerDelay) { AutoReset = true };
+                var timer = new Timer(sensor.Interval) { AutoReset = true };
 
                 timer.Elapsed += GetTimerElapsed(sensor);
                 timer.Enabled = true;
@@ -99,6 +98,8 @@ namespace SysHv.Client.WinService.Services
 
         public void Start()
         {
+            Console.ReadLine();
+
             var libDirectory = ConfigurationManager.AppSettings["SensorExtensionsPath"];
 
             foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))

@@ -68,6 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\ServerRestClient.cs" />
     <Compile Include="Gatherers\HardwareInfoGatherer.cs" />
     <Compile Include="Gatherers\RuntimeInfoGatherer.cs" />
     <Compile Include="Helpers\ConfigurationHelper.cs" />

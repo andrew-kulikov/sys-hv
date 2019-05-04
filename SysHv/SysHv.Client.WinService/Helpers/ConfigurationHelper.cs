@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
+using SysHv.Client.Common.DTOs;
 
 namespace SysHv.Client.WinService.Helpers
 {
     public static class ConfigurationHelper
     {
-        public static object LoginDto => new
+        public static string Email { get; } = ConfigurationManager.AppSettings["Email"];
+        public static string PasswordHash { get; } = ConfigurationManager.AppSettings["PasswordHash"];
+        public static int Id { get; } = int.Parse(ConfigurationManager.AppSettings["Id"]);
+        public static string ServerAddress { get; } = ConfigurationManager.AppSettings["ServerAddress"];
+        public static int ReconnectionInterval { get; } = int.Parse(ConfigurationManager.AppSettings["ReconnectionInterval"]);
+
+        public static ClientLoginDto LoginDto => new ClientLoginDto
         {
-            email = "123",
-            passwordHash = "AQAAAAEAACcQAAAAEHUnYHC9gcmIGV/EBR3pQ40eASy5OImqWCni4hmAmNCDORHpKJOUUTvb960IiShEqA==",//"AQAAAAEAACcQAAAAECCARM1gepdNz4mDCtim+SllMt+LQoUx+j6H8kprUMwWdmhH2AeVaKBbMdS1/2m+WQ==",
-            id = 1
+            Email = Email,
+            PasswordHash = PasswordHash,
+            Id = Id
         };
     }
 }

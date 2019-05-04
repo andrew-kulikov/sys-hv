@@ -37,15 +37,15 @@ namespace SysHv.Server.Services
             return _context.Sensors.ToListAsync();
         }
 
-        public Task<List<Sensor>> GetClientSensorsAsync(int clientId)
+        public Task<List<ClientSensor>> GetClientSensorsAsync(int clientId)
         {
-            var res = _context.Sensors
-                .Where(s => s.ClientSensors.Any(cs => cs.ClientId == clientId));
+            var clientSensors = _context.ClientSensors.Where(cs => cs.ClientId == clientId);
 
+            var sensors = clientSensors.Select(cs => cs.Sensor).ToList();
             // DO NOT REMOVE THIS - Enables subsensor loading
-            var subSensors = res.Select(s => s.SubSensors).ToList();
+            var subSensors = clientSensors.Select(cs => cs.Sensor.SubSensors).ToList();
 
-            return Task.Run(() => res.ToList());
+            return Task.Run(() => clientSensors.ToList());
         }
 
         public async Task<bool> RemoveSensorAsync(int id)

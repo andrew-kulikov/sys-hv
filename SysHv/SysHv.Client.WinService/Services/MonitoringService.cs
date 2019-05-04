@@ -3,30 +3,24 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using Newtonsoft.Json;
 using NLog;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Communications.HelpStuff;
 using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Client.Common.Models;
+using SysHv.Client.WinService.Communication;
 using SysHv.Client.WinService.Helpers;
-using Decoder = RabbitMQCommunications.Communications.Decoding.Decoder;
-using Timer = System.Timers.Timer;
 
 namespace SysHv.Client.WinService.Services
 {
     internal class MonitoringService
     {
-        private const int TimerDelay = 5000;
         private readonly IList<Assembly> _assemblies;
+        private readonly ServerRestClient _restClient;
         private readonly IList<object> _sensorInstances;
 
         private readonly IList<Timer> _sensorTimers;
@@ -39,6 +33,7 @@ namespace SysHv.Client.WinService.Services
             _assemblies = new List<Assembly>();
             _sensorTimers = new List<Timer>();
             _sensorInstances = new List<object>();
+            _restClient = new ServerRestClient();
         }
 
         private ElapsedEventHandler GetTimerElapsed(SensorDto sensor)
@@ -46,22 +41,23 @@ namespace SysHv.Client.WinService.Services
             var sensorType = _assemblies.SelectMany(a => a.GetTypes()).FirstOrDefault(a => a.Name == sensor.Contract);
 
             if (sensorType == null) return null;
+
             var sensorInstance = Activator.CreateInstance(sensorType);
             _sensorInstances.Add(sensorInstance);
 
             return (sender, args) =>
             {
                 using (var rabbitSender = new OneWaySender(new ConnectionModel(),
-                    new PublishProperties {ExchangeName = "", QueueName = _queueName}))
+                    new PublishProperties { ExchangeName = "", QueueName = _queueName }))
                 {
                     var collect = sensorType.GetMethod("Collect");
                     var result = collect?.Invoke(sensorInstance, new object[] { });
 
-                    Console.WriteLine(result);
+                    Console.WriteLine($"{sensor.Name} : {result}");
 
                     rabbitSender.Send(new SensorResponse
                     {
-                        ClientId = 1,
+                        ClientId = ConfigurationHelper.Id,
                         SensorId = sensor.Id,
                         Value = result
                     });
@@ -69,84 +65,48 @@ namespace SysHv.Client.WinService.Services
             };
         }
 
-        //todo: move this method to main loop to prevent service blocking if server ain't available
-        private void LoginTimerElapsed()
+        private async Task StartServerConnection()
         {
-            var loginResponse = Login().Result;
-
-            if (loginResponse == null || !loginResponse.Success)
+            while (true)
             {
-                Thread.Sleep(TimerDelay);
-                LoginTimerElapsed();
+                var loginResponse = await _restClient.Login();
+
+                if (loginResponse != null && loginResponse.Success)
+                {
+                    _queueName = loginResponse.Message;
+                    LaunchSensors(loginResponse.Sensors);
+
+                    break;
+                }
+
+                await Task.Delay(ConfigurationHelper.ReconnectionInterval);
             }
-
-            _queueName = loginResponse.Message;
-
-            LaunchSensors(loginResponse.Sensors);
-        }
-
-        private async Task<Response> Login()
-        {
-            var serverAddress = ConfigurationManager.AppSettings["ServerAddress"];
-
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(serverAddress);
-
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                var content = new StringContent(
-                    JsonConvert.SerializeObject(ConfigurationHelper.LoginDto),
-                    Encoding.UTF8,
-                    "application/json");
-
-                HttpResponseMessage result;
-                try
-                {
-                    result = await client.PostAsync("/api/client/login", content);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    return null;
-                }
-
-                if (result.IsSuccessStatusCode)
-                {
-                    var resultStr = await result.Content.ReadAsStringAsync();
-                    var response = Decoder.Decode<Response>(resultStr);
-                    Console.WriteLine(resultStr);
-
-                    return response;
-                }
-            }
-
-            return null;
         }
 
         private void LaunchSensors(IEnumerable<SensorDto> sensors)
         {
             foreach (var sensor in sensors)
             {
-                var timer = new Timer(TimerDelay) {AutoReset = true};
-                timer.Elapsed += GetTimerElapsed(sensor);
+                var timer = new Timer(sensor.Interval) { AutoReset = true };
 
+                timer.Elapsed += GetTimerElapsed(sensor);
                 timer.Enabled = true;
+
                 _sensorTimers.Add(timer);
             }
         }
 
         public void Start()
         {
-            Console.WriteLine("Enter something...");
             Console.ReadLine();
 
             var libDirectory = ConfigurationManager.AppSettings["SensorExtensionsPath"];
-            foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
-            foreach (var sensorPath in Directory.GetFiles(sensorDirectory, "*Sensor*.dll"))
-                _assemblies.Add(Assembly.LoadFile(sensorPath));
 
-            LoginTimerElapsed();
+            foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
+                foreach (var sensorPath in Directory.GetFiles(sensorDirectory, "*Sensor*.dll"))
+                    _assemblies.Add(Assembly.LoadFile(sensorPath));
+
+            Task.Run(StartServerConnection);
         }
 
         public void Stop()

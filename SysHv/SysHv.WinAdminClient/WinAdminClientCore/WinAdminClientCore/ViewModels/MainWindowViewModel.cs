@@ -103,9 +103,14 @@ namespace WinAdminClientCore.ViewModels
 
             var settings = new JsonSerializerSettings() { MissingMemberHandling = MissingMemberHandling.Error};
 
-            var obj = JsonConvert.DeserializeObject<DefaultComputerInfo>(o.ToString(), settings);
+            var obj = TryConvert(o.ToString());// = JsonConvert.DeserializeObject<SensorResponse>(o.ToString(), settings);
+            ProcessTypes(obj);
 
-            MessageBox.Show(obj.GetType().ToString());
+            //var obj1 = Convert.ChangeType(obj.Item2, obj.Item1);
+
+            //MessageBox.Show(obj1.GetType().ToString());
+
+
             //Console.WriteLine(o.GetType());
             /*foreach (var dto in o.CouLoad)
             {
@@ -119,22 +124,35 @@ namespace WinAdminClientCore.ViewModels
 
         }
 
+        void ProcessTypes(Tuple<Type, object> incoming)
+        {
+            var obj = Convert.ChangeType(incoming.Item2, incoming.Item1);
+
+            switch (obj)
+            {
+                case SensorResponse val:
+                    Computers[0].AddTemperatureDot(new ObservableValue((double)val.Value));
+                    return;
+            }
+        }
+
         public Tuple<Type, object> TryConvert(string json)
         {
+            var settings = new JsonSerializerSettings() { MissingMemberHandling = MissingMemberHandling.Error };
             var sensorTypes = new[] { typeof(DefaultComputerInfo), typeof(SensorResponse)};
 
             foreach (var type in sensorTypes)
             {
                 try
                 {
-
+                    return new Tuple<Type, object>(type, JsonConvert.DeserializeObject(json, type, settings));
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
-                    throw;
+                    continue;
                 }
             }
+            return new Tuple<Type, object>(typeof(string), "");
         }
     }
 }

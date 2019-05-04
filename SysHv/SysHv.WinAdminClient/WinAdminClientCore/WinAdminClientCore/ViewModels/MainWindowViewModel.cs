@@ -99,8 +99,12 @@ namespace WinAdminClientCore.ViewModels
 
         void ondata(object o)
         {
-            var obj = JsonConvert.DeserializeObject<SensorResponse>(o.ToString());
-            
+            //var obj = JsonConvert.DeserializeObject<SensorResponse>(o.ToString());
+
+            var settings = new JsonSerializerSettings() { MissingMemberHandling = MissingMemberHandling.Error};
+
+            var obj = JsonConvert.DeserializeObject<DefaultComputerInfo>(o.ToString(), settings);
+
             MessageBox.Show(obj.GetType().ToString());
             //Console.WriteLine(o.GetType());
             /*foreach (var dto in o.CouLoad)
@@ -113,6 +117,24 @@ namespace WinAdminClientCore.ViewModels
             }*/
             //MessageBox.Show(o.CouLoad.Count.ToString());
 
+        }
+
+        public Tuple<Type, object> TryConvert(string json)
+        {
+            var sensorTypes = new[] { typeof(DefaultComputerInfo), typeof(SensorResponse)};
+
+            foreach (var type in sensorTypes)
+            {
+                try
+                {
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
         }
     }
 }

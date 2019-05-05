@@ -41,8 +41,8 @@ namespace SysHv.Server.Services
         {
             var clientSensors = _context.ClientSensors.Where(cs => cs.ClientId == clientId);
 
-            var sensors = clientSensors.Select(cs => cs.Sensor).ToList();
             // DO NOT REMOVE THIS - Enables subsensor loading
+            var sensors = clientSensors.Select(cs => cs.Sensor).ToList();
             var subSensors = clientSensors.Select(cs => cs.Sensor.SubSensors).ToList();
 
             return Task.Run(() => clientSensors.ToList());

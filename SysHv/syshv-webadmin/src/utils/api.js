@@ -13,7 +13,7 @@ export function* callHttp(...args) {
       try {
         decoded = jwt_decode(token);
       } catch (error) {
-        console.log(`Invalid token ${token}`);
+        throw new Error(`Invalid token ${token}`);
       }
 
       if (
@@ -29,15 +29,7 @@ export function* callHttp(...args) {
     return data;
   } catch (err) {
     if (err.status === 401) {
-      yield put(refreshToken());
-      yield take(loginOk);
-      try {
-        const data = yield call(...args);
-        return data;
-      } catch (err2) {
-        console.log(err2);
-        throw err2;
-      }
+      console.log(err);
     }
     throw err;
   }

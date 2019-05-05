@@ -17,9 +17,10 @@ namespace SysHv.Server.Hubs
         }
 
         [Authorize("Bearer")]
-        public void AddSensor()
+        public string AddSensor()
         {
-            var user = Context.User.Identity.AuthenticationType;
+            var user = Context.User.Identity.Name;
+            return user;
         }
     }
 }

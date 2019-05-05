@@ -28,7 +28,6 @@ class HomePage extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props.token);
     !this.props.token && this.props.history.replace('/login');
   }
 

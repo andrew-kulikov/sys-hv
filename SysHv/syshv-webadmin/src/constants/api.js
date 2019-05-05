@@ -1,6 +1,8 @@
 const BACKEND = process.env.REACT_APP_API_URL
 const API = BACKEND + 'api/'
 
+export const HUB = BACKEND + 'monitoringHub'
+
 export const LOGIN = `${API}account/login`
 export const REFRESHTOKEN = `${API}token/refresh`
 

@@ -1,10 +1,7 @@
-import { call, put, take } from 'redux-saga/effects';
-import { refreshToken, loginOk } from '../actions/auth';
+import { call } from 'redux-saga/effects';
 import jwt_decode from 'jwt-decode';
 
 export function* callHttp(...args) {
-  if (process.env.REACT_APP_MOCK) return;
-
   try {
     const token = localStorage.getItem('token');
 

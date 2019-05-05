@@ -20,7 +20,7 @@ const signalRMiddleware = storeAPI => {
   }
 
   return next => action => {
-    if (action.type == loginOk().type) {
+    if (action.type === loginOk().type) {
       connection.start().catch(e => console.log(e.message));
     }
 

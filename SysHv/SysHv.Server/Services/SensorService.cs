@@ -34,7 +34,7 @@ namespace SysHv.Server.Services
 
         public Task<List<Sensor>> GetAllSensorsAsync()
         {
-            return _context.Sensors.ToListAsync();
+            return _context.Sensors.Include(s => s.SubSensors).ToListAsync();
         }
 
         public Task<List<ClientSensor>> GetClientSensorsAsync(int clientId)

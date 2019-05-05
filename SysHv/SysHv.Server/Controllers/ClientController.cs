@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -44,8 +45,8 @@ namespace SysHv.Server.Controllers
         ///     Success: is client exist
         ///     }
         /// </returns>
-        [Route("login")]
         [HttpPost]
+        [Route("login")]
         public async Task<IActionResult> LoginClient([FromBody] ClientLoginDto dto)
         {
             if (!ModelState.IsValid) return Json(new Response { Success = false, Message = "Model invalid" });
@@ -68,9 +69,9 @@ namespace SysHv.Server.Controllers
 
             return Json(new Response { Message = queue, Success = true, Sensors = sensorDtos });
         }
-
-        [Route("register")]
+ 
         [HttpPost]
+        [Route("register")]
         [Authorize("Bearer")]
         public async Task<IActionResult> RegisterClient([FromBody] ClientRegisterDto dto)
         {
@@ -85,7 +86,16 @@ namespace SysHv.Server.Controllers
             };
             await _clientService.AddClientAsync(client, user);
 
-            return Json(new { success = true });
+            return Ok();
+        }
+
+        [HttpGet]
+        [Authorize("Bearer")]
+        public async Task<ActionResult<ICollection<DAL.Models.Client>>> GetAllClients()
+        {
+            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+
+            return await _clientService.GetAdminClientsAsync(user.Id);
         }
     }
 }

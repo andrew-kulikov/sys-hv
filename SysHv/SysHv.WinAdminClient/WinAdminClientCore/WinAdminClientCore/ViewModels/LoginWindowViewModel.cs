@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -61,10 +62,10 @@ namespace WinAdminClientCore.ViewModels
 
         public ICommand LogInCommand
         {
-            get => _logInCommand ?? (_logInCommand = new RelayCommand.RelayCommand(
-                       p => CanLogin(),
-                       p => LogIn())
-                   );
+            // nehooya sebe resharper umeet
+            get => _logInCommand ??= new RelayCommand.RelayCommand(
+                p => CanLogin(),
+                p => RunMainWindow());
         }
 
         #endregion
@@ -92,7 +93,19 @@ namespace WinAdminClientCore.ViewModels
             return !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password);
         }
 
-        private void LogIn()
+        private void RunMainWindow()
+        {
+            if (!LogIn())
+                return;
+
+            var mainWindow = new MainWindow(new MainWindowViewModel());
+            //mainWindow.DataContext = new MainWindowViewModel();
+            mainWindow.Show();
+
+            _window.Close();
+        }
+
+        private bool LogIn()
         {
             PropertiesManager.RememberMe = RememberMe;
             if (RememberMe)
@@ -100,7 +113,6 @@ namespace WinAdminClientCore.ViewModels
                 PropertiesManager.UserName = UserName;
                 PropertiesManager.Password = Password;
             }
-            // todo: auth
             var server = PropertiesManager.SignalRServer;
 
             using (var client = new HttpClient())
@@ -122,22 +134,26 @@ namespace WinAdminClientCore.ViewModels
                     if (result.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         MessageBox.Show("wrong user credentials");
-                        return;
+                        return false;
                     }
+
+                    var token = JsonConvert.DeserializeObject<TokenDTO>(result.Content.ReadAsStringAsync().Result);
+                    if (!string.IsNullOrEmpty(token.Token))
+                        PropertiesManager.Token = token.Token;
+                    else
+                    {
+                        MessageBox.Show("failed to aquire session token");
+                        return false;
+                    }
+
+                    return true;
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show("a connection problem encountered");
-                    return;
+                    return false;
                 }
-
             }
-
-            var mainWindow = new MainWindow(new MainWindowViewModel());
-            //mainWindow.DataContext = new MainWindowViewModel();
-            mainWindow.Show();
-
-            _window.Close();
         }
 
         #endregion

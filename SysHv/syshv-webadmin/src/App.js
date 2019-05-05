@@ -1,50 +1,47 @@
 import React from 'react';
-import { HubConnectionBuilder, HttpTransportType } from '@aspnet/signalr';
-import logo from './logo.svg';
-import './App.css';
+import ReduxToastr from 'react-redux-toastr';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
-import Login from './components/Login';
-import Main from './components/Main';
+import GenericNotFound from './pages/GenericNotFound';
 
-const initHub = () => {
-  let connection = new HubConnectionBuilder()
-    .withUrl('https://localhost:44352/monitoringHub', {
-      accessTokenFactory: async () => {
-        let res = await fetch('https://localhost:44352/api/account/login', {
-          method: 'post',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            Email: '123',
-            Password: '123Qwe!'
-          })
-        });
-        let token = await res.json().then(j => j.token);
-        return token;
-      }
-    })
-    .build();
+import { sagaMiddleware } from './middleware/sagaMiddleware';
+import saga from './sagas';
+import { Provider } from 'react-redux';
+import store from './store';
 
-  connection.on('UpdateReceived', data => {
-    console.log(data);
-  });
+import home from './pages/Home';
+import logout from './containers/Logout';
+import login from './pages/Login';
+import myAccount from './pages/Account';
+import ResetPass from './pages/ResetPass';
 
-  connection.start().catch(err => console.error(err));
-};
-
-class App extends React.Component {
-  state = {
-    logged: false
-  };
-
-  login = () => {
-    initHub();
-    this.setState({ logged: true });
-  }
-
-  render() {
-    console.log(this.state.logged)
-    return this.state.logged ? <Main /> : <Login handleSubmit={this.login} />;
-  }
-}
+const App = props => (
+  <Provider store={store}>
+    <Router>
+      {/* <MainLayout> */}
+      <>
+        <Switch>
+          <Route exact path="/" component={home} />
+          <Route path="/home" component={home} />
+          <Route path="/login" component={login} />
+          <Route path="/account" component={myAccount} />
+          <Route
+            path="/password/reset"
+            component={props => <ResetPass {...props} type="reset" />}
+          />
+          <Route
+            path="/password/new"
+            component={props => <ResetPass {...props} type="new" />}
+          />
+          <Route path="/logout" component={logout} />
+          <Route component={GenericNotFound} />
+        </Switch>
+        <ReduxToastr closeOnToastrClick={true} progressBar={true} />
+      </>
+      {/* </MainLayout> */}
+    </Router>
+  </Provider>
+);
 
 export default App;
+sagaMiddleware.run(saga);

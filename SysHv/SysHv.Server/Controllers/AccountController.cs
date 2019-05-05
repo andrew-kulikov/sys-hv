@@ -35,10 +35,10 @@ namespace SysHv.Server.Controllers
                 var tokenExpires = DateTime.UtcNow.AddMinutes(720);
                 var token = _tokenService.GetToken(userLoginModel.Email, tokenExpires);
 
-                return new JsonResult(new { success = true, token });
+                return new JsonResult(new { token });
             }
 
-            return new JsonResult(new { success = false });
+            return Unauthorized();
         }
 
         [AllowAnonymous]

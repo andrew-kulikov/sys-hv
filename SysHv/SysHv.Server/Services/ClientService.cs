@@ -35,12 +35,15 @@ namespace SysHv.Server.Services
 
         public Task<List<DAL.Models.Client>> GetAllClientsAsync()
         {
-            return _context.Clients.ToListAsync();
+            return _context.Clients.Include(c => c.ClientSensors).ToListAsync();
         }
 
         public Task<List<DAL.Models.Client>> GetAdminClientsAsync(string adminId)
         {
-            return _context.Clients.Where(c => c.User.Id == adminId).ToListAsync();
+            return _context.Clients
+                .Include(c => c.ClientSensors)
+                .Where(c => c.User.Id == adminId)
+                .ToListAsync();
         }
 
         public async Task<bool> RemoveClientAsync(int id)

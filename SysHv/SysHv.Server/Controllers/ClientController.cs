@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +20,17 @@ namespace SysHv.Server.Controllers
     public class ClientController : Controller
     {
         private readonly IClientService _clientService;
-        private readonly ReceiverService _receiver;
         private readonly ISensorService _sensorService;
+        private readonly IMapper _mapper;
+        private readonly ReceiverService _receiver;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public ClientController(UserManager<ApplicationUser> userManager, IClientService clientService,
             ISensorService sensorService,
-            IHostedServiceAccessor<ReceiverService> receiver)
+            IHostedServiceAccessor<ReceiverService> receiver,
+            IMapper mapper)
         {
+            _mapper = mapper;
             _userManager = userManager;
             _clientService = clientService;
             _sensorService = sensorService;
@@ -44,8 +49,8 @@ namespace SysHv.Server.Controllers
         ///     Success: is client exist
         ///     }
         /// </returns>
-        [Route("login")]
         [HttpPost]
+        [Route("login")]
         public async Task<IActionResult> LoginClient([FromBody] ClientLoginDto dto)
         {
             if (!ModelState.IsValid) return Json(new Response { Success = false, Message = "Model invalid" });
@@ -68,9 +73,9 @@ namespace SysHv.Server.Controllers
 
             return Json(new Response { Message = queue, Success = true, Sensors = sensorDtos });
         }
-
-        [Route("register")]
+ 
         [HttpPost]
+        [Route("register")]
         [Authorize("Bearer")]
         public async Task<IActionResult> RegisterClient([FromBody] ClientRegisterDto dto)
         {
@@ -85,7 +90,17 @@ namespace SysHv.Server.Controllers
             };
             await _clientService.AddClientAsync(client, user);
 
-            return Json(new { success = true });
+            return Ok();
+        }
+
+        [HttpGet]
+        [Authorize("Bearer")]
+        public async Task<ActionResult<ICollection<ClientDto>>> GetAllClients()
+        {
+            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            var clients = await _clientService.GetAdminClientsAsync(user.Id);
+
+            return _mapper.Map<List<DAL.Models.Client>, List<ClientDto>>(clients);
         }
     }
 }

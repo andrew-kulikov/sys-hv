@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Newtonsoft.Json;
+using WinAdminClientCore.Dtos;
 using WinAdminClientCore.UIHelpers;
 
 namespace WinAdminClientCore.ViewModels
@@ -106,8 +109,28 @@ namespace WinAdminClientCore.ViewModels
 
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue ("application/json"));
 
-                /*var content = new StringContent(
-                    JsonConvert.SerializeObject(new {email = UserName, Password = Password}));*/
+                var content = new StringContent(
+                    JsonConvert.SerializeObject(new UserLoginDTO {Email = UserName, Password = Password}),
+                    Encoding.UTF8,
+                    "application/json");
+
+                HttpResponseMessage result;
+                try
+                {
+                    result = client.PostAsync("/api/account/login", content).Result;
+
+                    if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        MessageBox.Show("wrong user credentials");
+                        return;
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("a connection problem encountered");
+                    return;
+                }
+
             }
 
             var mainWindow = new MainWindow(new MainWindowViewModel());

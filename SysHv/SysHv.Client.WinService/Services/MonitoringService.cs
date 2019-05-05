@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.ServiceModel.Configuration;
 using System.Threading.Tasks;
 using System.Timers;
 using NLog;
@@ -70,7 +71,7 @@ namespace SysHv.Client.WinService.Services
             while (true)
             {
                 var loginResponse = await _restClient.Login();
-
+                
                 if (loginResponse != null && loginResponse.Success)
                 {
                     _queueName = loginResponse.Message;

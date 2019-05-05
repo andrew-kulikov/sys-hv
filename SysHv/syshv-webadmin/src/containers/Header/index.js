@@ -2,7 +2,7 @@ import React from "react";
 import { connectTo } from "../../utils";
 import { withNamespaces } from 'react-i18next';
 import { logout } from "../../actions/auth";
-import Button from '../../components/common/Button';
+import Button from '@material-ui/core/Button';
 
 
 class Header extends React.Component {

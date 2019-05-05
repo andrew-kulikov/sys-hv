@@ -1,16 +1,9 @@
 import React from 'react';
-import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
-import LineChart from 'recharts/lib/chart/LineChart';
-import Line from 'recharts/lib/cartesian/Line';
-import XAxis from 'recharts/lib/cartesian/XAxis';
-import YAxis from 'recharts/lib/cartesian/YAxis';
-import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
-import Tooltip from 'recharts/lib/component/Tooltip';
-import Legend from 'recharts/lib/component/Legend';
 
 import ApexCtarts from 'apexcharts';
 import Chart from 'react-apexcharts';
 
+import { connectTo } from '../../utils';
 
 var lastDate = 0;
 var data = [];
@@ -110,18 +103,24 @@ class SimpleLineChart extends React.Component {
   }
 
   intervals() {
+    /*
     window.setInterval(() => {
       getNewSeries(lastDate, {
         min: 10,
         max: 90
       });
 
-      ApexCtarts.exec('realtime', 'updateSeries', [
-        {
-          data: data
-        }
-      ]);
-    }, 5000);
+      this.setState({
+        ...this.state,
+        series: [
+          {
+            data: data.slice()
+          }
+        ]
+      });
+
+      //ApexCtarts.exec('realtime', 'updateSeries', [{ data: data }]);
+    }, 5000);*/
 
     // every 60 seconds, we reset the data
     window.setInterval(() => {
@@ -130,17 +129,14 @@ class SimpleLineChart extends React.Component {
       ApexCtarts.exec(
         'realtime',
         'updateSeries',
-        [
-          {
-            data: data
-          }
-        ],
+        [{ data: data }],
         false,
         true
       );
     }, 60000);
   }
   render() {
+    console.log(data);
     return (
       <Chart
         options={this.state.options}
@@ -152,4 +148,4 @@ class SimpleLineChart extends React.Component {
   }
 }
 
-export default SimpleLineChart;
+export default connectTo(state => ({ data: state.sensor.sensorValues }), {}, SimpleLineChart);

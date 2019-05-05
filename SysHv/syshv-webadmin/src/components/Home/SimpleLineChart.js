@@ -4,139 +4,81 @@ import ApexCtarts from 'apexcharts';
 import Chart from 'react-apexcharts';
 
 import { connectTo } from '../../utils';
+import moment from 'moment';
 
-var lastDate = 0;
-var data = [];
-
-function getDayWiseTimeSeries(baseval, count, yrange) {
-  var i = 0;
-  while (i < count) {
-    var x = baseval;
-    var y =
-      Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-
-    data.push({
-      x,
-      y
-    });
-    lastDate = baseval;
-    baseval += 86400000;
-    i++;
-  }
-}
-
-getDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 10, {
-  min: 10,
-  max: 90
-});
-
-function getNewSeries(baseval, yrange) {
-  var newDate = baseval + 86400000;
-  lastDate = newDate;
-  data.push({
-    x: newDate,
-    y: Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min
-  });
-}
-
-function resetData() {
-  data = data.slice(data.length - 10, data.length);
-}
 
 class SimpleLineChart extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      options: {
-        chart: {
-          id: 'realtime',
-          animations: {
-            enabled: true,
-            easing: 'linear',
-            dynamicAnimation: {
-              speed: 5000
-            }
-          },
-          toolbar: {
-            show: false
-          },
-          zoom: {
-            enabled: false
+  state = {
+    options: {
+      chart: {
+        id: 'realtime',
+        animations: {
+          enabled: true,
+          easing: 'linear',
+          dynamicAnimation: {
+            speed: 5000
           }
         },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-
-        title: {
-          text: 'Dynamic Updating Chart',
-          align: 'left'
-        },
-        markers: {
-          size: 0
-        },
-        xaxis: {
-          type: 'datetime',
-          range: 777600000
-        },
-        yaxis: {
-          max: 100
-        },
-        legend: {
+        toolbar: {
           show: false
+        },
+        zoom: {
+          enabled: false
         }
       },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+
+      title: {
+        text: 'Dynamic Updating Chart',
+        align: 'left'
+      },
+      markers: {
+        size: 0
+      },
+      xaxis: {
+        x: new Date('14 Nov 2012').getTime(),
+        type: 'datetime',
+        min: Date.now(),
+        range: 50000,
+        tickAmount: 2,
+        labels: {
+          formatter: function(val, timestamp) {
+            return moment(timestamp).format('HH:mm:ss');
+          }
+        }
+      },
+      yaxis: {
+        min: 0,
+        max: 100
+      },
+      legend: {
+        show: false
+      }
+    },
+    series: [
+      {
+        data: []
+      }
+    ]
+  };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return {
+      ...prevState,
       series: [
         {
-          data: data.slice()
+          data: nextProps.data.values.slice()
         }
       ]
     };
   }
 
-  componentDidMount() {
-    this.intervals();
-  }
-
-  intervals() {
-    /*
-    window.setInterval(() => {
-      getNewSeries(lastDate, {
-        min: 10,
-        max: 90
-      });
-
-      this.setState({
-        ...this.state,
-        series: [
-          {
-            data: data.slice()
-          }
-        ]
-      });
-
-      //ApexCtarts.exec('realtime', 'updateSeries', [{ data: data }]);
-    }, 5000);*/
-
-    // every 60 seconds, we reset the data
-    window.setInterval(() => {
-      resetData();
-
-      ApexCtarts.exec(
-        'realtime',
-        'updateSeries',
-        [{ data: data }],
-        false,
-        true
-      );
-    }, 60000);
-  }
   render() {
-    console.log(data);
     return (
       <Chart
         options={this.state.options}
@@ -148,4 +90,8 @@ class SimpleLineChart extends React.Component {
   }
 }
 
-export default connectTo(state => ({ data: state.sensor.sensorValues }), {}, SimpleLineChart);
+export default connectTo(
+  state => ({ data: state.selectedSensor }),
+  {},
+  SimpleLineChart
+);

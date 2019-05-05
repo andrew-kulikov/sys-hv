@@ -92,8 +92,6 @@ const Charts = props => {
   const { data } = props;
   const subsensors = data.subsensors;
 
-  console.log(data);
-
   return (
     <>
       <SimpleLineChart name="main" title={"Total"} height="350" data={data.values} />

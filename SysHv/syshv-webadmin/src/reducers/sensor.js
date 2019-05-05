@@ -13,8 +13,10 @@ export default createReducer(
       if (!sensorValues[update.SensorId]) sensorValues[update.SensorId] = [];
       sensorValues[update.SensorId].push({
         x: Date.now(),
-        y: update.Value.TotalLoad
+        y: update.Value
       });
+      if (sensorValues[update.SensorId].length > 25)
+        sensorValues[update.SensorId] = sensorValues[update.SensorId].slice(-10);
       return { ...state, sensorValues };
     }
   },

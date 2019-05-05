@@ -23,7 +23,10 @@ export default createReducer(
           const subsensorName = update.SubSensors[key].CoreName;
 
           if (!subsensors[subsensorName]) subsensors[subsensorName] = [];
-          subsensors[subsensorName].push(update.SubSensors[key].Load);
+          subsensors[subsensorName].push({
+            x: Date.now(),
+            y: update.SubSensors[key].Load
+          });
       }
 
       return { id: state.id, values, subsensors };

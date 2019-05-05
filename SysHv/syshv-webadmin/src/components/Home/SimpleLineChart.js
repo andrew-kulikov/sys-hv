@@ -6,12 +6,11 @@ import Chart from 'react-apexcharts';
 import { connectTo } from '../../utils';
 import moment from 'moment';
 
-
 class SimpleLineChart extends React.Component {
   state = {
     options: {
       chart: {
-        id: 'realtime',
+        id: this.props.name,
         animations: {
           enabled: true,
           easing: 'linear',
@@ -34,14 +33,13 @@ class SimpleLineChart extends React.Component {
       },
 
       title: {
-        text: 'Dynamic Updating Chart',
+        text: this.props.title,
         align: 'left'
       },
       markers: {
         size: 0
       },
       xaxis: {
-        x: new Date('14 Nov 2012').getTime(),
         type: 'datetime',
         min: Date.now(),
         range: 50000,
@@ -72,7 +70,7 @@ class SimpleLineChart extends React.Component {
       ...prevState,
       series: [
         {
-          data: nextProps.data.values.slice()
+          data: nextProps.data.slice()
         }
       ]
     };
@@ -84,14 +82,34 @@ class SimpleLineChart extends React.Component {
         options={this.state.options}
         series={this.state.series}
         type="line"
-        height="350"
+        height={this.props.height}
       />
     );
   }
 }
 
+const Charts = props => {
+  const { data } = props;
+  const subsensors = data.subsensors;
+
+  console.log(data);
+
+  return (
+    <>
+      <SimpleLineChart name="main" title={"Total"} height="350" data={data.values} />
+      <div style={{display: "flex"}}>
+      {Object.keys(subsensors).map(name => (
+        <div key={name} style={{width: "48%"}}>
+          <SimpleLineChart name="name" title={name} height="320" data={subsensors[name]} />
+        </div>
+      ))}
+      </div>
+    </>
+  );
+};
+
 export default connectTo(
   state => ({ data: state.selectedSensor }),
   {},
-  SimpleLineChart
+  Charts
 );

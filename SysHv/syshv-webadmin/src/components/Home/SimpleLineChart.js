@@ -8,36 +8,148 @@ import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
 import Tooltip from 'recharts/lib/component/Tooltip';
 import Legend from 'recharts/lib/component/Legend';
 
-const data = [
-  { name: 'Mon', Visits: 2200, Orders: 3400 },
-  { name: 'Tue', Visits: 1280, Orders: 2398 },
-  { name: 'Wed', Visits: 5000, Orders: 4300 },
-  { name: 'Thu', Visits: 4780, Orders: 2908 },
-  { name: 'Fri', Visits: 5890, Orders: 4800 },
-  { name: 'Sat', Visits: 4390, Orders: 3800 },
-  { name: 'Sun', Visits: 4490, Orders: 4300 }
-];
+import ApexCtarts from 'apexcharts';
+import Chart from 'react-apexcharts';
 
-function SimpleLineChart() {
-  return (
-    // 99% per https://github.com/recharts/recharts/issues/172
-    <ResponsiveContainer width="99%" height={320}>
-      <LineChart data={data}>
-        <XAxis dataKey="name" />
-        <YAxis />
-        <CartesianGrid vertical={false} strokeDasharray="3 3" />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="Visits" stroke="#82ca9d" />
-        <Line
-          type="monotone"
-          dataKey="Orders"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+
+var lastDate = 0;
+var data = [];
+
+function getDayWiseTimeSeries(baseval, count, yrange) {
+  var i = 0;
+  while (i < count) {
+    var x = baseval;
+    var y =
+      Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+
+    data.push({
+      x,
+      y
+    });
+    lastDate = baseval;
+    baseval += 86400000;
+    i++;
+  }
+}
+
+getDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 10, {
+  min: 10,
+  max: 90
+});
+
+function getNewSeries(baseval, yrange) {
+  var newDate = baseval + 86400000;
+  lastDate = newDate;
+  data.push({
+    x: newDate,
+    y: Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min
+  });
+}
+
+function resetData() {
+  data = data.slice(data.length - 10, data.length);
+}
+
+class SimpleLineChart extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      options: {
+        chart: {
+          id: 'realtime',
+          animations: {
+            enabled: true,
+            easing: 'linear',
+            dynamicAnimation: {
+              speed: 5000
+            }
+          },
+          toolbar: {
+            show: false
+          },
+          zoom: {
+            enabled: false
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+
+        title: {
+          text: 'Dynamic Updating Chart',
+          align: 'left'
+        },
+        markers: {
+          size: 0
+        },
+        xaxis: {
+          type: 'datetime',
+          range: 777600000
+        },
+        yaxis: {
+          max: 100
+        },
+        legend: {
+          show: false
+        }
+      },
+      series: [
+        {
+          data: data.slice()
+        }
+      ]
+    };
+  }
+
+  componentDidMount() {
+    this.intervals();
+  }
+
+  intervals() {
+    window.setInterval(() => {
+      getNewSeries(lastDate, {
+        min: 10,
+        max: 90
+      });
+
+      ApexCtarts.exec('realtime', 'updateSeries', [
+        {
+          data: data
+        }
+      ]);
+    }, 5000);
+
+    // every 60 seconds, we reset the data
+    window.setInterval(() => {
+      resetData();
+
+      ApexCtarts.exec(
+        'realtime',
+        'updateSeries',
+        [
+          {
+            data: data
+          }
+        ],
+        false,
+        true
+      );
+    }, 60000);
+  }
+  render() {
+    return (
+      <Chart
+        options={this.state.options}
+        series={this.state.series}
+        type="line"
+        height="350"
+      />
+    );
+  }
 }
 
 export default SimpleLineChart;

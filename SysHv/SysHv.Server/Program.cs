@@ -10,10 +10,10 @@ namespace SysHv.Server
         public static void Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
-            using (var scope = host.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetService<ServerDbContext>();
-            }
+            //using (var scope = host.Services.CreateScope())
+            //{
+            //    var dbContext = scope.ServiceProvider.GetService<ServerDbContext>();
+            //}
             host.Run();
         }
 

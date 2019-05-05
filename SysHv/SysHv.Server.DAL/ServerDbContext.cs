@@ -33,10 +33,6 @@ namespace SysHv.Server.DAL
                 .HasMany(s => s.SubSensors)
                 .WithOne(ss => ss.Sensor);
 
-            builder.Entity<Client>()
-                .HasMany(s => s.ClientSensors)
-                .WithOne(cs => cs.Client);
-
             base.OnModelCreating(builder);
         }
     }

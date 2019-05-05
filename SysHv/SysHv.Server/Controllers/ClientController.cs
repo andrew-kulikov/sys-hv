@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +20,17 @@ namespace SysHv.Server.Controllers
     public class ClientController : Controller
     {
         private readonly IClientService _clientService;
-        private readonly ReceiverService _receiver;
         private readonly ISensorService _sensorService;
+        private readonly IMapper _mapper;
+        private readonly ReceiverService _receiver;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public ClientController(UserManager<ApplicationUser> userManager, IClientService clientService,
             ISensorService sensorService,
-            IHostedServiceAccessor<ReceiverService> receiver)
+            IHostedServiceAccessor<ReceiverService> receiver,
+            IMapper mapper)
         {
+            _mapper = mapper;
             _userManager = userManager;
             _clientService = clientService;
             _sensorService = sensorService;
@@ -91,11 +95,12 @@ namespace SysHv.Server.Controllers
 
         [HttpGet]
         [Authorize("Bearer")]
-        public async Task<ActionResult<ICollection<DAL.Models.Client>>> GetAllClients()
+        public async Task<ActionResult<ICollection<ClientDto>>> GetAllClients()
         {
             var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            var clients = await _clientService.GetAdminClientsAsync(user.Id);
 
-            return await _clientService.GetAdminClientsAsync(user.Id);
+            return _mapper.Map<List<DAL.Models.Client>, List<ClientDto>>(clients);
         }
     }
 }

@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20190425142055_CreateClientModel.Designer.cs" />
     <Compile Remove="Migrations\20190425160940_AddClientsToUser.cs" />
     <Compile Remove="Migrations\20190425160940_AddClientsToUser.Designer.cs" />
+    <Compile Remove="Migrations\20190505182350_ChangeNavigation.cs" />
+    <Compile Remove="Migrations\20190505182350_ChangeNavigation.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

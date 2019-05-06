@@ -2,6 +2,7 @@ import auth from './auth';
 import home from './home';
 import account from './account';
 import sensor from './sensor';
+import selectedSensor from './selectedSensor';
 import { reducer as toastr } from 'react-redux-toastr';
 
 export default {
@@ -9,5 +10,6 @@ export default {
   home,
   account,
   toastr,
-  sensor
+  sensor,
+  selectedSensor
 };

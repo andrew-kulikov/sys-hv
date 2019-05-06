@@ -37,18 +37,26 @@ namespace SysHv.Server.Hubs
                 Connections[user] = new List<string>();
             Connections[user].Add(Context.ConnectionId);
 
-            Clients.All.SendAsync("sensorAdded");
-
             return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            var user = Context.User.Identity.Name;
+
+            Connections[user].Remove(Context.ConnectionId);
+
+            return base.OnDisconnectedAsync(exception);
         }
 
         public async Task AddClientSensor(ClientSensorDto dto)
         {
+            var user = Context.User.Identity.Name;
             var clientSensor = _mapper.Map<ClientSensor>(dto);
 
-            //await _sensorService.AddClientSensorAsync(clientSensor);
+            await _sensorService.AddClientSensorAsync(clientSensor);
 
-            //await Clients.User(Context.UserIdentifier).SendAsync("sensorAdded");
+            await Clients.Clients(Connections[user] as IReadOnlyList<string>).SendAsync("sensorAdded");
         }
     }
 }

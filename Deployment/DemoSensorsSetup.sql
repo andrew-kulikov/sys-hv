@@ -15,7 +15,8 @@ drop CONSTRAINT [FK_ClientSensors_Clients_ClientId],
 -- truncate referenced table
 truncate table dbo.Sensors;
 
--- restore constraints
+-- restore constraints. here may be some other tables so if you use this script to set up sensors - please check fk's in all tables first
+-- if first part worked and then you got a problem with adding - you need first to reset all FK's that has been dropped
 alter table dbo.SubSensors
 add CONSTRAINT [FK_SubSensors_Sensors_SensorId] FOREIGN KEY ([SensorId]) REFERENCES [dbo].[Sensors] ([Id]) ON DELETE CASCADE;
 

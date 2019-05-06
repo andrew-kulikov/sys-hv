@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="DTOs\ClientLoginDto.cs" />
     <Compile Include="DTOs\SensorDTO.cs" />
-    <Compile Include="DTOs\SensorOutput\NumericSensorDto.cs" />
+    <Compile Include="DTOs\SensorOutput\CPULoadSensorDto.cs" />
     <Compile Include="DTOs\SensorOutput\HardwareInfoDTO.cs" />
     <Compile Include="DTOs\SensorOutput\MotherBoardDTO.cs" />
     <Compile Include="DTOs\SensorOutput\NetworkInterfaceDTO.cs" />

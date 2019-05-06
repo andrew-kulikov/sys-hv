@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using LiveCharts;
+using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 
 namespace WinAdminClientCore.ViewModels.Sensors
@@ -11,11 +12,23 @@ namespace WinAdminClientCore.ViewModels.Sensors
 
         private LineSeries _observableLine;
 
-        public double LastValue {
-            get
+        private double _lastValue;
+
+        public double LastValue
+        {
+            get => _lastValue;
+            set
             {
-                var a =(double) (_observableLine.Values as ICollection).;
+                _observableLine.Values.Add(new ObservableValue(value));
+                _lastValue = value;
+                OnPropertyChanged(nameof(LastValue));
             }
-            set; }
+        }
+
+
+        public SingleNumberSensorViewModel()
+        {
+            _observableLine.Values = new ChartValues<ObservableValue>();
+        }
     }
 }

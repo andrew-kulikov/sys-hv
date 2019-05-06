@@ -8,14 +8,6 @@ import { withNamespaces } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
 
 class SensorsPage extends React.Component {
-  componentDidMount() {
-    !this.props.token && this.props.history.replace('/login');
-  }
-
-  componentDidUpdate() {
-    !this.props.token && this.props.history.replace('/login');
-  }
-
   render() {
     const { classes } = this.props;
 

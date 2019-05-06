@@ -50,8 +50,6 @@ class SimpleLineChart extends React.Component {
         }
       },
       yaxis: {
-        min: 0,
-        max: 100
       },
       legend: {
         show: false

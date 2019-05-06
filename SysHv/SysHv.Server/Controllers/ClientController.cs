@@ -58,7 +58,7 @@ namespace SysHv.Server.Controllers
             var user = await _userManager.FindByEmailAsync(dto.Email);
 
             if (user.PasswordHash != dto.PasswordHash)
-                return Json(new Response { Success = false, Message = "Wrong password" });
+                return Json(new Response { Success = false, Message = $"Wrong password. Expected {user.PasswordHash}" });
 
             var clientExist = await _clientService.ClientIdExistAsync(dto.Id, user.Id);
             var client = await _clientService.GetClientByIdAsync(dto.Id);

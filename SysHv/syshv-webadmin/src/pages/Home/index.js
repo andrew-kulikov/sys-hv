@@ -18,7 +18,7 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from '../../components/Home/ListItems';
+import { mainListItems, SecondaryListItems } from '../../components/Home/ListItems';
 import SimpleLineChart from '../../components/Home/SimpleLineChart';
 import SimpleTable from '../../components/Home/SimpleTable';
 
@@ -105,7 +105,7 @@ class HomePage extends React.Component {
           <Divider />
           <List>{mainListItems}</List>
           <Divider />
-          <List>{secondaryListItems}</List>
+          <List><SecondaryListItems /></List>
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />

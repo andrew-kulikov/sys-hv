@@ -21,15 +21,16 @@ const signalRMiddleware = storeAPI => {
 
   connection.on('sensorAdded', () => alert('sensor added'));
 
+  console.log(storeAPI.getState().auth.token);
   if (storeAPI.getState().auth.token) {
-    connection.start().then(() => connection.invoke('AddClientSensor', {})).catch(e => storeAPI.dispatch(logout()));
+    connection.start().catch(e => storeAPI.dispatch(logout()));
   }
 
   return next => action => {
     const res = next(action);
 
     if (action.type === loginOk().type) {
-      connection.start().catch(e => console.log(e.message));
+      //connection.start().catch(e => console.log(e.message));
     }
 
     return res;

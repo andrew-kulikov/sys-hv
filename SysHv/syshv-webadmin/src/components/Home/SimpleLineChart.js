@@ -1,6 +1,5 @@
 import React from 'react';
 
-import ApexCtarts from 'apexcharts';
 import Chart from 'react-apexcharts';
 
 import { connectTo } from '../../utils';
@@ -94,20 +93,26 @@ const Charts = props => {
 
   return (
     <>
-      <SimpleLineChart name="main" title={"Total"} height="350" data={data.values} />
-      <div style={{display: "flex"}}>
-      {Object.keys(subsensors).map(name => (
-        <div key={name} style={{width: "48%"}}>
-          <SimpleLineChart name="name" title={name} height="320" data={subsensors[name]} />
-        </div>
-      ))}
+      <SimpleLineChart
+        name="main"
+        title={'Total'}
+        height="350"
+        data={data.values}
+      />
+      <div style={{ display: 'flex' }}>
+        {Object.keys(subsensors).map(name => (
+          <div key={name} style={{ width: '48%' }}>
+            <SimpleLineChart
+              name="name"
+              title={name}
+              height="320"
+              data={subsensors[name]}
+            />
+          </div>
+        ))}
       </div>
     </>
   );
 };
 
-export default connectTo(
-  state => ({ data: state.selectedSensor }),
-  {},
-  Charts
-);
+export default connectTo(state => ({ data: state.selectedSensor }), {}, Charts);

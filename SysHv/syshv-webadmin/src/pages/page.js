@@ -27,10 +27,20 @@ import classNames from 'classnames';
 
 import styles from './style';
 
+import { connectTo } from '../utils';
+
 class Page extends React.Component {
   state = {
     open: true
   };
+
+  componentDidMount() {
+    !this.props.token && this.props.history.replace('/login');
+  }
+
+  componentDidUpdate() {
+    !this.props.token && this.props.history.replace('/login');
+  }
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -118,4 +128,10 @@ class Page extends React.Component {
   }
 }
 
-export default withStyles(styles)(Page);
+export default connectTo(
+  state => ({
+    token: state.auth.token
+  }),
+  {},
+  withStyles(styles)(Page)
+);

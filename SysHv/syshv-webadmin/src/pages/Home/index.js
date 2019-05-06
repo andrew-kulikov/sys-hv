@@ -26,8 +26,7 @@ class HomePage extends React.Component {
 
     return (
       <Page>
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
+        <>
           <Typography variant="h4" gutterBottom component="h2">
             Orders
           </Typography>
@@ -40,7 +39,7 @@ class HomePage extends React.Component {
           <div className={classes.tableContainer}>
             <SimpleTable />
           </div>
-        </main>
+        </>
       </Page>
     );
   }

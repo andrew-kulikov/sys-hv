@@ -108,8 +108,10 @@ class Page extends React.Component {
           </List>
         </Drawer>
 
-        {children}
-
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          {children}
+        </main>
         <Footer />
       </div>
     );

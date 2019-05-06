@@ -133,5 +133,5 @@ export default connectTo(
     token: state.auth.token
   }),
   {},
-  withStyles(styles)(Page)
+  withRouter(withStyles(styles)(Page))
 );

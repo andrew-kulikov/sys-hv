@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { connectTo } from '../../utils';
 import styles from './style';
 import Page from '../page';
 import { withNamespaces } from 'react-i18next';

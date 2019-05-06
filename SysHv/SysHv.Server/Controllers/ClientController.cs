@@ -53,7 +53,7 @@ namespace SysHv.Server.Controllers
         [Route("login")]
         public async Task<IActionResult> LoginClient([FromBody] ClientLoginDto dto)
         {
-            if (!ModelState.IsValid) return Json(new Response { Success = false, Message = "Model invalid" });
+            if (!ModelState.IsValid) return BadRequest(new Response { Success = false, Message = "Model invalid" });
 
             var user = await _userManager.FindByEmailAsync(dto.Email);
 
@@ -63,10 +63,10 @@ namespace SysHv.Server.Controllers
             var clientExist = await _clientService.ClientIdExistAsync(dto.Id, user.Id);
             var client = await _clientService.GetClientByIdAsync(dto.Id);
 
-            if (!clientExist) return Json(new Response { Success = false, Message = "Client does not exist" });
+            if (!clientExist) return NotFound(new Response { Success = false, Message = "Client does not exist" });
 
             var queue = dto.Id.ToString();
-            _receiver.RegisterClient(queue, user.Id);
+            _receiver.RegisterClient(client.Id, user.Id);
 
             var sensors = await _sensorService.GetClientSensorsAsync(client.Id);
             var sensorDtos = sensors.Select(s => s.ToSensorDto());

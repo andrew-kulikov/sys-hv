@@ -48,10 +48,10 @@ class LoginPage extends React.Component {
   }
 
   render() {
-    const { classes, t, login } = this.props;
+    const { classes, t } = this.props;
 
     return (
-      <Page className={classes.main}>
+      <main className={classes.main}>
         <CssBaseline />
         <Paper className={classes.paper}>
           <Avatar className={classes.avatar}>
@@ -98,7 +98,7 @@ class LoginPage extends React.Component {
             </Button>
           </form>
         </Paper>
-      </Page>
+      </main>
     );
   }
 }

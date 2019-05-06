@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using SysHv.Client.Common.DTOs.SensorOutput;
 using WinAdminClientCore.Collections;
+using WinAdminClientCore.Enums;
 using WinAdminClientCore.Models;
 using WinAdminClientCore.UIHelpers;
 
@@ -99,47 +100,28 @@ namespace WinAdminClientCore.ViewModels
 
         void ondata(object o)
         {
-            //var obj = JsonConvert.DeserializeObject<SensorResponse>(o.ToString());
-
-            var settings = new JsonSerializerSettings() { MissingMemberHandling = MissingMemberHandling.Error};
-
-            var obj = TryConvert(o.ToString());// = JsonConvert.DeserializeObject<SensorResponse>(o.ToString(), settings);
+            var obj = TryConvert(o.ToString());
             ProcessTypes(obj);
-
-            //var obj1 = Convert.ChangeType(obj.Item2, obj.Item1);
-
-            //MessageBox.Show(obj1.GetType().ToString());
-
-
-            //Console.WriteLine(o.GetType());
-            /*foreach (var dto in o.CouLoad)
-            {
-                Computers[0].AddTemperatureDot(new ObservableValue(dto.Value ?? 0));
-            }*/
-            /*for(int i = 0, len = LastHourSeries[0].Values.Count / 3; i < len; i++)
-            {
-                LastHourSeries[0].Values.RemoveAt(0);
-            }*/
-            //MessageBox.Show(o.CouLoad.Count.ToString());
-
         }
 
         void ProcessTypes(Tuple<Type, object> incoming)
         {
             var obj = Convert.ChangeType(incoming.Item2, incoming.Item1);
 
-            switch (obj)
-            {
-                case SensorResponse val:
-                    Computers[0].AddTemperatureDot(new ObservableValue((double)val.Value));
-                    return;
-            }
+            if (obj is SensorResponse)
+                switch ((SensorContract)(obj as SensorResponse).SensorId)
+                {
+                    case SensorContract.SingleDoubleValue:
+
+                        break;
+                }
+
         }
 
         public Tuple<Type, object> TryConvert(string json)
         {
             var settings = new JsonSerializerSettings() { MissingMemberHandling = MissingMemberHandling.Error };
-            var sensorTypes = new[] { typeof(DefaultComputerInfo), typeof(SensorResponse)};
+            var sensorTypes = new[] {typeof(SensorResponse), typeof(CPULoadSensorDto) };
 
             foreach (var type in sensorTypes)
             {

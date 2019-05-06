@@ -29,8 +29,6 @@ import styles from './style';
 
 import { connectTo } from '../utils';
 
-import { getClients } from '../actions/client';
-
 class Page extends React.Component {
   state = {
     open: true
@@ -38,7 +36,6 @@ class Page extends React.Component {
 
   componentDidMount() {
     !this.props.token && this.props.history.replace('/login');
-    this.props.getClients();
   }
 
   componentDidUpdate() {
@@ -135,6 +132,6 @@ export default connectTo(
   state => ({
     token: state.auth.token
   }),
-  { getClients },
+  { },
   withRouter(withStyles(styles)(Page))
 );

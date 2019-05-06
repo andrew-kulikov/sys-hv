@@ -8,8 +8,6 @@ import { get } from '../utils/httpUtil';
 import { setClients } from '../actions/client';
 
 export function* getClients() {
-    console.log('sdfsdf');
   const data = yield callHttp(get, CLIENTS);
-  console.log(data);
   yield put(setClients(data));
 }

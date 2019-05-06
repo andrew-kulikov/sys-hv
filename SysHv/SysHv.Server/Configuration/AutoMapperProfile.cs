@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using SysHv.Server.DAL.Models;
 using SysHv.Server.DTOs;
 
 namespace SysHv.Server.Configuration
@@ -12,6 +9,7 @@ namespace SysHv.Server.Configuration
         public AutoMapperProfile()
         {
             CreateMap<DAL.Models.Client, ClientDto>();
+            CreateMap<ClientSensorDto, ClientSensor>();
         }
     }
 }

@@ -1,5 +1,5 @@
 import { getUpdate, updateSelectedSensor } from '../actions/sensor';
-import { loginOk } from '../actions/auth';
+import { loginOk, logout } from '../actions/auth';
 import { HUB } from '../constants/api';
 
 import { HubConnectionBuilder } from '@aspnet/signalr';
@@ -19,16 +19,20 @@ const signalRMiddleware = storeAPI => {
     
   });
 
+  connection.on('sensorAdded', () => alert('sensor added'));
+
   if (storeAPI.getState().auth.token) {
-    connection.start().catch(e => console.log(e.message));
+    connection.start().then(() => connection.invoke('AddClientSensor', {})).catch(e => storeAPI.dispatch(logout()));
   }
 
   return next => action => {
+    const res = next(action);
+
     if (action.type === loginOk().type) {
       connection.start().catch(e => console.log(e.message));
     }
 
-    return next(action);
+    return res;
   };
 };
 

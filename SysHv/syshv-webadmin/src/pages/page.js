@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 import Footer from '../containers/Footer';
 import Header from '../containers/Header';
@@ -12,7 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import {
-  mainListItems,
+  MainListItems,
   SecondaryListItems
 } from '../components/Home/ListItems';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -98,7 +99,9 @@ class Page extends React.Component {
             </IconButton>
           </div>
           <Divider />
-          <List>{mainListItems}</List>
+          <List>
+            <MainListItems />
+          </List>
           <Divider />
           <List>
             <SecondaryListItems />

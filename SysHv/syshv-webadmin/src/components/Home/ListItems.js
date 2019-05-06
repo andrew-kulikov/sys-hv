@@ -12,34 +12,36 @@ import LogoutIcon from '@material-ui/icons/ExitToApp';
 import { logout } from '../../actions/auth';
 import { connectTo } from '../../utils';
 
-export const mainListItems = (
+import { withRouter } from 'react-router-dom';
+
+export const MainListItems = withRouter(props => (
   <div>
-    <ListItem button>
+    <ListItem button onClick={() => props.history.push('/')}>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItem>
-    <ListItem button>
+    <ListItem button onClick={() => props.history.push('/computers')}>
       <ListItemIcon>
         <LaptopIcon />
       </ListItemIcon>
       <ListItemText primary="Computers" />
     </ListItem>
-    <ListItem button>
+    <ListItem button onClick={() => props.history.push('/sensors')}>
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
       <ListItemText primary="Sensors" />
     </ListItem>
-    <ListItem button>
+    <ListItem button onClick={() => props.history.push('/logs')}>
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>
       <ListItemText primary="Reports" />
     </ListItem>
   </div>
-);
+));
 
 export const SecondaryListItems = connectTo(
   state => ({}),

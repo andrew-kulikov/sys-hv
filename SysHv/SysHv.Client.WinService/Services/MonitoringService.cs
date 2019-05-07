@@ -15,6 +15,7 @@ using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Client.Common.Models;
 using SysHv.Client.WinService.Communication;
+using SysHv.Client.WinService.Gatherers;
 using SysHv.Client.WinService.Helpers;
 
 namespace SysHv.Client.WinService.Services
@@ -89,11 +90,24 @@ namespace SysHv.Client.WinService.Services
                         return "good";
                     });
                     LaunchSensors(loginResponse.Sensors);
+                    SendHardwareInfo();
 
                     break;
                 }
 
                 await Task.Delay(ConfigurationHelper.ReconnectionInterval);
+            }
+        }
+
+        private void SendHardwareInfo()
+        {
+            var gatherer = new HardwareInfoGatherer();
+            var info = gatherer.Gather();
+
+            using (var rabbitSender = new OneWaySender(new ConnectionModel(),
+                new PublishProperties {ExchangeName = "", QueueName = _queueName}))
+            {
+                rabbitSender.Send(info, "HardwareInfo");
             }
         }
 

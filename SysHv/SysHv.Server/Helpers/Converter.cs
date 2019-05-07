@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using SysHv.Client.Common.DTOs;
+﻿using SysHv.Client.Common.DTOs;
 using SysHv.Server.DAL.Models;
 
 namespace SysHv.Server.Helpers
@@ -19,10 +15,11 @@ namespace SysHv.Server.Helpers
                 Contract = sensor.Contract,
                 Interval = clientSensor.Interval,
                 Description = clientSensor.Description,
-                CriticalValue = sensor.CriticalValue,
+                WarningValue = clientSensor.WarningValue,
+                CriticalValue = clientSensor.CriticalValue,
                 IsNumeric = sensor.IsNumeric,
-                MaxValue = sensor.MaxValue,
-                MinValue = sensor.MinValue,
+                MaxValue = clientSensor.MaxValue,
+                MinValue = clientSensor.MinValue,
                 ReturnType = sensor.ReturnType
             };
         }

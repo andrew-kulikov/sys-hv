@@ -12,6 +12,10 @@ namespace SysHv.Server.DAL.Models
         public int Interval { get; set; }
         public int ClientId { get; set; }
         public int SensorId { get; set; }
+        public float? MinValue { get; set; }
+        public float? MaxValue { get; set; }
+        public float? WarningValue { get; set; }
+        public float? CriticalValue { get; set; }
         public Sensor Sensor { get; set; }
     }
 }

@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using RabbitMQ.Client.Events;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Setup;
+using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Server.Helpers;
 using SysHv.Server.Hubs;
 
@@ -64,6 +65,13 @@ namespace SysHv.Server.HostedServices
         {
             var message = Encoding.UTF8.GetString(ea.Body);
             var type = ea.BasicProperties.Type;
+
+            if (type == "HardwareInfo")
+            {
+                var info = JsonConvert.DeserializeObject<HardwareInfoDTO>(message);
+
+                return;
+            }
 
             _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject(message));
         }

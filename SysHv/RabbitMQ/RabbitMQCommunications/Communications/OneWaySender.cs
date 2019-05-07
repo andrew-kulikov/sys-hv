@@ -33,10 +33,10 @@ namespace RabbitMQCommunications.Communications
             Model = Connection.CreateModel();
         }
 
-        public void Send<T>(T dto)
+        public void Send<T>(T dto, string type = null)
         {
             var properties = Model.CreateBasicProperties();
-            properties.Type = typeof(T).ToString();
+            properties.Type = type;
 
             var json = JsonConvert.SerializeObject(dto);
             var messageBuffer = Encoding.UTF8.GetBytes(json);

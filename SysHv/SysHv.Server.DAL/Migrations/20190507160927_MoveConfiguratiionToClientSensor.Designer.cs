@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SysHv.Server.DAL;
 
 namespace SysHv.Server.DAL.Migrations
 {
     [DbContext(typeof(ServerDbContext))]
-    partial class ServerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190507160927_MoveConfiguratiionToClientSensor")]
+    partial class MoveConfiguratiionToClientSensor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,8 +235,6 @@ namespace SysHv.Server.DAL.Migrations
                     b.Property<string>("Name");
 
                     b.Property<int>("SensorId");
-
-                    b.Property<float?>("WarningValue");
 
                     b.HasKey("Id");
 

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SysHv.Client.Common.DTOs.SensorOutput
 {
@@ -10,6 +6,7 @@ namespace SysHv.Client.Common.DTOs.SensorOutput
     {
         public int ClientId { get; set; }
         public int SensorId { get; set; }
+        public DateTime Time { get; set; }
         public object Value { get; set; }
     }
 }

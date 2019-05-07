@@ -17,12 +17,12 @@ const getValue = val => {
 export default createReducer(
   {
     [a.selectSensor]: (state, id) => ({ id, values: [], subsensors: {} }),
-    [a.updateSelectedSensor]: (state, update) => {
-      console.log(update);
+    [a.updateSelectedSensor]: (state, { update, date }) => {
+      //console.log(update, date);
       let values = state.values;
 
       values.push({
-        x: Date.now(),
+        x: date,
         y: getValue(update.Value)
       });
 
@@ -34,7 +34,7 @@ export default createReducer(
 
         if (!subsensors[subsensorName]) subsensors[subsensorName] = [];
         subsensors[subsensorName].push({
-          x: Date.now(),
+          x: date,
           y: getValue(update.SubSensors[key].Value)
         });
         if (subsensors[subsensorName].length > 25)

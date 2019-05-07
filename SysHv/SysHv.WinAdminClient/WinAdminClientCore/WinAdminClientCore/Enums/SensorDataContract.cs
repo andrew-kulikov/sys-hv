@@ -5,7 +5,8 @@
     /// </summary>
     public class SensorDataContract
     {
-        public static readonly string CpuLoadDto = "CpuLoadDTO";
+        public  const string CpuLoadSensor = "CpuLoadSensor";
+        public  const string CpuTempSensor = "CpuTempSensor";
 
         public string Value { get; set; }
 

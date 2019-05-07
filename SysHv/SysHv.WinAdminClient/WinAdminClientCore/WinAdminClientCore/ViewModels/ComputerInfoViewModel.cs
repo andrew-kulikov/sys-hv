@@ -1,8 +1,13 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
+using SysHv.Client.Common.DTOs.SensorOutput;
+using SysHv.Server.DAL.Models;
+using WinAdminClientCore.Enums;
 using WinAdminClientCore.Models;
 
 namespace WinAdminClientCore.ViewModels
@@ -20,6 +25,8 @@ namespace WinAdminClientCore.ViewModels
         #endregion
 
         #region Properties
+
+        public int Id { get; private set; }
 
         public SeriesCollection TemperatureDots
         {
@@ -55,26 +62,70 @@ namespace WinAdminClientCore.ViewModels
 
         #region Constructors
 
-        public ComputerInfoViewModel()
+        public ComputerInfoViewModel(int id)
         {
-            TemperatureDots = new SeriesCollection
+            Id = id;
+            /*TemperatureDots = new SeriesCollection
             {
                 new LineSeries
                 {
                     Values = new ChartValues<ObservableValue>()
                 }
-            };
+            };*/
         }
 
         #endregion
 
         #region Public Methods
 
-        public void AddTemperatureDot(ObservableValue dot)
+        public void UpdateSingleValueSensors(string contract, NumericSensorDto sensor)
         {
-            TemperatureDots[0].Values.Add(dot);
-            if (TemperatureDots[0].Values.Count > 30)
-                TemperatureDots[0].Values.RemoveAt(0);
+            switch (contract)
+            {
+                case SensorDataContract.CpuTempSensor:
+                    if (TemperatureDots == null)
+                        TemperatureDots = new SeriesCollection();
+                    UpdateSeries(TemperatureDots, sensor);
+                    break;
+
+                case SensorDataContract.CpuLoadSensor:
+                    if (CpuLoadDots == null)
+                        CpuLoadDots = new SeriesCollection();
+                    UpdateSeries(CpuLoadDots, sensor);
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void AddSeriesDot(IChartValues values, ObservableValue dot)
+        {
+            values.Add(dot);
+            if (values.Count > 30)
+                values.RemoveAt(0);
+        }
+
+        private void UpdateSeries(SeriesCollection seriesCollection, NumericSensorDto sensorDto)
+        {
+            var subSensors = sensorDto.SubSensors.ToArray();
+            int count = subSensors.Length;
+            if (seriesCollection.Count != count)
+                InitializeSeriesCollection(seriesCollection, count);
+
+
+            for (int i = 0; i < count; i++)
+            {
+                AddSeriesDot(seriesCollection[i].Values, new ObservableValue(subSensors[i].Value));
+            }
+        }
+
+        private void InitializeSeriesCollection(SeriesCollection collection, int count)
+        {
+            collection = new SeriesCollection();
+            for (int i = 0; i < count; i++)
+                collection.Add(new LineSeries { Values = new ChartValues<ObservableValue>()});
         }
 
         #endregion

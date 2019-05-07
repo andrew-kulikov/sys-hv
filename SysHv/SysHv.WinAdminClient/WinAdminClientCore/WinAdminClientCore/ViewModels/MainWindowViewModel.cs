@@ -36,23 +36,10 @@ namespace WinAdminClientCore.ViewModels
             }
         }
 
-
-        private double _lastLecture;
-        private double _trend;
-
         public MainWindowViewModel()
         {
-            /*CpuLoad = new DispatcherizedObservableCollection<DefaultComputerInfo>()
-            {
-                new DefaultComputerInfo() { DisplayName = "asd"},
-                new DefaultComputerInfo() { DisplayName = "qwe"},
-                new DefaultComputerInfo() { DisplayName = "zxc"}
-            };*/
 
-            Computers = new DispatcherizedObservableCollection<ComputerInfoViewModel>()
-            {
-                new ComputerInfoViewModel()
-            };
+            Computers = new DispatcherizedObservableCollection<ComputerInfoViewModel>();
 
             var connection = new HubConnectionBuilder()
                 .WithUrl($"{PropertiesManager.SignalRServer}{PropertiesManager.Hub}", options =>
@@ -63,43 +50,6 @@ namespace WinAdminClientCore.ViewModels
 
             connection.On<object>("UpdateReceived", ondata);
             connection.StartAsync();
-
-
-
-
-            LastHourSeries = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    AreaLimit = -10,
-                    Values = new ChartValues<ObservableValue>
-                    {
-                        new ObservableValue(3),
-                        new ObservableValue(5),
-                        new ObservableValue(6),
-                        new ObservableValue(7),
-                        new ObservableValue(3),
-                        new ObservableValue(4),
-                        new ObservableValue(2),
-                        new ObservableValue(5),
-                        new ObservableValue(8),
-                        new ObservableValue(3),
-                        new ObservableValue(5),
-                        new ObservableValue(6),
-                        new ObservableValue(7),
-                        new ObservableValue(3),
-                        new ObservableValue(4),
-                        new ObservableValue(2),
-                        new ObservableValue(5),
-                        new ObservableValue(8)
-                    }
-                }
-            };
-            _trend = 8;
-
-
-
-
         }
 
         public SeriesCollection LastHourSeries { get; set; }
@@ -108,6 +58,7 @@ namespace WinAdminClientCore.ViewModels
         void ondata(object o)
         {
             var obj = JsonConvert.DeserializeObject<SensorResponse>(o.ToString());
+            var sensors = JsonConvert.DeserializeObject<NumericSensorDto>(obj.Value.ToString());
             ProcessResponse(obj);
         }
 
@@ -126,9 +77,20 @@ namespace WinAdminClientCore.ViewModels
 
         private void ProcessSensor(SensorResponse response, Sensor sensor)
         {
-            if (sensor.ReturnType == SensorDataContract.CpuLoadDto)
+            // got null contract
+            switch (sensor.Contract)
             {
-                
+                case SensorDataContract.CpuLoadSensor:
+                case SensorDataContract.CpuTempSensor:
+                {
+                    var sensorDto = JsonConvert.DeserializeObject<NumericSensorDto>(response.Value.ToString());
+                    foreach (var computer in Computers)
+                    {
+                        if (computer.Id == response.ClientId)
+                            computer.UpdateSingleValueSensors(sensor.Contract, sensorDto);
+                    }
+                    break;
+                }
             }
         }
 

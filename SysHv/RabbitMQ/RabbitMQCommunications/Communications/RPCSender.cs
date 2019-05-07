@@ -1,29 +1,29 @@
-﻿using RabbitMQ.Client;
-using RabbitMQCommunications.Communications.Interfaces;
-using RabbitMQCommunications.Setup;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using RabbitMQ.Client;
 using RabbitMQCommunications.Communications.Exceptions;
 using RabbitMQCommunications.Communications.HelpStuff;
+using RabbitMQCommunications.Setup;
 using SysHv.Client.Common.Models;
 
 namespace RabbitMQCommunications.Communications
 {
     /// <summary>
-    /// uses what you wish Exchange (default = "") of any type,
-    /// routing key = queue name
+    ///     uses what you wish Exchange (default = "") of any type,
+    ///     routing key = queue name
     /// </summary>
-    public class RPCSender<T> : IRPCCaller, IDisposable
+    public class RPCSender : IDisposable
     {
-        private readonly TimeSpan _timeout = new TimeSpan(0, 0, 20);
+        private readonly IConnection _connection;
 
-        private QueueingBasicConsumer _consumer;
-        private IModel _model;
-        private IConnection _connection;
-        private PublishProperties _publishProperties;
-        private string _responseQueue;
+        private readonly QueueingBasicConsumer _consumer;
+        private readonly IModel _model;
+        private readonly PublishProperties _publishProperties;
+        private readonly string _responseQueue;
+        private readonly TimeSpan _timeout = new TimeSpan(0, 0, 30);
 
         public RPCSender(ConnectionModel connectionModel, PublishProperties publishProperties)
         {
@@ -33,7 +33,7 @@ namespace RabbitMQCommunications.Communications
             {
                 HostName = connectionModel.Host,
                 UserName = connectionModel.Username,
-                Password = connectionModel.Password,
+                Password = connectionModel.Password
             }.CreateConnection();
 
             _model = _connection.CreateModel();
@@ -49,7 +49,13 @@ namespace RabbitMQCommunications.Communications
             }
         }
 
-        public async Task<string> Call(string message)
+        public void Dispose()
+        {
+            _model?.Abort();
+            _connection?.Close();
+        }
+
+        public async Task<TRes> Call<TArg, TRes>(TArg message) where TRes : class
         {
             var correlationToken = Guid.NewGuid().ToString();
 
@@ -57,26 +63,26 @@ namespace RabbitMQCommunications.Communications
             properties.ReplyTo = _responseQueue;
             properties.CorrelationId = correlationToken;
 
-            var messageBuffer = Encoding.UTF8.GetBytes(message);
+            var messageBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
             var timeoutAt = DateTime.Now + _timeout;
 
             var delivered = false;
-            var response = "";
+            TRes response = null;
 
             _model.BasicPublish("", _publishProperties.QueueName, properties, messageBuffer);
 
             await Task.Run(() =>
             {
-                while (true/*DateTime.Now <= timeoutAt*/)
+                while (DateTime.Now <= timeoutAt)
                 {
                     Thread.Sleep(250);
                     var deliveryArgs = _consumer.Queue.Dequeue();
 
-                    if (deliveryArgs.BasicProperties != null && 
+                    if (deliveryArgs.BasicProperties != null &&
                         deliveryArgs.BasicProperties.CorrelationId == correlationToken)
                     {
-                        response = Encoding.UTF8.GetString(deliveryArgs.Body);
+                        response = JsonConvert.DeserializeObject<TRes>(Encoding.UTF8.GetString(deliveryArgs.Body));
                         delivered = true;
                         break;
                     }
@@ -84,12 +90,6 @@ namespace RabbitMQCommunications.Communications
             });
 
             return !delivered ? null : response;
-        }
-
-        public void Dispose()
-        {
-            _model?.Abort();
-            _connection?.Close();
         }
     }
 }

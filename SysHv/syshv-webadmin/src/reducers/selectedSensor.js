@@ -2,7 +2,7 @@ import { createReducer } from 'redux-act';
 import * as a from '../actions/sensor';
 
 const DEFAULT_STATE = {
-  id: 1,
+  id: 2,
   values: [],
   subsensors: {}
 };
@@ -11,7 +11,7 @@ export default createReducer(
   {
     [a.selectSensor]: (state, id) => ({ id, values: [], subsensors: {} }),
     [a.updateSelectedSensor]: (state, update) => {
-      console.log(update);
+      //console.log(update);
       let values = state.values;
 
       values.push({

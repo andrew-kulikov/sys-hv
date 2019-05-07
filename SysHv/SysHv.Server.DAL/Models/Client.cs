@@ -9,9 +9,9 @@ namespace SysHv.Server.DAL.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string QueueName { get; set; }
         public string Ip { get; set; }
         public ApplicationUser User { get; set; }
+        public string HardwareInfo { get; set; }
         public ICollection<ClientSensor> ClientSensors { get; set; }
     }
 }

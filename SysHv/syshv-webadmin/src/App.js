@@ -9,11 +9,14 @@ import saga from './sagas';
 import { Provider } from 'react-redux';
 import store from './store';
 
-import home from './pages/Home';
-import logout from './containers/Logout';
-import login from './pages/Login';
-import myAccount from './pages/Account';
+import Home from './pages/Home';
+import Logout from './containers/Logout';
+import Login from './pages/Login';
+import Account from './pages/Account';
 import ResetPass from './pages/ResetPass';
+import Sensors from './pages/Sensors';
+import Computers from './pages/Computers';
+import Logs from './pages/Logs';
 
 const App = props => (
   <Provider store={store}>
@@ -21,10 +24,13 @@ const App = props => (
       {/* <MainLayout> */}
       <>
         <Switch>
-          <Route exact path="/" component={home} />
-          <Route path="/home" component={home} />
-          <Route path="/login" component={login} />
-          <Route path="/account" component={myAccount} />
+          <Route exact path="/" component={Home} />
+          <Route path="/home" component={Home} />
+          <Route path="/login" component={Login} />
+          <Route path="/account" component={Account} />
+          <Route path="/sensors" component={Sensors} />
+          <Route path="/computers" component={Computers} />
+          <Route path="/logs" component={Logs} />
           <Route
             path="/password/reset"
             component={props => <ResetPass {...props} type="reset" />}
@@ -33,7 +39,7 @@ const App = props => (
             path="/password/new"
             component={props => <ResetPass {...props} type="new" />}
           />
-          <Route path="/logout" component={logout} />
+          <Route path="/logout" component={Logout} />
           <Route component={GenericNotFound} />
         </Switch>
         <ReduxToastr closeOnToastrClick={true} progressBar={true} />

@@ -9,11 +9,14 @@ using System.Threading.Tasks;
 using System.Timers;
 using NLog;
 using RabbitMQCommunications.Communications;
+using RabbitMQCommunications.Communications.Exceptions;
 using RabbitMQCommunications.Communications.HelpStuff;
+using RabbitMQCommunications.Setup;
 using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Client.Common.Models;
 using SysHv.Client.WinService.Communication;
+using SysHv.Client.WinService.Gatherers;
 using SysHv.Client.WinService.Helpers;
 
 namespace SysHv.Client.WinService.Services
@@ -23,6 +26,7 @@ namespace SysHv.Client.WinService.Services
         private readonly IList<Assembly> _assemblies;
         private readonly ServerRestClient _restClient;
         private readonly IList<object> _sensorInstances;
+        private readonly RPCReceiver _receiver;
 
         private readonly IList<Timer> _sensorTimers;
         private Logger _logger = LogManager.GetCurrentClassLogger();
@@ -31,6 +35,11 @@ namespace SysHv.Client.WinService.Services
 
         public MonitoringService()
         {
+            using (var creator = new QueueCreator(new ConnectionModel("localhost", "guest", "guest")))
+            {
+                creator.TryCreateQueue("rpc", false, false, false, null);
+            }
+            _receiver = new RPCReceiver(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
             _assemblies = new List<Assembly>();
             _sensorTimers = new List<Timer>();
             _sensorInstances = new List<object>();
@@ -75,12 +84,31 @@ namespace SysHv.Client.WinService.Services
                 if (loginResponse != null && loginResponse.Success)
                 {
                     _queueName = loginResponse.Message;
+                    
+                    _receiver.StartListen<string, string>(s =>
+                    {
+                        Console.WriteLine(s);
+                        return "good";
+                    });
                     LaunchSensors(loginResponse.Sensors);
+                    SendHardwareInfo();
 
                     break;
                 }
 
                 await Task.Delay(ConfigurationHelper.ReconnectionInterval);
+            }
+        }
+
+        private void SendHardwareInfo()
+        {
+            var gatherer = new HardwareInfoGatherer();
+            var info = gatherer.Gather();
+
+            using (var rabbitSender = new OneWaySender(new ConnectionModel(),
+                new PublishProperties {ExchangeName = "", QueueName = _queueName}))
+            {
+                rabbitSender.Send(info, "HardwareInfo");
             }
         }
 

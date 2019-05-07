@@ -13,9 +13,6 @@ namespace SysHv.Server.DAL.Models
         public OsType OsType { get; set; }
         public string ReturnType { get; set; }
         public bool IsNumeric { get; set; }
-        public float? MinValue { get; set; }
-        public float? MaxValue { get; set; }
-        public float? CriticalValue { get; set; }
         public string Contract { get; set; }
         public ICollection<SubSensor> SubSensors { get; set; }
         public ICollection<ClientSensor> ClientSensors { get; set; }

@@ -9,4 +9,6 @@ export const REFRESHTOKEN = `${API}token/refresh`;
 export const FORGOTPASSWORD = `${API}forgotpassword`;
 export const RESETPASSWORD = `${API}resetpassword`;
 
+export const CLIENTS = `${API}client`;
+
 export const ME = `${API}me`;

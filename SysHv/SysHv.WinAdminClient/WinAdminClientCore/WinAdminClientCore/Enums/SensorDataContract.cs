@@ -5,7 +5,7 @@
     /// </summary>
     public class SensorDataContract
     {
-        public static readonly string SingleDoubleValue = "CpuLoadDTO";
+        public static readonly string CpuLoadDto = "CpuLoadDTO";
 
         public string Value { get; set; }
 

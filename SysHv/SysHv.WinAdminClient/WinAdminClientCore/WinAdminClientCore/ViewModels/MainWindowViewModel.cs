@@ -116,14 +116,17 @@ namespace WinAdminClientCore.ViewModels
             {
                 if (response.SensorId == sensor.Id)
                 {
-
+                    ProcessSensor(response, sensor);
                 }
             }
         }
 
         private void ProcessSensor(SensorResponse response, Sensor sensor)
         {
-
+            if (sensor.ReturnType == SensorDataContract.CpuLoadDto)
+            {
+                
+            }
         }
 
         private List<Sensor> CallSensorTypes(int id)

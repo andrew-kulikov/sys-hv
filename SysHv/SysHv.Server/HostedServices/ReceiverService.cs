@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,35 +20,19 @@ namespace SysHv.Server.HostedServices
     {
         private readonly IConfigurationHelper _configurationHelper;
         private readonly IHubContext<MonitoringHub> _hubContext;
-        private IDictionary<string, OneWayReceiver> _userReceivers;
+        private readonly IDictionary<string, IDictionary<int, OneWayReceiver>> _userReceivers;
 
         public ReceiverService(IHubContext<MonitoringHub> hubContext, IConfigurationHelper configurationHelper)
         {
             _hubContext = hubContext;
             _configurationHelper = configurationHelper;
 
-            _userReceivers = new Dictionary<string, OneWayReceiver>();
+            _userReceivers = new Dictionary<string, IDictionary<int, OneWayReceiver>>();
         }
 
-        public void RegisterClient(string queueName, string userId)
+        public void Dispose()
         {
-            using (var creator = new QueueCreator(_configurationHelper.ConnectionInfo))
-            {
-                creator.TryCreateQueue(queueName);
-            }
-
-            var receiver = new OneWayReceiver(_configurationHelper.ConnectionInfo, queueName);
-            receiver.Receive(MessageReceived);
-
-            _userReceivers[userId] = receiver;
-        }
-
-        private void MessageReceived(object sender, BasicDeliverEventArgs ea)
-        {
-            var message = Encoding.UTF8.GetString(ea.Body);
-            var type = ea.BasicProperties.Type;
-            
-            _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject(message));
+            foreach (var receiver in _userReceivers.SelectMany(v => v.Value.Values)) receiver.Dispose();
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -57,15 +42,38 @@ namespace SysHv.Server.HostedServices
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            foreach (var receiver in _userReceivers.SelectMany(v => v.Value.Values)) receiver.Dispose();
             return Task.CompletedTask;
         }
 
-        public void Dispose()
+        public void RegisterClient(int clientId, string userId)
         {
-            foreach (var receiver in _userReceivers.Values)
+            var queueName = clientId.ToString();
+            using (var creator = new QueueCreator(_configurationHelper.ConnectionInfo))
             {
-                receiver.Dispose();
+                creator.TryCreateQueue(queueName);
             }
+
+            var receiver = new OneWayReceiver(_configurationHelper.ConnectionInfo, queueName);
+            receiver.Receive(MessageReceived);
+
+            if (!_userReceivers.ContainsKey(userId)) _userReceivers[userId] = new Dictionary<int, OneWayReceiver>();
+            _userReceivers[userId][clientId] = receiver;
+        }
+
+        private void MessageReceived(object sender, BasicDeliverEventArgs ea)
+        {
+            var message = Encoding.UTF8.GetString(ea.Body);
+            var type = ea.BasicProperties.Type;
+
+            if (type == "HardwareInfo")
+            {
+                var info = JsonConvert.DeserializeObject<HardwareInfoDTO>(message);
+
+                return;
+            }
+
+            _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject(message));
         }
     }
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 
-import ApexCtarts from 'apexcharts';
 import Chart from 'react-apexcharts';
 
 import { connectTo } from '../../utils';
@@ -31,38 +30,23 @@ class SimpleLineChart extends React.Component {
       stroke: {
         curve: 'smooth'
       },
-
       title: {
         text: this.props.title,
         align: 'left'
-      },
-      markers: {
-        size: 0
       },
       xaxis: {
         type: 'datetime',
         min: Date.now(),
         range: 50000,
-        tickAmount: 2,
+        tickAmount: 4,
         labels: {
           formatter: function(val, timestamp) {
             return moment(timestamp).format('HH:mm:ss');
           }
         }
-      },
-      yaxis: {
-        min: 0,
-        max: 100
-      },
-      legend: {
-        show: false
       }
     },
-    series: [
-      {
-        data: []
-      }
-    ]
+    series: [{ data: [] }]
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -94,20 +78,26 @@ const Charts = props => {
 
   return (
     <>
-      <SimpleLineChart name="main" title={"Total"} height="350" data={data.values} />
-      <div style={{display: "flex"}}>
-      {Object.keys(subsensors).map(name => (
-        <div key={name} style={{width: "48%"}}>
-          <SimpleLineChart name="name" title={name} height="320" data={subsensors[name]} />
-        </div>
-      ))}
+      <SimpleLineChart
+        name="main"
+        title={'Total'}
+        height="350"
+        data={data.values}
+      />
+      <div style={{ display: 'flex' }}>
+        {Object.keys(subsensors).map(name => (
+          <div key={name} style={{ width: '48%' }}>
+            <SimpleLineChart
+              name="name"
+              title={name}
+              height="320"
+              data={subsensors[name]}
+            />
+          </div>
+        ))}
       </div>
     </>
   );
 };
 
-export default connectTo(
-  state => ({ data: state.selectedSensor }),
-  {},
-  Charts
-);
+export default connectTo(state => ({ data: state.selectedSensor }), {}, Charts);

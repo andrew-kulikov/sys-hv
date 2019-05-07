@@ -33,13 +33,13 @@ const clientStyles = theme => ({
   ipHeading: {
     flexShrink: 0,
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: "bold",
+    fontWeight: 'bold'
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     flexShrink: 0,
-    
-    flexBasis: '33.33%',
+
+    flexBasis: '33.33%'
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -59,9 +59,9 @@ const Client = withStyles(clientStyles)(({ classes, client }) => (
     <ExpansionPanelDetails>
       <List>
         {Object.keys(client).map(k => (
-          <ListItem button>
+          <ListItem key={k} button>
             <ListItemText>
-              <Typography key={k}>{`${k} : ${client[k]}`}</Typography>
+              <Typography>{`${k} : ${client[k]}`}</Typography>
             </ListItemText>
           </ListItem>
         ))}

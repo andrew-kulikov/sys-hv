@@ -11,4 +11,6 @@ export const RESETPASSWORD = `${API}resetpassword`;
 
 export const CLIENTS = `${API}client`;
 
+export const SENSORS = `${API}sensor`;
+
 export const ME = `${API}me`;

@@ -58,10 +58,10 @@ const Client = withStyles(clientStyles)(({ classes, client }) => (
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
       <List>
-        {Object.keys(client).map(k => (
-          <ListItem key={k} button>
+        {client.clientSensors.map(s => (
+          <ListItem key={s.id} button>
             <ListItemText>
-              <Typography>{`${k} : ${client[k]}`}</Typography>
+              <Typography>{`${s.id} : ${s.name}`}</Typography>
             </ListItemText>
           </ListItem>
         ))}

@@ -9,11 +9,15 @@ import * as accountSagas from './account';
 import * as clientActions from '../actions/client';
 import * as clientSagas from './client';
 
+import * as sensorActions from '../actions/sensor';
+import * as sensorSagas from './sensor';
+
 export default function* saga() {
   const relations = [
     [authActions, authSagas],
     [accountActions, accountSagas],
-    [clientActions, clientSagas]
+    [clientActions, clientSagas],
+    [sensorActions, sensorSagas]
   ];
 
   for (const [actions, sagas] of relations) {

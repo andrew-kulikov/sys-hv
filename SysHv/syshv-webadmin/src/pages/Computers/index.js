@@ -8,6 +8,16 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import InboxIcon from '@material-ui/icons/Inbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
+
+import Chip from '@material-ui/core/Chip';
+
 import styles from './style';
 import { withNamespaces } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
@@ -20,10 +30,16 @@ const clientStyles = theme => ({
   root: {
     width: '100%'
   },
+  ipHeading: {
+    flexShrink: 0,
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: "bold",
+  },
   heading: {
     fontSize: theme.typography.pxToRem(15),
+    flexShrink: 0,
+    
     flexBasis: '33.33%',
-    flexShrink: 0
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -34,17 +50,22 @@ const clientStyles = theme => ({
 const Client = withStyles(clientStyles)(({ classes, client }) => (
   <ExpansionPanel>
     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography className={classes.heading}>{client.name}</Typography>
+      <Typography className={classes.ipHeading}>{client.ip} - </Typography>
+      <Typography className={classes.heading}> {client.name}</Typography>
       <Typography className={classes.secondaryHeading}>
         {client.description}
       </Typography>
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
-      <div>
+      <List>
         {Object.keys(client).map(k => (
-          <Typography key={k}>{`${k} : ${client[k]}`}</Typography>
+          <ListItem button>
+            <ListItemText>
+              <Typography key={k}>{`${k} : ${client[k]}`}</Typography>
+            </ListItemText>
+          </ListItem>
         ))}
-      </div>
+      </List>
     </ExpansionPanelDetails>
   </ExpansionPanel>
 ));

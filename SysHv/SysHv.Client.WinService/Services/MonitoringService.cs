@@ -107,7 +107,7 @@ namespace SysHv.Client.WinService.Services
             using (var rabbitSender = new OneWaySender(new ConnectionModel(),
                 new PublishProperties {ExchangeName = "", QueueName = _queueName}))
             {
-                rabbitSender.Send(info, "HardwareInfo");
+                rabbitSender.Send(info, "HardwareInfo", ConfigurationHelper.Id.ToString());
             }
         }
 

@@ -66,6 +66,15 @@ namespace SysHv.Server.Services
             return _context.Clients.AnyAsync(c => c.Id == id && c.User.Id == userId);
         }
 
+        public async Task AddHardwareInfo(int id, string info)
+        {
+            var client = await GetClientByIdAsync(id);
+
+            client.HardwareInfo = info;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task AddClientAsync(DAL.Models.Client client, ApplicationUser admin)
         {
             client.User = admin;

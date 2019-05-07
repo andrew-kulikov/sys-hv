@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -89,12 +90,22 @@ namespace SysHv.Server
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            var sqlOptionsBuilder = new DbContextOptionsBuilder<ServerDbContext>();
+            sqlOptionsBuilder.UseSqlServer(Configuration.GetConnectionString("ServerDbConnectionString"),
+                assembly => assembly.MigrationsAssembly(typeof(ServerDbContext).Assembly.FullName));
+
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<ISensorService, SensorService>();
-            services.AddSingleton<IHostedService, ReceiverService>();
+            services.AddSingleton<IHostedService, ReceiverService>(serviceProvider =>
+                new ReceiverService(
+                    serviceProvider.GetService<IHubContext<MonitoringHub>>(),
+                    serviceProvider.GetService<IConfigurationHelper>(),
+                    sqlOptionsBuilder.Options
+                    ));
             services.AddSingleton<IConfigurationHelper, ConfigurationHelper>();
-            services.AddTransient<IHostedServiceAccessor<ReceiverService>, HostedServiceAccessor<ReceiverService>>();
+            services.AddSingleton<IHostedServiceAccessor<ReceiverService>, HostedServiceAccessor<ReceiverService>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

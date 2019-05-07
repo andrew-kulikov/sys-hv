@@ -16,6 +16,15 @@ import Divider from '@material-ui/core/Divider';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
+import CheckIcon from '@material-ui/icons/Check';
+
 import Chip from '@material-ui/core/Chip';
 
 import styles from './style';
@@ -39,7 +48,6 @@ const clientStyles = theme => ({
     fontSize: theme.typography.pxToRem(15),
     flexShrink: 0,
 
-    flexBasis: '33.33%'
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -50,22 +58,39 @@ const clientStyles = theme => ({
 const Client = withStyles(clientStyles)(({ classes, client }) => (
   <ExpansionPanel>
     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography className={classes.ipHeading}>{client.ip} - </Typography>
-      <Typography className={classes.heading}> {client.name}</Typography>
-      <Typography className={classes.secondaryHeading}>
-        {client.description}
-      </Typography>
+      <Typography className={classes.heading}>{`Client #${client.id} - ${client.name}. IP: ${client.ip}`}</Typography>
+    
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
-      <List>
-        {client.clientSensors.map(s => (
-          <ListItem key={s.id} button>
-            <ListItemText>
-              <Typography>{`${s.id} : ${s.name}`}</Typography>
-            </ListItemText>
-          </ListItem>
-        ))}
-      </List>
+     
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Sensor</TableCell>
+              <TableCell align="center">Last Update</TableCell>
+              <TableCell align="center">Last Value</TableCell>
+              <TableCell align="center">Status</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {client.clientSensors.map(row => (
+              <TableRow key={row.id}>
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                <TableCell align="center" component="th" scope="row">
+                  {'davno'}
+                </TableCell>
+                <TableCell align="center" component="th" scope="row">
+                  {'OK'}
+                </TableCell>
+                <TableCell align="center" component="th" scope="row">
+                  <CheckIcon />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
     </ExpansionPanelDetails>
   </ExpansionPanel>
 ));

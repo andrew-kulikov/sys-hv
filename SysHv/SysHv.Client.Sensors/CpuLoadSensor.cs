@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Linq;
 using OpenHardwareMonitor.Hardware;
+using SysHv.Client.Common.DTOs;
 using SysHv.Client.Common.DTOs.SensorOutput;
 
 namespace SysHv.Client.Sensors
 {
     public class CpuLoadSensor : IDisposable
     {
+        private readonly SensorDto _sensor;
+        public CpuLoadSensor(SensorDto sensor)
+        {
+            _sensor = sensor;
+        }
         public void Dispose()
         {
             HardwareMonitor.Close();
@@ -33,6 +39,12 @@ namespace SysHv.Client.Sensors
                     Value = s.Value ?? 0
                 });
 
+            var status = "OK";
+            if (load.Value >= _sensor.WarningValue && load.Value < _sensor.CriticalValue)
+                status = "Warning";
+            if (load.Value >= _sensor.CriticalValue)
+                status = "Critical";
+            load.Status = status;
 
             return load;
         }

@@ -7,16 +7,23 @@ const DEFAULT_STATE = {
   subsensors: {}
 };
 
+const getValue = val => {
+  if (+val === NaN || !val) {
+    console.warn(val);
+    return 0;
+  }
+  return +val;
+};
 export default createReducer(
   {
     [a.selectSensor]: (state, id) => ({ id, values: [], subsensors: {} }),
     [a.updateSelectedSensor]: (state, update) => {
-      //console.log(update);
+      console.log(update);
       let values = state.values;
 
       values.push({
         x: Date.now(),
-        y: update.Value
+        y: getValue(update.Value)
       });
 
       if (values.length > 25) values = values.slice(-10);
@@ -28,7 +35,7 @@ export default createReducer(
         if (!subsensors[subsensorName]) subsensors[subsensorName] = [];
         subsensors[subsensorName].push({
           x: Date.now(),
-          y: update.SubSensors[key].Value
+          y: getValue(update.SubSensors[key].Value)
         });
         if (subsensors[subsensorName].length > 25)
           subsensors[subsensorName] = subsensors[subsensorName].slice(-10);

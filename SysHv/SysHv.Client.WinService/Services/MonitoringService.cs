@@ -51,7 +51,7 @@ namespace SysHv.Client.WinService.Services
 
             if (sensorType == null) return null;
 
-            var sensorInstance = Activator.CreateInstance(sensorType);
+            var sensorInstance = Activator.CreateInstance(sensorType, sensor);
             _sensorInstances.Add(sensorInstance);
 
             return (sender, args) =>

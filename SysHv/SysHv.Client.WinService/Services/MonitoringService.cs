@@ -140,8 +140,9 @@ namespace SysHv.Client.WinService.Services
 
         public void Stop()
         {
-            foreach (var sensorInstance in _sensorInstances) (sensorInstance as IDisposable)?.Dispose();
             foreach (var timer in _sensorTimers) timer.Enabled = false;
+            foreach (var sensorInstance in _sensorInstances) (sensorInstance as IDisposable)?.Dispose();
+            _receiver.Dispose();
         }
     }
 }

@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\SysHv.Client.Common\SysHv.Client.Common.csproj" />
+    <ProjectReference Include="..\..\..\SysHv.Server.DAL\SysHv.Server.DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

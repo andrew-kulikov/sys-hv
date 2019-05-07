@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,7 +13,9 @@ using LiveCharts.Wpf;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using SysHv.Client.Common.DTOs.SensorOutput;
+using SysHv.Server.DAL.Models;
 using WinAdminClientCore.Collections;
+using WinAdminClientCore.DataHelpers;
 using WinAdminClientCore.Enums;
 using WinAdminClientCore.Models;
 using WinAdminClientCore.UIHelpers;
@@ -100,22 +104,45 @@ namespace WinAdminClientCore.ViewModels
 
         void ondata(object o)
         {
-            var obj = TryConvert(o.ToString());
-            ProcessTypes(obj);
+            var obj = JsonConvert.DeserializeObject<SensorResponse>(o.ToString());
+            ProcessResponse(obj);
         }
 
-        void ProcessTypes(Tuple<Type, object> incoming)
+        private void ProcessResponse(SensorResponse response)
         {
-            var obj = Convert.ChangeType(incoming.Item2, incoming.Item1);
+            var sensors = CallSensorTypes(response.ClientId);
 
-            if (obj is SensorResponse)
-                switch ((SensorContract)(obj as SensorResponse).SensorId)
+            foreach (var sensor in sensors)
+            {
+                if (response.SensorId == sensor.Id)
                 {
-                    case SensorContract.SingleDoubleValue:
 
-                        break;
                 }
+            }
+        }
 
+        private void ProcessSensor(SensorResponse response, Sensor sensor)
+        {
+
+        }
+
+        private List<Sensor> CallSensorTypes(int id)
+        {
+            using (var client = new HttpClient())
+            {
+                var serverAddress = PropertiesManager.SignalRServer;
+                client.BaseAddress = new Uri(serverAddress);
+
+                RequestBuilder.SetAuthToken(client);
+
+                var result = client.GetAsync($"/api/sensor/client/{id}").Result;
+
+                var json = result.Content.ReadAsStringAsync().Result;
+
+                var obj = JsonConvert.DeserializeObject<List<Sensor>>(json);
+
+                return obj;
+            }
         }
 
         public Tuple<Type, object> TryConvert(string json)

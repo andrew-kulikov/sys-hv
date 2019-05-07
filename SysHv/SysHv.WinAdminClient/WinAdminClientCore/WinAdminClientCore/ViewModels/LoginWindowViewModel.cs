@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Newtonsoft.Json;
+using WinAdminClientCore.DataHelpers;
 using WinAdminClientCore.Dtos;
 using WinAdminClientCore.UIHelpers;
 
@@ -119,12 +120,9 @@ namespace WinAdminClientCore.ViewModels
             {
                 client.BaseAddress = new Uri(server);
 
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue ("application/json"));
+                RequestBuilder.SetJsonAsAcceptable(client);
 
-                var content = new StringContent(
-                    JsonConvert.SerializeObject(new UserLoginDTO {Email = UserName, Password = Password}),
-                    Encoding.UTF8,
-                    "application/json");
+                var content = RequestBuilder.GenerateLoginBody(UserName, Password);
 
                 HttpResponseMessage result;
                 try

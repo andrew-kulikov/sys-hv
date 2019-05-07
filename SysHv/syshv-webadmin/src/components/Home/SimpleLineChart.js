@@ -30,36 +30,23 @@ class SimpleLineChart extends React.Component {
       stroke: {
         curve: 'smooth'
       },
-
       title: {
         text: this.props.title,
         align: 'left'
-      },
-      markers: {
-        size: 0
       },
       xaxis: {
         type: 'datetime',
         min: Date.now(),
         range: 50000,
-        tickAmount: 2,
+        tickAmount: 4,
         labels: {
           formatter: function(val, timestamp) {
             return moment(timestamp).format('HH:mm:ss');
           }
         }
-      },
-      yaxis: {
-      },
-      legend: {
-        show: false
       }
     },
-    series: [
-      {
-        data: []
-      }
-    ]
+    series: [{ data: [] }]
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {

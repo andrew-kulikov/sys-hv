@@ -15,5 +15,6 @@ namespace SysHv.Server.Services
         Task AddClientAsync(DAL.Models.Client client, ApplicationUser admin);
         Task<bool> ClientExistAsync(string ip, string userId);
         Task<bool> ClientIdExistAsync(int id, string userId);
+        Task AddHardwareInfo(int id, string info);
     }
 }

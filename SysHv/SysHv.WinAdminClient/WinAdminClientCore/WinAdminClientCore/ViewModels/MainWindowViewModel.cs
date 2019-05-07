@@ -55,7 +55,10 @@ namespace WinAdminClientCore.ViewModels
             };
 
             var connection = new HubConnectionBuilder()
-                .WithUrl($"{PropertiesManager.SignalRServer}{PropertiesManager.Hub}")
+                .WithUrl($"{PropertiesManager.SignalRServer}{PropertiesManager.Hub}", options =>
+                    {
+                        options.AccessTokenProvider = () => Task.FromResult(PropertiesManager.Token);
+                    })
                 .Build();
 
             connection.On<object>("UpdateReceived", ondata);
@@ -151,7 +154,7 @@ namespace WinAdminClientCore.ViewModels
         public Tuple<Type, object> TryConvert(string json)
         {
             var settings = new JsonSerializerSettings() { MissingMemberHandling = MissingMemberHandling.Error };
-            var sensorTypes = new[] {typeof(SensorResponse), typeof(CPULoadSensorDto) };
+            var sensorTypes = new[] {typeof(SensorResponse), typeof(NumericSensorDto) };
 
             foreach (var type in sensorTypes)
             {

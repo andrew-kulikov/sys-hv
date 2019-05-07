@@ -12,7 +12,7 @@ namespace SysHv.Client.Sensors
             HardwareMonitor.Close();
         }
 
-        public CPULoadSensorDto Collect()
+        public NumericSensorDto Collect()
         {
             // Now loads one processor
             HardwareMonitor.Accept();
@@ -22,12 +22,12 @@ namespace SysHv.Client.Sensors
 
             if (processor == null) return null;
 
-            var load = new CPULoadSensorDto();
+            var load = new NumericSensorDto();
             var loadSensors = processor.Sensors.Where(s => s.SensorType == SensorType.Load).ToList();
 
             load.Value = loadSensors.FirstOrDefault(s => s.Name == "CPU Total")?.Value ?? 0;
             load.SubSensors = loadSensors.Where(s => s.Name.StartsWith("CPU Core"))
-                .Select(s => new CPULoadSensorDto.CPULoadSubSensorDto
+                .Select(s => new NumericSensorDto.NumericSubSensorDto
                 {
                     Name = s.Name,
                     Value = s.Value ?? 0

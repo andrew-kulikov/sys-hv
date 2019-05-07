@@ -2,13 +2,13 @@
 
 namespace SysHv.Client.Common.DTOs.SensorOutput
 {
-    public class CPULoadSensorDto
+    public class NumericSensorDto
     {
         public string Status { get; set; }
         public float Value { get; set; }
-        public IEnumerable<CPULoadSubSensorDto> SubSensors { get; set; }
+        public IEnumerable<NumericSubSensorDto> SubSensors { get; set; }
 
-        public class CPULoadSubSensorDto
+        public class NumericSubSensorDto
         {
             public string Name { get; set; }
             public float Value { get; set; }

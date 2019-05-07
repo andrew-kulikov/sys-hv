@@ -8,15 +8,15 @@ const DEFAULT_STATE = {
 export default createReducer(
   {
     [a.getUpdate]: (state, update) => {
-      //console.log(update);
       let sensorValues = state.sensorValues;
+
       if (!sensorValues[update.SensorId]) sensorValues[update.SensorId] = [];
-      sensorValues[update.SensorId].push({
-        x: Date.now(),
-        y: update.Value
-      });
+
+      sensorValues[update.SensorId].push(update);
+
       if (sensorValues[update.SensorId].length > 25)
         sensorValues[update.SensorId] = sensorValues[update.SensorId].slice(-10);
+
       return { ...state, sensorValues };
     }
   },

@@ -25,25 +25,27 @@ namespace ClientApp
         {
 
             Console.ReadLine();
-            using (OneWaySender sender = new OneWaySender(new ConnectionModel(), new PublishProperties() { ExchangeName = "", QueueName = "asd"}))
+            //using (OneWaySender sender = new OneWaySender(new ConnectionModel(), new PublishProperties() { ExchangeName = "", QueueName = "asd"}))
+            //{
+            //    //sender.Send(new string('a', 20));
+            //    sender.Send<int>(123);
+            //    sender.Send<DateTime>(DateTime.Now);
+            //}
+            //asd += () => { Console.WriteLine(); };
+            //asd.Invoke();
+            //asd = null;
+            //asd += () => Console.WriteLine("asd");
+            //asd.Invoke();
+            //Console.ReadLine();
+            using (var sender = new RPCSender(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" }))
             {
-                //sender.Send(new string('a', 20));
-                sender.Send<int>(123);
-                sender.Send<DateTime>(DateTime.Now);
-            }
-            asd += () => { Console.WriteLine(); };
-            asd.Invoke();
-            asd = null;
-            asd += () => Console.WriteLine("asd");
-            asd.Invoke();
-            Console.ReadLine();
-            /*var sender = new RPCSender<int>(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
-            Console.WriteLine("calling for 3");
-            var ans = await sender.Call("3");
+                Console.WriteLine("calling for 3");
+                var ans = await sender.Call<string, string>("3");
 
-            Console.WriteLine(ans);
-            Console.ReadLine();
-            sender.Dispose();*/
+                Console.WriteLine(ans);
+                Console.ReadLine();
+            }
+            
         }
     }
 }

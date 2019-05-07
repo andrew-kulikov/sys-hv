@@ -21,28 +21,26 @@ namespace ServerApp
         /// <param name="args"></param>
         static async Task Main(string[] args)
         {
-            Console.WriteLine(System.Environment.MachineName);
-            using (var creator = new QueueCreator(new ConnectionModel()))
-            {
-                creator.TryCreateQueue("asd");
-            }
+            //Console.WriteLine(System.Environment.MachineName);
+            //using (var creator = new QueueCreator(new ConnectionModel()))
+            //{
+            //    creator.TryCreateQueue("asd");
+            //}
 
-            var receiver = new OneWayReceiver(new ConnectionModel(), "178.122.194.35");
-   
-            Console.WriteLine("waiting for 3");
-            Console.ReadLine();
-            //await asd();
+            //var receiver = new OneWayReceiver(new ConnectionModel(), "178.122.194.35");
 
-            receiver.Dispose();
-        }
+            //Console.WriteLine("waiting for 3");
+            //Console.ReadLine();
 
-        static async Task asd()
-        {
-            await Task.Run(() =>
-            {
-                Thread.Sleep(1000);
-                Console.WriteLine("asd");
+            //receiver.Dispose();
+            var receiver = new RPCReceiver(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
+    
+            receiver.StartListen<string, string>(s => { Console.WriteLine(s);
+                return "good";
             });
+
+            Console.ReadLine();
+            receiver.Dispose();
         }
     }
 }

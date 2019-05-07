@@ -1,4 +1,4 @@
-import { getUpdate, updateSelectedSensor } from '../actions/sensor';
+import { getUpdate, updateSelectedSensor, addSensor } from '../actions/sensor';
 import { loginOk, logout } from '../actions/auth';
 import { HUB } from '../constants/api';
 
@@ -15,12 +15,11 @@ const signalRMiddleware = storeAPI => {
     console.log(message);
     storeAPI.dispatch(getUpdate(message));
 
-    if (storeAPI.getState().selectedSensor.id == message.SensorId) 
+    if (storeAPI.getState().selectedSensor.id == message.SensorId)
       storeAPI.dispatch(updateSelectedSensor(message.Value));
-    
   });
 
-  connection.on('sensorAdded', () => alert('sensor added'));
+  connection.on('sensorAdded', resp => alert(resp));
 
   console.log(storeAPI.getState().auth.token);
   if (storeAPI.getState().auth.token) {
@@ -28,11 +27,20 @@ const signalRMiddleware = storeAPI => {
   }
 
   return next => action => {
+    if (action.type === logout().type) {
+      connection.stop();
+    }
     const res = next(action);
 
     if (action.type === loginOk().type) {
+      connection.stop();
+      connection.start();
       //connection.start().catch(e => console.log(e.message));
     }
+    if (action.type === addSensor().type) {
+      connection.invoke('AddClientSensor', action.payload);
+    }
+   
 
     return res;
   };

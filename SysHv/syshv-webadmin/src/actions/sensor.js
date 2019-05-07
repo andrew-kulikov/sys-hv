@@ -4,3 +4,5 @@ export const getUpdate = createAction('getUpdate');
 
 export const selectSensor = createAction('selectSensor');
 export const updateSelectedSensor = createAction('updateSelectedSensor');
+
+export const addSensor = createAction('addSensor');

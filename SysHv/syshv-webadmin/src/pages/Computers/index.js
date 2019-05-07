@@ -1,12 +1,14 @@
 import React from 'react';
 
 import Page from '../page';
+import Button from '@material-ui/core/Button';
 
 import styles from './style';
 import { withNamespaces } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
 
 import { getClients } from '../../actions/client';
+import { addSensor } from '../../actions/sensor';
 import { connectTo } from '../../utils';
 
 class ComputersPage extends React.Component {
@@ -22,12 +24,15 @@ class ComputersPage extends React.Component {
         {clients.map(c => (
           <div key={c.id}>
             {Object.keys(c).map(k => (
-              <div key={k}>
-                {`${k} : ${c[k]}`}
-              </div>
+              <div key={k}>{`${k} : ${c[k]}`}</div>
             ))}
           </div>
         ))}
+        <div>
+          <Button onClick={() => this.props.addSensor({ ClientId: 1 })}>
+            Add
+          </Button>
+        </div>
       </Page>
     );
   }
@@ -35,6 +40,6 @@ class ComputersPage extends React.Component {
 
 export default connectTo(
   state => ({ clients: state.client.clients }),
-  { getClients },
+  { getClients, addSensor },
   withNamespaces()(withStyles(styles)(ComputersPage))
 );

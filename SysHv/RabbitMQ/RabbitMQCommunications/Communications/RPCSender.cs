@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using RabbitMQCommunications.Communications.Exceptions;
 using RabbitMQCommunications.Communications.HelpStuff;
 using RabbitMQCommunications.Setup;
@@ -41,12 +42,6 @@ namespace RabbitMQCommunications.Communications
             _responseQueue = _model.QueueDeclare().QueueName;
             _consumer = new QueueingBasicConsumer(_model);
             _model.BasicConsume(_responseQueue, true, _consumer);
-
-            using (var creator = new QueueCreator(connectionModel))
-            {
-                if (!creator.TryCreateQueue(publishProperties.QueueName, false, false, false, null))
-                    throw new RabbitMQDeclarationException("cannot create listening queue");
-            }
         }
 
         public void Dispose()
@@ -77,7 +72,16 @@ namespace RabbitMQCommunications.Communications
                 while (DateTime.Now <= timeoutAt)
                 {
                     Thread.Sleep(250);
-                    var deliveryArgs = _consumer.Queue.Dequeue();
+
+                    BasicDeliverEventArgs deliveryArgs = null;
+                    try
+                    {
+                        deliveryArgs = _consumer.Queue.Dequeue();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
 
                     if (deliveryArgs.BasicProperties != null &&
                         deliveryArgs.BasicProperties.CorrelationId == correlationToken)

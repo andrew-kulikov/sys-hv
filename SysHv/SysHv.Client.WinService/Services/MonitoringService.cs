@@ -69,7 +69,8 @@ namespace SysHv.Client.WinService.Services
                         ClientId = ConfigurationHelper.Id,
                         SensorId = sensor.Id,
                         Value = result,
-                        Time = DateTime.Now
+                        Time = DateTime.Now,
+                        UserEmail = ConfigurationHelper.Email
                     });
                 }
             };

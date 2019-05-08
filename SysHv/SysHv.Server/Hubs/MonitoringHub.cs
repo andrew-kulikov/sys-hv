@@ -17,7 +17,7 @@ namespace SysHv.Server.Hubs
     [Authorize("Bearer")]
     public class MonitoringHub : Hub
     {
-        private static readonly IDictionary<string, ICollection<string>> Connections =
+        internal static readonly IDictionary<string, ICollection<string>> Connections =
             new Dictionary<string, ICollection<string>>();
 
         private readonly IClientService _clientService;

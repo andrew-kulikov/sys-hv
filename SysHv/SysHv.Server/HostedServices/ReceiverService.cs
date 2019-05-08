@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RabbitMQ.Client.Events;
 using RabbitMQCommunications.Communications;
 using RabbitMQCommunications.Setup;
 using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Server.DAL;
+using SysHv.Server.DAL.Models;
 using SysHv.Server.Helpers;
 using SysHv.Server.Hubs;
 using SysHv.Server.Services;
@@ -70,24 +72,55 @@ namespace SysHv.Server.HostedServices
         {
             var message = Encoding.UTF8.GetString(ea.Body);
             var type = ea.BasicProperties.Type;
-             
+
+            WriteLog(message);
 
             if (type == "HardwareInfo")
             {
                 var clientId = int.Parse(ea.BasicProperties.AppId);
 
-                using (var context = new ServerDbContext(_options))
-                {
-                    var client = context.Clients.FirstOrDefault(c => c.Id == clientId);
-                    if (client != null)
-                    {
-                        client.HardwareInfo = message;
-                        context.SaveChanges();
-                    }
-                }
+                SaveHardwareInfo(clientId, message);
             }
 
+            // TODO: send to user
             _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject(message));
+        }
+
+        private void WriteLog(string message)
+        {
+            var sensorResponse = JsonConvert.DeserializeObject<SensorResponse>(message);
+
+            NumericSensorDto sensorValue = null;
+            if (sensorResponse != null) sensorValue = (sensorResponse.Value as JObject)?.ToObject<NumericSensorDto>();
+
+            if (sensorValue == null) return;
+
+            using (var context = new ServerDbContext(_options))
+            {
+                var log = new SensorLog
+                {
+
+                    ClientSensorId = sensorResponse.ClientId,
+                    Status = sensorValue.Status,
+                    Time = sensorResponse.Time,
+                    LogJson = JsonConvert.SerializeObject(sensorValue)
+                };
+                context.SensorLogs.Add(log);
+                context.SaveChangesAsync();
+            }
+        }
+
+        private void SaveHardwareInfo(int clientId, string hardwareInfo)
+        {
+            using (var context = new ServerDbContext(_options))
+            {
+                var client = context.Clients.FirstOrDefault(c => c.Id == clientId);
+                if (client != null)
+                {
+                    client.HardwareInfo = hardwareInfo;
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }

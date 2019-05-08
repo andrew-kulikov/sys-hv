@@ -1,4 +1,4 @@
-import { getUpdate, updateSelectedSensor, addSensor } from '../actions/sensor';
+import { getUpdate, updateSelectedSensor, addSensor, getSensors } from '../actions/sensor';
 import { loginOk, logout } from '../actions/auth';
 import { HUB } from '../constants/api';
 
@@ -12,11 +12,12 @@ const signalRMiddleware = storeAPI => {
     .build();
 
   connection.on('UpdateReceived', message => {
-    console.log(message);
     storeAPI.dispatch(getUpdate(message));
 
-    if (storeAPI.getState().selectedSensor.id == message.SensorId)
-      storeAPI.dispatch(updateSelectedSensor(message.Value));
+    if (storeAPI.getState().selectedSensor.sensor.id == message.SensorId)
+      storeAPI.dispatch(
+        updateSelectedSensor({ update: message.Value, date: message.Time })
+      );
   });
 
   connection.on('sensorAdded', resp => alert(resp));

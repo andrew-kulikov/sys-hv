@@ -7,7 +7,7 @@ import { withNamespaces } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
 
 const LogsPage = ({ classes }) => (
-  <Page>
+  <Page title="Logs">
     <div>Logs</div>
   </Page>
 );

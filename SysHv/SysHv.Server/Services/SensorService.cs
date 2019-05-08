@@ -27,6 +27,11 @@ namespace SysHv.Server.Services
             return _context.Sensors.FirstOrDefaultAsync(s => s.Id == id);
         }
 
+        public Task<ClientSensor> GetClientSensorByIdAsync(int id)
+        {
+            return _context.ClientSensors.FirstOrDefaultAsync(s => s.Id == id);
+        }
+
         public Task<Sensor> GetSensorByNameAsync(string name)
         {
             return _context.Sensors.FirstOrDefaultAsync(s => s.Name == name);

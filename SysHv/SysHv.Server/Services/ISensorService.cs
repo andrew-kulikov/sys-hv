@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using SysHv.Server.DAL.Models;
 
@@ -15,5 +13,6 @@ namespace SysHv.Server.Services
         Task<bool> RemoveSensorAsync(int id);
         Task AddSensorAsync(Sensor sensor);
         Task AddClientSensorAsync(ClientSensor sensor);
+        Task<ClientSensor> GetClientSensorByIdAsync(int id);
     }
 }

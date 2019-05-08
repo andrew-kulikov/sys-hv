@@ -1,4 +1,5 @@
-import { call } from 'redux-saga/effects';
+import { call, put } from 'redux-saga/effects';
+import { logout } from '../actions/auth';
 import jwt_decode from 'jwt-decode';
 
 export function* callHttp(...args) {
@@ -27,6 +28,8 @@ export function* callHttp(...args) {
   } catch (err) {
     if (err.status === 401) {
       console.log(err);
+      yield put(logout());
+      return;
     }
     throw err;
   }

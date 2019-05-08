@@ -17,7 +17,7 @@ namespace SysHv.Server.Hubs
     [Authorize("Bearer")]
     public class MonitoringHub : Hub
     {
-        private static readonly IDictionary<string, ICollection<string>> Connections =
+        internal static readonly IDictionary<string, ICollection<string>> Connections =
             new Dictionary<string, ICollection<string>>();
 
         private readonly IClientService _clientService;
@@ -61,7 +61,7 @@ namespace SysHv.Server.Hubs
             /*var clientSensor = _mapper.Map<ClientSensor>(dto);
 
            await _sensorService.AddClientSensorAsync(clientSensor);*/
-            using (var sender = new RPCSender(new ConnectionModel("localhost", "vasya", "123456"),
+            using (var sender = new RPCSender(new ConnectionModel(client.Ip, "vasya", "123456"),
                 new PublishProperties { QueueName = "rpc", ExchangeName = "" }))
             {
                 var res = await sender.Call<string, string>("sdf");

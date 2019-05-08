@@ -8,17 +8,19 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
-import Chip from '@material-ui/core/Chip';
+import Link from '@material-ui/core/Link';
+import { Link as RouterLink } from 'react-router-dom';
 
-import styles from './style';
+import CheckIcon from '@material-ui/icons/Check';
+import AlertIcon from '@material-ui/icons/AddAlertOutlined';
+
+import { styles, clientStyles } from './style';
 import { withNamespaces } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -26,46 +28,62 @@ import { getClients } from '../../actions/client';
 import { addSensor } from '../../actions/sensor';
 import { connectTo } from '../../utils';
 
-const clientStyles = theme => ({
-  root: {
-    width: '100%'
-  },
-  ipHeading: {
-    flexShrink: 0,
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: 'bold'
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexShrink: 0,
+import moment from 'moment';
 
-    flexBasis: '33.33%'
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary
-  }
-});
-
-const Client = withStyles(clientStyles)(({ classes, client }) => (
+const Client = withStyles(clientStyles)(({ classes, client, updates }) => (
   <ExpansionPanel>
     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography className={classes.ipHeading}>{client.ip} - </Typography>
-      <Typography className={classes.heading}> {client.name}</Typography>
-      <Typography className={classes.secondaryHeading}>
-        {client.description}
-      </Typography>
+      <Typography className={classes.heading}>{`Client #${client.id} - ${
+        client.name
+      }. IP: ${client.ip}`}</Typography>
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
-      <List>
-        {Object.keys(client).map(k => (
-          <ListItem key={k} button>
-            <ListItemText>
-              <Typography>{`${k} : ${client[k]}`}</Typography>
-            </ListItemText>
-          </ListItem>
-        ))}
-      </List>
+      <Table className={classes.table}>
+        <TableHead>
+          <TableRow>
+            <TableCell>Sensor</TableCell>
+            <TableCell align="center">Last Update</TableCell>
+            <TableCell align="center">Last Value</TableCell>
+            <TableCell align="center">Status</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {client.clientSensors.map(sensor => {
+            const sensorUpdates = updates[sensor.id];
+            let lastUpdateDate = '-',
+              lastValue = '-',
+              lastStatus = '-';
+            if (sensorUpdates && sensorUpdates.length > 0) {
+              const lastUpdate = sensorUpdates[sensorUpdates.length - 1];
+              lastUpdateDate = moment(new Date(lastUpdate.Time)).format(
+                'HH:mm:ss'
+              );
+              lastValue = lastUpdate.Value.Value;
+              lastStatus =
+                lastUpdate.Value.Status == 'OK' ? <CheckIcon /> : <AlertIcon />;
+            }
+            return (
+              <TableRow key={sensor.id}>
+                <TableCell component="th" scope="row">
+                  <Link component={RouterLink} to={'/sensor/' + sensor.id}>
+                    {sensor.name}
+                  </Link>
+                </TableCell>
+                <TableCell align="center" component="th" scope="row">
+                  {lastUpdateDate}
+                </TableCell>
+                <TableCell align="center" component="th" scope="row">
+                  {lastValue}
+                  {sensor.ValueUnit}
+                </TableCell>
+                <TableCell align="center" component="th" scope="row">
+                  {lastStatus}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
     </ExpansionPanelDetails>
   </ExpansionPanel>
 ));
@@ -75,13 +93,12 @@ class ComputersPage extends React.Component {
     this.props.getClients();
   }
   render() {
-    const { clients } = this.props;
-    console.log(clients);
+    const { clients, updates } = this.props;
+
     return (
-      <Page>
-        <div>Clients:</div>
+      <Page title="Clients">
         {clients.map(c => (
-          <Client key={c.id} client={c} />
+          <Client key={c.id} client={c} updates={updates.sensorValues} />
         ))}
         <div>
           <Button onClick={() => this.props.addSensor({ ClientId: 1 })}>
@@ -94,7 +111,11 @@ class ComputersPage extends React.Component {
 }
 
 export default connectTo(
-  state => ({ clients: state.client.clients }),
+  state => ({
+    clients: state.client.clients,
+    updates: state.sensor,
+    allSensors: state.allSensors
+  }),
   { getClients, addSensor },
   withNamespaces()(withStyles(styles)(ComputersPage))
 );

@@ -2,21 +2,30 @@ import { createReducer } from 'redux-act';
 import * as a from '../actions/sensor';
 
 const DEFAULT_STATE = {
-  id: 2,
+  sensor: {},
   values: [],
   subsensors: {}
 };
 
+const getValue = val => {
+ 
+  if (isNaN(val)) {
+    console.warn(val);
+    return 0;
+  }
+  return val;
+};
+
 export default createReducer(
   {
-    [a.selectSensor]: (state, id) => ({ id, values: [], subsensors: {} }),
-    [a.updateSelectedSensor]: (state, update) => {
-      //console.log(update);
+    [a.selectSensor]: (state, sensor) => ({ sensor, values: [], subsensors: {} }),
+    [a.updateSelectedSensor]: (state, { update, date }) => {
+      //console.log(update, date);
       let values = state.values;
 
       values.push({
-        x: Date.now(),
-        y: update.Value
+        x: date,
+        y: getValue(update.Value)
       });
 
       if (values.length > 25) values = values.slice(-10);
@@ -27,14 +36,14 @@ export default createReducer(
 
         if (!subsensors[subsensorName]) subsensors[subsensorName] = [];
         subsensors[subsensorName].push({
-          x: Date.now(),
-          y: update.SubSensors[key].Value
+          x: date,
+          y: getValue(update.SubSensors[key].Value)
         });
         if (subsensors[subsensorName].length > 25)
           subsensors[subsensorName] = subsensors[subsensorName].slice(-10);
       }
 
-      return { id: state.id, values, subsensors };
+      return { ...state, values, subsensors };
     }
   },
   DEFAULT_STATE

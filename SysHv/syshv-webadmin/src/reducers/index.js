@@ -4,6 +4,7 @@ import account from './account';
 import sensor from './sensor';
 import client from './client';
 import selectedSensor from './selectedSensor';
+import allSensors from './allSensors';
 import { reducer as toastr } from 'react-redux-toastr';
 
 export default {
@@ -13,5 +14,6 @@ export default {
   toastr,
   sensor,
   client,
+  allSensors,
   selectedSensor
 };

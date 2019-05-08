@@ -35,7 +35,7 @@ namespace SysHv.Client.WinService.Services
 
         public MonitoringService()
         {
-            using (var creator = new QueueCreator(new ConnectionModel("localhost", "guest", "guest")))
+            using (var creator = new QueueCreator(new ConnectionModel()))
             {
                 creator.TryCreateQueue("rpc", false, false, false, null);
             }
@@ -52,7 +52,7 @@ namespace SysHv.Client.WinService.Services
 
             if (sensorType == null) return null;
 
-            var sensorInstance = Activator.CreateInstance(sensorType);
+            var sensorInstance = Activator.CreateInstance(sensorType, sensor);
             _sensorInstances.Add(sensorInstance);
 
             return (sender, args) =>
@@ -69,7 +69,9 @@ namespace SysHv.Client.WinService.Services
                     {
                         ClientId = ConfigurationHelper.Id,
                         SensorId = sensor.Id,
-                        Value = result
+                        Value = result,
+                        Time = DateTime.Now,
+                        UserEmail = ConfigurationHelper.Email
                     });
                 }
             };

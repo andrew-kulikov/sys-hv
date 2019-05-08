@@ -50,7 +50,7 @@ class Page extends React.Component {
     this.setState({ open: false });
   };
   render() {
-    const { children, classes } = this.props;
+    const { children, classes, title } = this.props;
 
     return (
       <div className={classes.root}>
@@ -84,7 +84,7 @@ class Page extends React.Component {
               noWrap
               className={classes.title}
             >
-              Dashboard
+              {title}
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">

@@ -34,7 +34,7 @@ namespace SysHv.Client.WinService.Services
 
         public MonitoringService()
         {
-            using (var creator = new QueueCreator(new ConnectionModel("localhost", "guest", "guest")))
+            using (var creator = new QueueCreator(new ConnectionModel()))
             {
                 creator.TryCreateQueue("rpc", false, false, false, null);
             }

@@ -31,8 +31,10 @@ class SensorsPage extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Page>
-        <Typography variant="h4" component="h2">All sensors available in system:</Typography>
+      <Page title="All Sensors">
+        <Typography variant="h4" component="h2" style={{ marginLeft: '10px' }}>
+          All sensors available in system:
+        </Typography>
         <div style={{ display: 'flex' }}>
           {this.props.sensors.map(s => (
             <Card className={classes.card} key={s.id}>
@@ -57,7 +59,11 @@ class SensorsPage extends React.Component {
                   </Typography>
                   <List>
                     {s.subSensors.map(subsensor => (
-                      <ListItem key={subsensor.id} style={{ padding: '0' }} button>
+                      <ListItem
+                        key={subsensor.id}
+                        style={{ padding: '0' }}
+                        button
+                      >
                         <ListItemText>
                           <Typography>{`${subsensor.name} - ${
                             subsensor.description

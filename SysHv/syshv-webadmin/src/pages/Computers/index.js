@@ -17,7 +17,7 @@ import TableRow from '@material-ui/core/TableRow';
 import CheckIcon from '@material-ui/icons/Check';
 import AlertIcon from '@material-ui/icons/AddAlertOutlined';
 
-import styles from './style';
+import { styles, clientStyles } from './style';
 import { withNamespaces } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -26,25 +26,6 @@ import { addSensor } from '../../actions/sensor';
 import { connectTo } from '../../utils';
 
 import moment from 'moment';
-
-const clientStyles = theme => ({
-  root: {
-    width: '100%'
-  },
-  ipHeading: {
-    flexShrink: 0,
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: 'bold'
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexShrink: 0
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary
-  }
-});
 
 const Client = withStyles(clientStyles)(({ classes, client, updates }) => (
   <ExpansionPanel>
@@ -109,8 +90,7 @@ class ComputersPage extends React.Component {
     const { clients, updates } = this.props;
 
     return (
-      <Page>
-        <div>Clients:</div>
+      <Page title="Clients">
         {clients.map(c => (
           <Client key={c.id} client={c} updates={updates.sensorValues} />
         ))}

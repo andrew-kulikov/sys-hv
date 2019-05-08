@@ -12,21 +12,19 @@ import SimpleLineChart from '../../components/Home/SimpleLineChart';
 import SimpleTable from '../../components/Home/SimpleTable';
 
 const HomePage = ({ classes }) => (
-  <Page>
-    <>
-      <Typography variant="h4" gutterBottom component="h2">
-        Orders
-      </Typography>
-      <Typography component="div" className={classes.chartContainer}>
-        <SimpleLineChart />
-      </Typography>
-      <Typography variant="h4" gutterBottom component="h2">
-        Products
-      </Typography>
-      <div className={classes.tableContainer}>
-        <SimpleTable />
-      </div>
-    </>
+  <Page title="Dashboard">
+    <Typography variant="h4" gutterBottom component="h2">
+      Orders
+    </Typography>
+    <Typography component="div" className={classes.chartContainer}>
+      <SimpleLineChart />
+    </Typography>
+    <Typography variant="h4" gutterBottom component="h2">
+      Products
+    </Typography>
+    <div className={classes.tableContainer}>
+      <SimpleTable />
+    </div>
   </Page>
 );
 

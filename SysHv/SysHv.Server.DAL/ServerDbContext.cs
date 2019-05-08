@@ -14,6 +14,8 @@ namespace SysHv.Server.DAL
         public DbSet<Client> Clients { get; set; }
         public DbSet<ClientSensor> ClientSensors { get; set; }
         public DbSet<SubSensor> SubSensors { get; set; }
+        public DbSet<ClientLog> ClientLogs { get; set; }
+        public DbSet<SensorLog> SensorLogs { get; set; }
         public ServerDbContext(DbContextOptions<ServerDbContext> options) : base(options)
         {
 

@@ -40,6 +40,8 @@ namespace WinAdminClientCore.ViewModels
         {
 
             Computers = new DispatcherizedObservableCollection<ComputerInfoViewModel>();
+            /*for (int i = 0; i < 10; i++)
+                Computers.Add(new ComputerInfoViewModel(i));*/
 
             var connection = new HubConnectionBuilder()
                 .WithUrl($"{PropertiesManager.SignalRServer}{PropertiesManager.Hub}", options =>
@@ -49,17 +51,15 @@ namespace WinAdminClientCore.ViewModels
                 .Build();
 
             connection.On<object>("UpdateReceived", ondata);
+
             connection.StartAsync();
         }
-
-        public SeriesCollection LastHourSeries { get; set; }
-
 
         void ondata(object o)
         {
             var obj = JsonConvert.DeserializeObject<SensorResponse>(o.ToString());
-            var sensors = JsonConvert.DeserializeObject<NumericSensorDto>(obj.Value.ToString());
-            ProcessResponse(obj);
+                var sensors = JsonConvert.DeserializeObject<NumericSensorDto>(obj.Value.ToString());
+                ProcessResponse(obj);
         }
 
         private void ProcessResponse(SensorResponse response)
@@ -82,15 +82,23 @@ namespace WinAdminClientCore.ViewModels
             {
                 case SensorDataContract.CpuLoadSensor:
                 case SensorDataContract.CpuTempSensor:
-                {
-                    var sensorDto = JsonConvert.DeserializeObject<NumericSensorDto>(response.Value.ToString());
-                    foreach (var computer in Computers)
+                default:
                     {
-                        if (computer.Id == response.ClientId)
-                            computer.UpdateSingleValueSensors(sensor.Contract, sensorDto);
+
+                        var sensorDto = JsonConvert.DeserializeObject<NumericSensorDto>(response.Value.ToString());
+                        if (Computers.Count == 0)
+                        {
+                            Computers.Add(new ComputerInfoViewModel(response.ClientId));
+                        }
+
+                        foreach (var computer in Computers)
+                        {
+                            if (computer.Id == response.ClientId)
+                                computer.UpdateSingleValueSensors(sensor.Contract, sensorDto);
+                        }
+
+                        break;
                     }
-                    break;
-                }
             }
         }
 
@@ -116,7 +124,7 @@ namespace WinAdminClientCore.ViewModels
         public Tuple<Type, object> TryConvert(string json)
         {
             var settings = new JsonSerializerSettings() { MissingMemberHandling = MissingMemberHandling.Error };
-            var sensorTypes = new[] {typeof(SensorResponse), typeof(NumericSensorDto) };
+            var sensorTypes = new[] { typeof(SensorResponse), typeof(NumericSensorDto) };
 
             foreach (var type in sensorTypes)
             {

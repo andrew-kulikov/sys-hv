@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WinAdminClientCore.ViewModels;
+using WinAdminClientCore.Views;
 
 namespace WinAdminClientCore
 {
@@ -21,6 +22,9 @@ namespace WinAdminClientCore
     /// </summary>
     public partial class MainWindow : Window
     {
+        private SensorsStats _sensorsStats = new SensorsStats();
+        private RegisterService _registerService = new RegisterService();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -30,7 +34,7 @@ namespace WinAdminClientCore
         {
             DataContext = viewModel;
 
-            //_computerStats = new DefaultComputerStats(); //{DataC = viewModel.CpuLoad};
+            _sensorsStats.ItemsControl.ItemsSource = viewModel.Computers;
 
             InitializeComponent();
         }
@@ -43,12 +47,19 @@ namespace WinAdminClientCore
             switch (index)
             {
                 case 0:
-                    //GridPrincipal.Children.Clear();
-                    //GridPrincipal.Children.Add(_computerStats);
+                    GridPrincipal.Children.Clear();
                     break;
                 case 1:
-                    //GridPrincipal.Children.Clear();
-                    //GridPrincipal.Children.Add(userControlEscolha);
+                    GridPrincipal.Children.Clear();
+                    GridPrincipal.Children.Add(_sensorsStats);
+                    break;
+
+                case 3:
+                    break;
+
+                case 4:
+                    GridPrincipal.Children.Clear();
+                    GridPrincipal.Children.Add(_registerService);
                     break;
                 default:
                     break;

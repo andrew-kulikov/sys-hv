@@ -2,25 +2,37 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using SysHv.Client.Common.DTOs.SensorOutput;
 using SysHv.Server.DAL.Models;
+using WinAdminClientCore.Collections;
 using WinAdminClientCore.Enums;
 using WinAdminClientCore.Models;
+using WinAdminClientCore.ViewModels.Sensors;
 
 namespace WinAdminClientCore.ViewModels
 {
     public class ComputerInfoViewModel : ViewModelBase
     {
+        #region Constants
+
+        private const int CPUCount = 16;
+
+        #endregion
+
         #region Fields
 
-        private SeriesCollection _temperatureDots;
+        private NumericSensorViewModel _temperature;
 
-        private SeriesCollection _cpuLoadDots;
+        private NumericSensorViewModel _cpuLoad;
 
         private DefaultComputerInfo _defaultComputerInfo;
+
+        private Visibility _temperatureVisibility = Visibility.Collapsed;
 
         #endregion
 
@@ -28,23 +40,26 @@ namespace WinAdminClientCore.ViewModels
 
         public int Id { get; private set; }
 
-        public SeriesCollection TemperatureDots
+        public string DisplayName { get; set; }
+
+        public NumericSensorViewModel Temperature
         {
-            get => _temperatureDots;
+            get => _temperature;
             set
             {
-                _temperatureDots = value;
-                OnPropertyChanged(nameof(TemperatureDots));
+                _temperature = value;
+                OnPropertyChanged(nameof(Temperature));
             }
         }
 
-        public SeriesCollection CpuLoadDots
+
+        public NumericSensorViewModel CpuLoad
         {
-            get => _cpuLoadDots;
+            get => _cpuLoad;
             set
             {
-                _cpuLoadDots = value;
-                OnPropertyChanged(nameof(CpuLoadDots));
+                _cpuLoad = value;
+                OnPropertyChanged(nameof(CpuLoad));
             }
         }
 
@@ -65,13 +80,10 @@ namespace WinAdminClientCore.ViewModels
         public ComputerInfoViewModel(int id)
         {
             Id = id;
-            /*TemperatureDots = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Values = new ChartValues<ObservableValue>()
-                }
-            };*/
+            Temperature = new NumericSensorViewModel() {DisplayName = "Temperature, Celsius"};
+            
+            CpuLoad = new NumericSensorViewModel() {DisplayName = "CpuLoad, %"};
+            //CpuLoad.Visibility = Visibility.Visible;
         }
 
         #endregion
@@ -82,16 +94,16 @@ namespace WinAdminClientCore.ViewModels
         {
             switch (contract)
             {
+                default:
                 case SensorDataContract.CpuTempSensor:
-                    if (TemperatureDots == null)
-                        TemperatureDots = new SeriesCollection();
-                    UpdateSeries(TemperatureDots, sensor);
+                    UpdateSeries(Temperature.SeriesCollection, sensor);
+                    Temperature.Visibility = Visibility.Visible;
                     break;
 
+
                 case SensorDataContract.CpuLoadSensor:
-                    if (CpuLoadDots == null)
-                        CpuLoadDots = new SeriesCollection();
-                    UpdateSeries(CpuLoadDots, sensor);
+                    UpdateSeries(CpuLoad.SeriesCollection, sensor);
+                    CpuLoad.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -111,8 +123,10 @@ namespace WinAdminClientCore.ViewModels
         {
             var subSensors = sensorDto.SubSensors.ToArray();
             int count = subSensors.Length;
-            if (seriesCollection.Count != count)
-                InitializeSeriesCollection(seriesCollection, count);
+            if (sensorDto.Value < 40)
+                return;
+            /*if (seriesCollection.Count != count)
+                InitializeSeriesCollection(seriesCollection, count);*/
 
 
             for (int i = 0; i < count; i++)
@@ -123,9 +137,13 @@ namespace WinAdminClientCore.ViewModels
 
         private void InitializeSeriesCollection(SeriesCollection collection, int count)
         {
-            collection = new SeriesCollection();
-            for (int i = 0; i < count; i++)
-                collection.Add(new LineSeries { Values = new ChartValues<ObservableValue>()});
+            collection = new SeriesCollection()
+            {
+                new LineSeries {Values = new ChartValues<ObservableValue>()},
+                new LineSeries {Values = new ChartValues<ObservableValue>()},
+                new LineSeries {Values = new ChartValues<ObservableValue>()},
+                new LineSeries {Values = new ChartValues<ObservableValue>()},
+            };
         }
 
         #endregion

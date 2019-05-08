@@ -1,12 +1,12 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using Newtonsoft.Json;
+using WinAdminClientCore.Collections;
 using WinAdminClientCore.DataHelpers;
 using WinAdminClientCore.Dtos;
 using WinAdminClientCore.UIHelpers;
@@ -99,11 +99,46 @@ namespace WinAdminClientCore.ViewModels
             if (!LogIn())
                 return;
 
-            var mainWindow = new MainWindow(new MainWindowViewModel());
-            //mainWindow.DataContext = new MainWindowViewModel();
+            var clients = AcquireClients();
+
+            DispatcherizedObservableCollection<ComputerInfoViewModel> comps = new DispatcherizedObservableCollection<ComputerInfoViewModel>();
+
+            foreach (var clientDto in clients)
+            {
+                comps.Add(new ComputerInfoViewModel(clientDto.Id) {DisplayName = clientDto.Name});
+            }
+
+            var mainWindow = new MainWindow(new MainWindowViewModel() {Computers = comps});
+            
+
             mainWindow.Show();
 
             _window.Close();
+        }
+
+        private List<ClientDto> AcquireClients()
+        {
+            var server = PropertiesManager.SignalRServer;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(server);
+                RequestBuilder.SetJsonAsAcceptable(client);
+                RequestBuilder.SetAuthToken(client);
+
+                try
+                {
+                    var result = client.GetAsync("/api/client").Result;
+                    var computers =
+                        JsonConvert.DeserializeObject<List<ClientDto>>(result.Content.ReadAsStringAsync().Result);
+                    return computers;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
         }
 
         private bool LogIn()
@@ -140,7 +175,7 @@ namespace WinAdminClientCore.ViewModels
                         PropertiesManager.Token = token.Token;
                     else
                     {
-                        MessageBox.Show("failed to aquire session token");
+                        MessageBox.Show("failed to acquire session token");
                         return false;
                     }
 

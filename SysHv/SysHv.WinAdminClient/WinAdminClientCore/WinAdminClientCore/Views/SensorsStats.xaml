@@ -6,7 +6,20 @@
              xmlns:local="clr-namespace:WinAdminClientCore.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <ScrollViewer>
+        <ItemsControl x:Name="ItemsControl">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Expander Header="{Binding DisplayName}">
+                        <StackPanel>
+                            <local:TemperatureChart DataContext="{Binding Temperature}"/>
+                            <local:TemperatureChart DataContext="{Binding CpuLoad}"/>
+                        </StackPanel>
+                    </Expander>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+
+        </ItemsControl>
+    </ScrollViewer>
 </UserControl>

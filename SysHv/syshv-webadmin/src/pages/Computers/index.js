@@ -1,97 +1,41 @@
 import React from 'react';
 
 import Page from '../page';
+import Client from '../../components/client/Client';
+import AddClientModal from '../../components/client/AddClientModal';
+
 import Button from '@material-ui/core/Button';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-
-import Link from '@material-ui/core/Link';
-import { Link as RouterLink } from 'react-router-dom';
-
-import CheckIcon from '@material-ui/icons/Check';
-import AlertIcon from '@material-ui/icons/AddAlertOutlined';
-
-import { styles, clientStyles } from './style';
+import { styles } from './style';
 import { withNamespaces } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
 
-import { getClients } from '../../actions/client';
+import { getClients, addClient } from '../../actions/client';
 import { addSensor } from '../../actions/sensor';
 import { connectTo } from '../../utils';
 
-import moment from 'moment';
-
-const Client = withStyles(clientStyles)(({ classes, client, updates }) => (
-  <ExpansionPanel>
-    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography className={classes.heading}>{`Client #${client.id} - ${
-        client.name
-      }. IP: ${client.ip}`}</Typography>
-    </ExpansionPanelSummary>
-    <ExpansionPanelDetails>
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Sensor</TableCell>
-            <TableCell align="center">Last Update</TableCell>
-            <TableCell align="center">Last Value</TableCell>
-            <TableCell align="center">Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {client.clientSensors.map(sensor => {
-            const sensorUpdates = updates[sensor.id];
-            let lastUpdateDate = '-',
-              lastValue = '-',
-              lastStatus = '-';
-            if (sensorUpdates && sensorUpdates.length > 0) {
-              const lastUpdate = sensorUpdates[sensorUpdates.length - 1];
-              lastUpdateDate = moment(new Date(lastUpdate.Time)).format(
-                'HH:mm:ss'
-              );
-              lastValue = lastUpdate.Value.Value;
-              lastStatus =
-                lastUpdate.Value.Status == 'OK' ? <CheckIcon /> : <AlertIcon />;
-            }
-            return (
-              <TableRow key={sensor.id}>
-                <TableCell component="th" scope="row">
-                  <Link component={RouterLink} to={'/sensor/' + sensor.id}>
-                    {sensor.name}
-                  </Link>
-                </TableCell>
-                <TableCell align="center" component="th" scope="row">
-                  {lastUpdateDate}
-                </TableCell>
-                <TableCell align="center" component="th" scope="row">
-                  {lastValue}
-                  {sensor.ValueUnit}
-                </TableCell>
-                <TableCell align="center" component="th" scope="row">
-                  {lastStatus}
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </ExpansionPanelDetails>
-  </ExpansionPanel>
-));
-
 class ComputersPage extends React.Component {
+  state = {
+    modalOpen: false
+  };
+
+  handleModalOpen = () => {
+    this.setState({ modalOpen: true });
+  };
+
+  handleModalClose = () => {
+    this.setState({ modalOpen: false });
+  };
+
+  handleSubmitClient = client => {
+    this.props.addClient(client);
+    this.setState({ modalOpen: false });
+  };
+
   componentDidMount() {
     this.props.getClients();
   }
+
   render() {
     const { clients, updates } = this.props;
 
@@ -101,10 +45,13 @@ class ComputersPage extends React.Component {
           <Client key={c.id} client={c} updates={updates.sensorValues} />
         ))}
         <div>
-          <Button onClick={() => this.props.addSensor({ ClientId: 1 })}>
-            Add
-          </Button>
+          <Button onClick={this.handleModalOpen}>Add</Button>
         </div>
+        <AddClientModal
+          open={this.state.modalOpen}
+          handleClose={this.handleModalClose}
+          handleSubmit={this.handleSubmitClient}
+        />
       </Page>
     );
   }
@@ -116,6 +63,6 @@ export default connectTo(
     updates: state.sensor,
     allSensors: state.allSensors
   }),
-  { getClients, addSensor },
+  { getClients, addSensor, addClient },
   withNamespaces()(withStyles(styles)(ComputersPage))
 );

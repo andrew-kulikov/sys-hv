@@ -1,31 +1,27 @@
 import React from 'react';
 
+import Paper from '@material-ui/core/Paper';
+import Input from '@material-ui/core/Input';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import InputLabel from '@material-ui/core/InputLabel';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-
-import Link from '@material-ui/core/Link';
-import { Link as RouterLink } from 'react-router-dom';
 
 import styles from './style';
 import { connectTo } from '../../utils';
 import { withNamespaces } from 'react-i18next';
 import withStyles from '@material-ui/core/styles/withStyles';
 
-import { login } from '../../actions/auth';
+import { register } from '../../actions/auth';
 
-class LoginPage extends React.Component {
+class RegisterPage extends React.Component {
   state = {
     email: '',
-    password: ''
+    password: '',
+    passwordRepeat: ''
   };
 
   handleChange = event => {
@@ -35,7 +31,7 @@ class LoginPage extends React.Component {
   };
 
   handleSubmit = e => {
-    this.props.login({
+    this.props.register({
       email: this.state.email,
       password: this.state.password
     });
@@ -86,23 +82,23 @@ class LoginPage extends React.Component {
                 autoComplete="current-password"
               />
             </FormControl>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="passwordRepeat">Repeat Password</InputLabel>
+              <Input
+                value={this.state.passwordRepeat}
+                onChange={this.handleChange}
+                name="passwordRepeat"
+                type="password"
+                id="passwordRepeat"
+                autoComplete="current-password"
+              />
+            </FormControl>
             <Button
               onClick={this.handleSubmit}
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.login}
-            >
-              Sign in
-            </Button>
-            <div className={classes.or}> 
-              <Typography>Or</Typography>
-            </div>
-            <Button
-              onClick={() => this.props.history.replace('/register')}
-              fullWidth
-              variant="contained"
-              color="primary"
+              className={classes.submit}
             >
               Register
             </Button>
@@ -118,7 +114,7 @@ export default connectTo(
     token: state.auth.token
   }),
   {
-    login
+    register
   },
-  withNamespaces()(withStyles(styles)(LoginPage))
+  withNamespaces()(withStyles(styles)(RegisterPage))
 );

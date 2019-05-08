@@ -21,9 +21,5 @@ export default createReducer({
       token: '',
       refreshToken: ''
     }
-  },
-  [a.resetPasswordOk]: (state) => ({
-    ...state,
-    isSuccessResetPassword: true,
-  })
+  }
 }, DEFAULT_STATE )

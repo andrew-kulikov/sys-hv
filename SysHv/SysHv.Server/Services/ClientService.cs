@@ -28,9 +28,9 @@ namespace SysHv.Server.Services
             return _context.Clients.FirstOrDefaultAsync(c => c.Name == name);
         }
 
-        public Task<DAL.Models.Client> GetClientByIpAsync(string ip)
+        public Task<DAL.Models.Client> GetClientByIpAsync(string ip, string username)
         {
-            return _context.Clients.FirstOrDefaultAsync(c => c.Ip == ip);
+            return _context.Clients.FirstOrDefaultAsync(c => c.Ip == ip && c.User.Email == username);
         }
 
         public Task<List<DAL.Models.Client>> GetAllClientsAsync()

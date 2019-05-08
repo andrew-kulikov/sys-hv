@@ -73,7 +73,7 @@ namespace SysHv.Server.Controllers
 
             return Json(new Response { Message = queue, Success = true, Sensors = sensorDtos });
         }
- 
+
         [HttpPost]
         [Route("register")]
         [Authorize("Bearer")]
@@ -90,7 +90,7 @@ namespace SysHv.Server.Controllers
             };
             await _clientService.AddClientAsync(client, user);
 
-            return Ok();
+            return Json(new { success = true });
         }
 
         [HttpGet]

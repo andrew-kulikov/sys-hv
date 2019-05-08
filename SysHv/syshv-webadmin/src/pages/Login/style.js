@@ -26,8 +26,14 @@ const styles = theme => ({
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing.unit
   },
-  submit: {
+  login: {
     marginTop: theme.spacing.unit * 3
+  },
+  or: {
+    margin: '10px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 

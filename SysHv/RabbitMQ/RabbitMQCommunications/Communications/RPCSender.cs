@@ -50,7 +50,7 @@ namespace RabbitMQCommunications.Communications
             _connection?.Close();
         }
 
-        public async Task<TRes> Call<TArg, TRes>(TArg message) where TRes : class
+        public async Task<TRes> Call<TArg, TRes>(TArg message)
         {
             var correlationToken = Guid.NewGuid().ToString();
 
@@ -63,7 +63,7 @@ namespace RabbitMQCommunications.Communications
             var timeoutAt = DateTime.Now + _timeout;
 
             var delivered = false;
-            TRes response = null;
+            var response = default(TRes);
 
             _model.BasicPublish("", _publishProperties.QueueName, properties, messageBuffer);
 
@@ -93,7 +93,7 @@ namespace RabbitMQCommunications.Communications
                 }
             });
 
-            return !delivered ? null : response;
+            return !delivered ? default(TRes) : response;
         }
     }
 }

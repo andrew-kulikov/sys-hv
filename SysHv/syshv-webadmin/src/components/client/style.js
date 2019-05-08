@@ -15,7 +15,7 @@ export const clientStyles = theme => ({
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary
   },
-  deleteButton: {
+  actionButton: {
     width: 'fit-content',
     marginTop: theme.spacing.unit
   }

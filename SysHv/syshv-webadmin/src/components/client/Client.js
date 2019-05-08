@@ -6,6 +6,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -18,6 +19,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 import AlertIcon from '@material-ui/icons/AddAlertOutlined';
 
 import { clientStyles } from './style';
@@ -26,7 +28,7 @@ import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 
 const Client = withStyles(clientStyles)(
-  ({ classes, client, updates, deleteClient }) => (
+  ({ classes, client, updates, deleteClient, handleOpenAddSensor }) => (
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
         <Typography className={classes.heading}>{`Client #${client.id} - ${
@@ -87,13 +89,25 @@ const Client = withStyles(clientStyles)(
           </TableBody>
         </Table>
 
-        <IconButton
-          aria-label="Delete"
-          className={classes.deleteButton}
-          onClick={() => deleteClient(client.id)}
-        >
-          <DeleteIcon fontSize="default" />
-        </IconButton>
+        <div className={classes.actionButtons}>
+          <IconButton
+            className={classes.actionButton}
+            onClick={() => deleteClient(client.id)}
+          >
+            <Tooltip title="Delete Client" aria-label="Delete Client">
+              <DeleteIcon fontSize="default" />
+            </Tooltip>
+          </IconButton>
+
+          <IconButton
+            className={classes.actionButton}
+            onClick={() => handleOpenAddSensor(client)}
+          >
+            <Tooltip title="Add Sensor" aria-label="Add Sensor">
+              <AddIcon fontSize="default" />
+            </Tooltip>
+          </IconButton>
+        </div>
       </ExpansionPanelDetails>
     </ExpansionPanel>
   )

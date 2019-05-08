@@ -15,6 +15,10 @@ export default theme => ({
       padding: '15px',
       width: '400px',
       margin: '10px'
+    },
+    sensorSelect: {
+      marginTop: theme.spacing.unit,
+      minWidth: 240,
     }
   });
   

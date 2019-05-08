@@ -69,10 +69,14 @@ namespace SysHv.Server.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddClientSensorAsync(ClientSensor sensor)
+        public async Task<ClientSensor> AddClientSensorAsync(ClientSensor sensor)
         {
-            await _context.ClientSensors.AddAsync(sensor);
+            var newSensor = await _context.ClientSensors.AddAsync(sensor);
             await _context.SaveChangesAsync();
+
+            var clientSensorSensor = newSensor.Entity.Sensor;
+
+            return newSensor.Entity;
         }
     }
 }

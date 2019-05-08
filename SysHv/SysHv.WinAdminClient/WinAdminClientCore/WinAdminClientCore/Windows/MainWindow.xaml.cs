@@ -37,6 +37,7 @@ namespace WinAdminClientCore
 
             _sensorsStats.ItemsControl.ItemsSource = viewModel.Computers;
             _sensorsInfo.ItemsControl.ItemsSource = viewModel.Computers;
+            _registerService.DataContext = new RegisterClientViewModel();
 
             InitializeComponent();
         }

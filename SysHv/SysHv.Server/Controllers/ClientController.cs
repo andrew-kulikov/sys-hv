@@ -93,6 +93,16 @@ namespace SysHv.Server.Controllers
             return Json(new { success = true });
         }
 
+        [HttpDelete]
+        [Route("{id:int}")]
+        [Authorize("Bearer")]
+        public async Task<IActionResult> DeleteClient(int id)
+        {
+            await _clientService.RemoveClientAsync(id);
+
+            return Json(new { success = true });
+        }
+
         [HttpGet]
         [Authorize("Bearer")]
         public async Task<ActionResult<ICollection<ClientDto>>> GetAllClients()

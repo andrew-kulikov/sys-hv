@@ -54,5 +54,5 @@ const request = (url, options) =>
 
 export const get = url => request(url, getOptions());
 export const post = (url, data) => request(url, makePostOptions(data));
-export const del = (url, id) => request(url + id, deleteOptions());
+export const del = (url, id) => request(`${url}/${id}`, deleteOptions());
 export const patch = (url, data) => request(url, makePatchOptions(data));

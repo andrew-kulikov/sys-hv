@@ -11,7 +11,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 
 import { connectTo } from '../../utils';
 import styles from './style';
@@ -50,7 +49,7 @@ class SensorsPage extends React.Component {
                   {s.name}
                 </Typography>
                 <Typography className={classes.pos} color="textSecondary">
-                  OS: {getOsType(s.osType)}
+                  OS: {getOsType(s.osType)}; Units: {s.valueUnit}
                 </Typography>
                 <Typography component="p">{s.description}</Typography>
                 <div style={{ marginTop: '10px' }}>

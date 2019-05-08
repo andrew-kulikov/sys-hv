@@ -14,6 +14,7 @@ namespace SysHv.Server.DAL.Models
         public string ReturnType { get; set; }
         public bool IsNumeric { get; set; }
         public string Contract { get; set; }
+        public string ValueUnit { get; set; }
         public ICollection<SubSensor> SubSensors { get; set; }
         public ICollection<ClientSensor> ClientSensors { get; set; }
     }

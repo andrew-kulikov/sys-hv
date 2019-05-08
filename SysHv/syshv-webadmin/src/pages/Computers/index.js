@@ -14,6 +14,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import Link from '@material-ui/core/Link';
+import { Link as RouterLink } from 'react-router-dom';
+
 import CheckIcon from '@material-ui/icons/Check';
 import AlertIcon from '@material-ui/icons/AddAlertOutlined';
 
@@ -62,13 +65,16 @@ const Client = withStyles(clientStyles)(({ classes, client, updates }) => (
             return (
               <TableRow key={sensor.id}>
                 <TableCell component="th" scope="row">
-                  {sensor.name}
+                  <Link component={RouterLink} to={'/sensor/' + sensor.id}>
+                    {sensor.name}
+                  </Link>
                 </TableCell>
                 <TableCell align="center" component="th" scope="row">
                   {lastUpdateDate}
                 </TableCell>
                 <TableCell align="center" component="th" scope="row">
                   {lastValue}
+                  {sensor.ValueUnit}
                 </TableCell>
                 <TableCell align="center" component="th" scope="row">
                   {lastStatus}
@@ -107,7 +113,8 @@ class ComputersPage extends React.Component {
 export default connectTo(
   state => ({
     clients: state.client.clients,
-    updates: state.sensor
+    updates: state.sensor,
+    allSensors: state.allSensors
   }),
   { getClients, addSensor },
   withNamespaces()(withStyles(styles)(ComputersPage))

@@ -74,7 +74,6 @@ namespace SysHv.Server.HostedServices
 
             if (type == "HardwareInfo")
             {
-                var info = JsonConvert.DeserializeObject<HardwareInfoDTO>(message);
                 var clientId = int.Parse(ea.BasicProperties.AppId);
 
                 using (var context = new ServerDbContext(_options))

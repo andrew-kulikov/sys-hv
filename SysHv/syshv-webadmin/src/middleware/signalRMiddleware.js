@@ -14,7 +14,7 @@ const signalRMiddleware = storeAPI => {
   connection.on('UpdateReceived', message => {
     storeAPI.dispatch(getUpdate(message));
 
-    if (storeAPI.getState().selectedSensor.id == message.SensorId)
+    if (storeAPI.getState().selectedSensor.sensor.id == message.SensorId)
       storeAPI.dispatch(
         updateSelectedSensor({ update: message.Value, date: message.Time })
       );

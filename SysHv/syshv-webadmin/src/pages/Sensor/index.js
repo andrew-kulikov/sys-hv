@@ -7,6 +7,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 import RadialGraphs from '../../components/Sensor/RadialGraphs';
+import LiveGraphs from '../../components/Sensor/LiveGraphs';
 
 import styles from './style';
 import { withNamespaces } from 'react-i18next';
@@ -55,10 +56,14 @@ class SensorPage extends React.Component {
           </div>
           {value === 0 && (
             <TabContainer>
-              <RadialGraphs id={match.params.id} />
+              <RadialGraphs />
             </TabContainer>
           )}
-          {value === 1 && <TabContainer>Live graph</TabContainer>}
+          {value === 1 && (
+            <TabContainer>
+              <LiveGraphs />
+            </TabContainer>
+          )}
           {value === 2 && <TabContainer>Last 2 days</TabContainer>}
           {value === 3 && <TabContainer>Last month</TabContainer>}
           {value === 4 && <TabContainer>All history</TabContainer>}
@@ -72,8 +77,7 @@ class SensorPage extends React.Component {
 export default withNamespaces()(
   withStyles(styles)(
     connectTo(
-      state => ({
-      }),
+      state => ({}),
       {
         getClientSensor
       },

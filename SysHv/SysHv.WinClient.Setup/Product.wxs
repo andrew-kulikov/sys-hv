@@ -40,10 +40,17 @@
 
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <!--<Directory Id="ProgramFilesFolder">-->
       <Directory Id="INSTALLFOLDER" Name="Sys Admin Heaven Background Service" />
+
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="SysHvDir" Name="SysHv">
+          <Directory Id="SENSORSDIR" Name="Sensors">
+            <Directory Id="CpuTempSensor" Name="CpuTempSensor"/>
+          </Directory>
+        </Directory>
+      </Directory>
     </Directory>
-    <!--</Directory>-->
+    
 
 
   </Fragment>

@@ -17,7 +17,6 @@ using SysHv.Server.DAL;
 using SysHv.Server.DAL.Models;
 using SysHv.Server.Helpers;
 using SysHv.Server.Hubs;
-using SysHv.Server.Services;
 
 namespace SysHv.Server.HostedServices
 {
@@ -28,7 +27,8 @@ namespace SysHv.Server.HostedServices
         private readonly DbContextOptions<ServerDbContext> _options;
         private readonly IDictionary<string, IDictionary<int, OneWayReceiver>> _userReceivers;
 
-        public ReceiverService(IHubContext<MonitoringHub> hubContext, IConfigurationHelper configurationHelper, DbContextOptions<ServerDbContext> clientService)
+        public ReceiverService(IHubContext<MonitoringHub> hubContext, IConfigurationHelper configurationHelper,
+            DbContextOptions<ServerDbContext> clientService)
         {
             _hubContext = hubContext;
             _configurationHelper = configurationHelper;
@@ -80,10 +80,15 @@ namespace SysHv.Server.HostedServices
                 var clientId = int.Parse(ea.BasicProperties.AppId);
 
                 SaveHardwareInfo(clientId, message);
+                return;
             }
 
-            // TODO: send to user
-            _hubContext.Clients.All.SendAsync("UpdateReceived", JsonConvert.DeserializeObject(message));
+            var messageDecoded = JsonConvert.DeserializeObject<SensorResponse>(message);
+
+            if (messageDecoded != null)
+                _hubContext.Clients
+                    .Clients(MonitoringHub.Connections[messageDecoded.UserEmail] as IReadOnlyList<string>)
+                    .SendAsync("UpdateReceived", JsonConvert.DeserializeObject(message));
         }
 
         private void WriteLog(string message)
@@ -99,7 +104,6 @@ namespace SysHv.Server.HostedServices
             {
                 var log = new SensorLog
                 {
-
                     ClientSensorId = sensorResponse.ClientId,
                     Status = sensorValue.Status,
                     Time = sensorResponse.Time,

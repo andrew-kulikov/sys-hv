@@ -8,11 +8,12 @@ const DEFAULT_STATE = {
 };
 
 const getValue = val => {
-  if (+val === NaN || !val) {
+ 
+  if (isNaN(val)) {
     console.warn(val);
     return 0;
   }
-  return +val;
+  return val;
 };
 
 export default createReducer(

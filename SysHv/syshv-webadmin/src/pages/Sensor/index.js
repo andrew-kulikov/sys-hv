@@ -10,6 +10,8 @@ import { withNamespaces } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
 import { connectTo } from '../../utils';
 
+import { getClientSensor } from '../../actions/sensor';
+
 class SensorPage extends React.Component {
   state = {
     options: {
@@ -79,12 +81,7 @@ class SensorPage extends React.Component {
               opacity: 1
             },
             {
-              offset: 20,
-              color: '#61DBC3',
-              opacity: 1
-            },
-            {
-              offset: 60,
+              offset: 90,
               color: '#FAD375',
               opacity: 1
             },
@@ -103,20 +100,62 @@ class SensorPage extends React.Component {
         lineCap: 'round'
       },
       labels: ['Percent']
-    },
-    series: [100]
+    }
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.getClientSensor(this.props.match.params.id);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return {
+      options: {
+        ...prevState.options,
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'dark',
+            type: 'horizontal',
+            shadeIntensity: 0.5,
+            colorStops: [
+              {
+                offset: nextProps.selectedSensor.sensor.minValue,
+                color: '#95DA74',
+                opacity: 1
+              },
+              {
+                offset: nextProps.selectedSensor.sensor.criticalValue,
+                color: '#FAD375',
+                opacity: 1
+              },
+              {
+                offset: nextProps.selectedSensor.sensor.maxValue,
+                color: '#EB656F',
+                opacity: 1
+              }
+            ],
+
+            opacityFrom: 1,
+            opacityTo: 1
+          }
+        }
+      }
+    };
+  }
 
   render() {
-    const { classes, match } = this.props;
+    const { classes, match, selectedSensor } = this.props;
+    console.log(selectedSensor);
+    const values = selectedSensor.values;
+    let currentValue = 0;
+    if (values.length) currentValue = values[values.length - 1].y;
+
     return (
       <Page title={`Sensor - ${match.params.id}`}>
         <Paper>
           <ReactApexChart
             options={this.state.options}
-            series={this.state.series}
+            series={[currentValue]}
             type="radialBar"
             height="450"
           />
@@ -127,5 +166,15 @@ class SensorPage extends React.Component {
 }
 
 export default withNamespaces()(
-  withStyles(styles)(connectTo(state => ({}), {}, SensorPage))
+  withStyles(styles)(
+    connectTo(
+      state => ({
+        selectedSensor: state.selectedSensor
+      }),
+      {
+        getClientSensor
+      },
+      SensorPage
+    )
+  )
 );

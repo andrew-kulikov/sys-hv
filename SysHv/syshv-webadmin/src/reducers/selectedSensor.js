@@ -42,7 +42,7 @@ export default createReducer(
           subsensors[subsensorName] = subsensors[subsensorName].slice(-10);
       }
 
-      return { id: state.id, values, subsensors };
+      return { ...state, values, subsensors };
     }
   },
   DEFAULT_STATE

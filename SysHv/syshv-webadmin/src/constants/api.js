@@ -13,4 +13,6 @@ export const CLIENTS = `${API}client`;
 
 export const SENSORS = `${API}sensor`;
 
+export const CLIENT_SENSOR = id => `${API}sensor/${id}`;
+
 export const ME = `${API}me`;

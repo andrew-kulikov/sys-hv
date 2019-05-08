@@ -38,5 +38,13 @@ namespace SysHv.Server.Controllers
         {
             return Json(_sensorService.GetAllSensorsAsync().Result);
         }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        [Authorize("Bearer")]
+        public ActionResult<ClientSensor> GetSensorById(int id)
+        {
+            return Json(_sensorService.GetClientSensorByIdAsync(id).Result);
+        }
     }
 }

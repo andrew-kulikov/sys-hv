@@ -1,4 +1,4 @@
-import { getUpdate, updateSelectedSensor, addSensor } from '../actions/sensor';
+import { getUpdate, updateSelectedSensor, addSensor, getSensors } from '../actions/sensor';
 import { loginOk, logout } from '../actions/auth';
 import { HUB } from '../constants/api';
 

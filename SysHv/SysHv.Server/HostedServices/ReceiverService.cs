@@ -106,7 +106,7 @@ namespace SysHv.Server.HostedServices
                     LogJson = JsonConvert.SerializeObject(sensorValue)
                 };
                 context.SensorLogs.Add(log);
-                context.SaveChangesAsync();
+                context.SaveChanges();
             }
         }
 

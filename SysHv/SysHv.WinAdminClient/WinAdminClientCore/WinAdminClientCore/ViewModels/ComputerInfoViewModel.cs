@@ -102,7 +102,6 @@ namespace WinAdminClientCore.ViewModels
 
         public void UpdateSingleValueSensors(string contract, NumericSensorDto sensor)
         {
-            sensor.Status = "Just Received";
             switch (contract)
             {
                 case SensorDataContract.CpuTempSensor:

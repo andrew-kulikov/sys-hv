@@ -8,7 +8,9 @@
 
   <ItemGroup>
     <None Remove="Views\DefaultComputerStats.xaml" />
+    <None Remove="Views\RegisterClient.xaml" />
     <None Remove="Views\RegisterService.xaml" />
+    <None Remove="Views\SensorsInfo.xaml" />
     <None Remove="Views\SensorsStats.xaml" />
     <None Remove="Views\TemperatureChart.xaml" />
     <None Remove="Windows\LoginWindow.xaml" />
@@ -39,7 +41,13 @@
     <Compile Update="Views\DefaultComputerStats.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\RegisterClient.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\RegisterService.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\SensorsInfo.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\SensorsStats.xaml.cs">

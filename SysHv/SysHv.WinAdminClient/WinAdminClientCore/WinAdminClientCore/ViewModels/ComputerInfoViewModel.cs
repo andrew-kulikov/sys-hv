@@ -18,12 +18,6 @@ namespace WinAdminClientCore.ViewModels
 {
     public class ComputerInfoViewModel : ViewModelBase
     {
-        #region Constants
-
-        private const int CPUCount = 16;
-
-        #endregion
-
         #region Fields
 
         private NumericSensorViewModel _temperature;
@@ -32,7 +26,7 @@ namespace WinAdminClientCore.ViewModels
 
         private DefaultComputerInfo _defaultComputerInfo;
 
-        private Visibility _temperatureVisibility = Visibility.Collapsed;
+        private DispatcherizedObservableCollection<SensorInfoViewModel> _sensorsInfo;
 
         #endregion
 
@@ -41,6 +35,16 @@ namespace WinAdminClientCore.ViewModels
         public int Id { get; private set; }
 
         public string DisplayName { get; set; }
+
+        public DispatcherizedObservableCollection<SensorInfoViewModel> SensorsInfo
+        {
+            get => _sensorsInfo;
+            set
+            {
+                _sensorsInfo = value;
+                OnPropertyChanged(nameof(SensorsInfo));
+            }
+        }
 
         public NumericSensorViewModel Temperature
         {
@@ -80,9 +84,15 @@ namespace WinAdminClientCore.ViewModels
         public ComputerInfoViewModel(int id)
         {
             Id = id;
-            Temperature = new NumericSensorViewModel() {DisplayName = "Temperature, Celsius"};
-            
-            CpuLoad = new NumericSensorViewModel() {DisplayName = "CpuLoad, %"};
+            Temperature = new NumericSensorViewModel() { DisplayName = "Temperature, Celsius" };
+
+            CpuLoad = new NumericSensorViewModel() { DisplayName = "CpuLoad, %" };
+            //SensorsInfo[0].Status
+            SensorsInfo = new DispatcherizedObservableCollection<SensorInfoViewModel>()
+            {
+                new SensorInfoViewModel() {Status = "Not Available yet"},
+                new SensorInfoViewModel() {Status = "Not Available yet"},
+            };
             //CpuLoad.Visibility = Visibility.Visible;
         }
 
@@ -92,18 +102,24 @@ namespace WinAdminClientCore.ViewModels
 
         public void UpdateSingleValueSensors(string contract, NumericSensorDto sensor)
         {
+            sensor.Status = "Just Received";
             switch (contract)
             {
-                default:
                 case SensorDataContract.CpuTempSensor:
                     UpdateSeries(Temperature.SeriesCollection, sensor);
                     Temperature.Visibility = Visibility.Visible;
+                    SensorsInfo[0].Contract = contract;
+                    SensorsInfo[0].Status = sensor.Status;
+                    SensorsInfo[0].Value = sensor.Value;
                     break;
 
 
                 case SensorDataContract.CpuLoadSensor:
                     UpdateSeries(CpuLoad.SeriesCollection, sensor);
                     CpuLoad.Visibility = Visibility.Visible;
+                    SensorsInfo[1].Contract = contract;
+                    SensorsInfo[1].Status = sensor.Status;
+                    SensorsInfo[1].Value = sensor.Value;
                     break;
             }
         }
@@ -123,8 +139,6 @@ namespace WinAdminClientCore.ViewModels
         {
             var subSensors = sensorDto.SubSensors.ToArray();
             int count = subSensors.Length;
-            if (sensorDto.Value < 40)
-                return;
             /*if (seriesCollection.Count != count)
                 InitializeSeriesCollection(seriesCollection, count);*/
 

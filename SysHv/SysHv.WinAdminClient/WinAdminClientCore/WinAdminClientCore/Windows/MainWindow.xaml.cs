@@ -23,7 +23,8 @@ namespace WinAdminClientCore
     public partial class MainWindow : Window
     {
         private SensorsStats _sensorsStats = new SensorsStats();
-        private RegisterService _registerService = new RegisterService();
+        private RegisterClient _registerService = new RegisterClient();
+        private SensorsInfo _sensorsInfo = new SensorsInfo();
 
         public MainWindow()
         {
@@ -35,6 +36,7 @@ namespace WinAdminClientCore
             DataContext = viewModel;
 
             _sensorsStats.ItemsControl.ItemsSource = viewModel.Computers;
+            _sensorsInfo.ItemsControl.ItemsSource = viewModel.Computers;
 
             InitializeComponent();
         }
@@ -48,20 +50,19 @@ namespace WinAdminClientCore
             {
                 case 0:
                     GridPrincipal.Children.Clear();
+                    GridPrincipal.Children.Add(_sensorsInfo);
                     break;
                 case 1:
                     GridPrincipal.Children.Clear();
                     GridPrincipal.Children.Add(_sensorsStats);
                     break;
 
-                case 3:
+                case 2:
                     break;
 
-                case 4:
+                case 3:
                     GridPrincipal.Children.Clear();
                     GridPrincipal.Children.Add(_registerService);
-                    break;
-                default:
                     break;
             }
         }

@@ -58,8 +58,8 @@ namespace WinAdminClientCore.ViewModels
         void ondata(object o)
         {
             var obj = JsonConvert.DeserializeObject<SensorResponse>(o.ToString());
-                var sensors = JsonConvert.DeserializeObject<NumericSensorDto>(obj.Value.ToString());
-                ProcessResponse(obj);
+            var sensors = JsonConvert.DeserializeObject<NumericSensorDto>(obj.Value.ToString());
+            ProcessResponse(obj);
         }
 
         private void ProcessResponse(SensorResponse response)
@@ -70,31 +70,25 @@ namespace WinAdminClientCore.ViewModels
             {
                 if (response.SensorId == sensor.Id)
                 {
-                    ProcessSensor(response, sensor);
+                    ProcessSensor(response, sensor);    
                 }
             }
         }
 
-        private void ProcessSensor(SensorResponse response, Sensor sensor)
+        private void ProcessSensor(SensorResponse response, ClientSensor sensor)
         {
             // got null contract
-            switch (sensor.Contract)
+            switch (sensor.Sensor.Contract)
             {
                 case SensorDataContract.CpuLoadSensor:
                 case SensorDataContract.CpuTempSensor:
-                default:
                     {
-
                         var sensorDto = JsonConvert.DeserializeObject<NumericSensorDto>(response.Value.ToString());
-                        if (Computers.Count == 0)
-                        {
-                            Computers.Add(new ComputerInfoViewModel(response.ClientId));
-                        }
-
+                        
                         foreach (var computer in Computers)
                         {
                             if (computer.Id == response.ClientId)
-                                computer.UpdateSingleValueSensors(sensor.Contract, sensorDto);
+                                computer.UpdateSingleValueSensors(sensor.Sensor.Contract, sensorDto);
                         }
 
                         break;
@@ -102,7 +96,7 @@ namespace WinAdminClientCore.ViewModels
             }
         }
 
-        private List<Sensor> CallSensorTypes(int id)
+        private List<ClientSensor> CallSensorTypes(int id)
         {
             using (var client = new HttpClient())
             {
@@ -115,7 +109,7 @@ namespace WinAdminClientCore.ViewModels
 
                 var json = result.Content.ReadAsStringAsync().Result;
 
-                var obj = JsonConvert.DeserializeObject<List<Sensor>>(json);
+                var obj = JsonConvert.DeserializeObject<List<ClientSensor>>(json);
 
                 return obj;
             }

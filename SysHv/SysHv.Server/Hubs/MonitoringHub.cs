@@ -62,7 +62,7 @@ namespace SysHv.Server.Hubs
 
            await _sensorService.AddClientSensorAsync(clientSensor);*/
             using (var sender = new RPCSender(new ConnectionModel(client.Ip, "vasya", "123456"),
-                new PublishProperties { QueueName = "rpc", ExchangeName = "" }))
+                new PublishProperties {QueueName = "rpc", ExchangeName = ""}))
             {
                 var res = await sender.Call<string, string>("sdf");
                 await Clients.Clients(Connections[user] as IReadOnlyList<string>).SendAsync("sensorAdded", res);

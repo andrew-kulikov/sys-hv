@@ -1,14 +1,10 @@
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import { HUB } from '../constants/api';
 
-import {
-  getUpdate,
-  updateSelectedSensor,
-  addSensor
-} from '../actions/sensor';
+import { getUpdate, updateSelectedSensor, addSensor } from '../actions/sensor';
+import { addClient } from '../actions/client';
 
 import { loginOk, logout } from '../actions/auth';
-
 
 const signalRMiddleware = storeAPI => {
   let connection = new HubConnectionBuilder()
@@ -27,18 +23,16 @@ const signalRMiddleware = storeAPI => {
   });
 
   connection.on('sensorAdded', resp => alert(resp));
-
-  console.log(storeAPI.getState().auth.token);
+  connection.on('clientAdded', client => console.log(client));
 
   connection.start().catch(e => {
-    connection.stop();
+    console.log(e.toString());
     storeAPI.dispatch(logout());
   });
 
   return next => action => {
-    if (action.type === logout().type) {
+    if (action.type === logout().type) 
       connection.stop();
-    }
 
     const res = next(action);
 
@@ -46,9 +40,10 @@ const signalRMiddleware = storeAPI => {
       connection.stop();
       connection.start();
     }
-    if (action.type === addSensor().type) {
+
+    if (action.type === addSensor().type) 
       connection.invoke('AddClientSensor', action.payload);
-    }
+    
 
     return res;
   };

@@ -8,7 +8,7 @@ namespace SysHv.Server.Services
     {
         Task<DAL.Models.Client> GetClientByIdAsync(int id);
         Task<DAL.Models.Client> GetClientByNameAsync(string name);
-        Task<DAL.Models.Client> GetClientByIpAsync(string ip);
+        Task<DAL.Models.Client> GetClientByIpAsync(string ip, string username);
         Task<List<DAL.Models.Client>> GetAllClientsAsync();
         Task<List<DAL.Models.Client>> GetAdminClientsAsync(string adminId);
         Task<bool> RemoveClientAsync(int id);

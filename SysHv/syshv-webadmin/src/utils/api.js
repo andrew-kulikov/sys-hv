@@ -29,7 +29,6 @@ export function* callHttp(...args) {
     if (err.status === 401) {
       console.log(err);
       yield put(logout());
-      return;
     }
     throw err;
   }

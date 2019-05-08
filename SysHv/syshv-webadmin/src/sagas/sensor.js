@@ -15,7 +15,6 @@ export function* getSensors() {
 }
 
 export function* getClientSensor({ payload }) {
-  console.log(payload)
   const id = payload;
   const sensor = yield callHttp(get, CLIENT_SENSOR(id));
   yield put(selectSensor(sensor));

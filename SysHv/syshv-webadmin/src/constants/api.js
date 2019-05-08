@@ -4,6 +4,7 @@ const API = BACKEND + 'api/';
 export const HUB = BACKEND + 'monitoringHub';
 
 export const LOGIN = `${API}account/login`;
+export const REGISTER = `${API}account/register`;
 export const REFRESHTOKEN = `${API}token/refresh`;
 
 export const FORGOTPASSWORD = `${API}forgotpassword`;

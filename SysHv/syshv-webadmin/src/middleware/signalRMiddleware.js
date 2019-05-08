@@ -1,8 +1,14 @@
-import { getUpdate, updateSelectedSensor, addSensor, getSensors } from '../actions/sensor';
-import { loginOk, logout } from '../actions/auth';
+import { HubConnectionBuilder } from '@aspnet/signalr';
 import { HUB } from '../constants/api';
 
-import { HubConnectionBuilder } from '@aspnet/signalr';
+import {
+  getUpdate,
+  updateSelectedSensor,
+  addSensor
+} from '../actions/sensor';
+
+import { loginOk, logout } from '../actions/auth';
+
 
 const signalRMiddleware = storeAPI => {
   let connection = new HubConnectionBuilder()
@@ -24,7 +30,10 @@ const signalRMiddleware = storeAPI => {
 
   console.log(storeAPI.getState().auth.token);
 
-  connection.start().catch(e => storeAPI.dispatch(logout()));
+  connection.start().catch(e => {
+    connection.stop();
+    storeAPI.dispatch(logout());
+  });
 
   return next => action => {
     if (action.type === logout().type) {

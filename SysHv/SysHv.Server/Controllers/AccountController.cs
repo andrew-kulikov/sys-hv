@@ -13,11 +13,12 @@ namespace SysHv.Server.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ITokenService _tokenService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ITokenService tokenService)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+            ITokenService tokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -29,16 +30,17 @@ namespace SysHv.Server.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginModel)
         {
-            var loginResult = await _signInManager.PasswordSignInAsync(userLoginModel.Email, userLoginModel.Password, false, false);
+            var loginResult =
+                await _signInManager.PasswordSignInAsync(userLoginModel.Email, userLoginModel.Password, false, false);
             if (loginResult.Succeeded)
             {
                 var tokenExpires = DateTime.UtcNow.AddMinutes(720);
                 var token = _tokenService.GetToken(userLoginModel.Email, tokenExpires);
 
-                return new JsonResult(new { token });
+                return new JsonResult(new {token});
             }
 
-            return Unauthorized();
+            return Unauthorized("User with this email and password does not exist");
         }
 
         [AllowAnonymous]
@@ -59,10 +61,10 @@ namespace SysHv.Server.Controllers
             }
             catch (Exception e)
             {
-                return new JsonResult(new { success, message = e.Message, inner = e.InnerException.Message });
+                return new JsonResult(new {success, message = e.Message, inner = e.InnerException.Message});
             }
 
-            return new JsonResult(new { success });
+            return new JsonResult(new {success});
         }
     }
 }

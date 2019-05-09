@@ -2,7 +2,6 @@ import { HubConnectionBuilder } from '@aspnet/signalr';
 import { HUB } from '../constants/api';
 
 import { getUpdate, updateSelectedSensor, addSensor } from '../actions/sensor';
-import { addClient } from '../actions/client';
 
 import { loginOk, logout } from '../actions/auth';
 

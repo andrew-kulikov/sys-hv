@@ -7,7 +7,10 @@ const DEFAULT_STATE = {
 
 export default createReducer(
   {
-    [a.setClients]: (state, clients) => ({ ...state, clients })
+    [a.setClients]: (state, clients) => ({ ...state, clients }),
+    [a.deleteClient]: (state, id) => ({
+      clients: state.clients.filter(c => c.id !== id)
+    })
   },
   DEFAULT_STATE
 );

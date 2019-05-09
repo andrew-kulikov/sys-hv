@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using NLog;
 using RabbitMQCommunications.Communications;
-using RabbitMQCommunications.Communications.Exceptions;
 using RabbitMQCommunications.Communications.HelpStuff;
 using RabbitMQCommunications.Setup;
 using SysHv.Client.Common.DTOs;
@@ -24,9 +23,9 @@ namespace SysHv.Client.WinService.Services
     internal class MonitoringService
     {
         private readonly IList<Assembly> _assemblies;
+        private readonly RPCReceiver _receiver;
         private readonly ServerRestClient _restClient;
         private readonly IList<object> _sensorInstances;
-        private readonly RPCReceiver _receiver;
 
         private readonly IList<Timer> _sensorTimers;
         private Logger _logger = LogManager.GetCurrentClassLogger();
@@ -37,9 +36,11 @@ namespace SysHv.Client.WinService.Services
         {
             using (var creator = new QueueCreator(new ConnectionModel()))
             {
-                creator.TryCreateQueue("rpc", false, false, false, null);
+                creator.TryCreateQueue("rpc_AddSensor", false, false, false, null);
             }
-            _receiver = new RPCReceiver(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
+
+            _receiver = new RPCReceiver(new ConnectionModel(),
+                new PublishProperties { QueueName = "rpc_AddSensor", ExchangeName = "" });
             _assemblies = new List<Assembly>();
             _sensorTimers = new List<Timer>();
             _sensorInstances = new List<object>();
@@ -86,12 +87,9 @@ namespace SysHv.Client.WinService.Services
                 if (loginResponse != null && loginResponse.Success)
                 {
                     _queueName = loginResponse.Message;
-                    
-                    _receiver.StartListen<string, string>(s =>
-                    {
-                        Console.WriteLine(s);
-                        return "good";
-                    });
+
+                    _receiver.StartListen<SensorDto, bool>(LaunchSensor);
+
                     LaunchSensors(loginResponse.Sensors);
                     SendHardwareInfo();
 
@@ -108,7 +106,7 @@ namespace SysHv.Client.WinService.Services
             var info = gatherer.Gather();
 
             using (var rabbitSender = new OneWaySender(new ConnectionModel(),
-                new PublishProperties {ExchangeName = "", QueueName = _queueName}))
+                new PublishProperties { ExchangeName = "", QueueName = _queueName }))
             {
                 rabbitSender.Send(info, "HardwareInfo", ConfigurationHelper.Id.ToString());
             }
@@ -116,15 +114,25 @@ namespace SysHv.Client.WinService.Services
 
         private void LaunchSensors(IEnumerable<SensorDto> sensors)
         {
-            foreach (var sensor in sensors)
-            {
-                var timer = new Timer(sensor.Interval) { AutoReset = true };
+            foreach (var sensor in sensors) LaunchSensor(sensor);
+        }
 
-                timer.Elapsed += GetTimerElapsed(sensor);
+        private bool LaunchSensor(SensorDto sensor)
+        {
+            var timer = new Timer(sensor.Interval) { AutoReset = true };
+
+            var timerElapsed = GetTimerElapsed(sensor);
+
+            if (timerElapsed != null)
+            {
+                timer.Elapsed += timerElapsed;
                 timer.Enabled = true;
 
                 _sensorTimers.Add(timer);
+                return true;
             }
+
+            return false;
         }
 
         public void Start()

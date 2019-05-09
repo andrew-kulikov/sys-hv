@@ -85,7 +85,7 @@ namespace SysHv.Server.HostedServices
 
             var messageDecoded = JsonConvert.DeserializeObject<SensorResponse>(message);
 
-            if (messageDecoded != null)
+            if (messageDecoded != null && MonitoringHub.Connections.ContainsKey(messageDecoded.UserEmail))
                 _hubContext.Clients
                     .Clients(MonitoringHub.Connections[messageDecoded.UserEmail] as IReadOnlyList<string>)
                     .SendAsync("UpdateReceived", JsonConvert.DeserializeObject(message));
@@ -104,7 +104,7 @@ namespace SysHv.Server.HostedServices
             {
                 var log = new SensorLog
                 {
-                    ClientSensorId = sensorResponse.ClientId,
+                    ClientSensorId = sensorResponse.SensorId,
                     Status = sensorValue.Status,
                     Time = sensorResponse.Time,
                     LogJson = JsonConvert.SerializeObject(sensorValue)

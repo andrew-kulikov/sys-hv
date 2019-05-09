@@ -96,6 +96,7 @@ namespace SysHv.Server
             sqlOptionsBuilder.UseSqlServer(Configuration.GetConnectionString("ServerDbConnectionString"),
                 assembly => assembly.MigrationsAssembly(typeof(ServerDbContext).Assembly.FullName));
 
+            services.AddScoped<ILogService, LogService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<ISensorService, SensorService>();

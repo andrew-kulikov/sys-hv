@@ -2,10 +2,11 @@ import React from 'react';
 
 import styles from './style';
 import Page from '../page';
-import { withNamespaces } from 'react-i18next';
 
 import { withStyles } from '@material-ui/core/styles';
+import { withNamespaces } from 'react-i18next';
 
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import SimpleLineChart from '../../components/Home/SimpleLineChart';
@@ -14,17 +15,11 @@ import SimpleTable from '../../components/Home/SimpleTable';
 const HomePage = ({ classes }) => (
   <Page title="Dashboard">
     <Typography variant="h4" gutterBottom component="h2">
-      Orders
+      Hello, admin
     </Typography>
-    <Typography component="div" className={classes.chartContainer}>
-      <SimpleLineChart />
-    </Typography>
-    <Typography variant="h4" gutterBottom component="h2">
-      Products
-    </Typography>
-    <div className={classes.tableContainer}>
-      <SimpleTable />
-    </div>
+    <Paper title="Clients">Clients</Paper>
+    <Paper title="Sensors">Sensors</Paper>
+    <Paper title="Stats">Stats</Paper>
   </Page>
 );
 

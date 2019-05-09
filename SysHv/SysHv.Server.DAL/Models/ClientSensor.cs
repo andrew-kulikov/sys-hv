@@ -16,6 +16,7 @@ namespace SysHv.Server.DAL.Models
         public float? MaxValue { get; set; }
         public float? WarningValue { get; set; }
         public float? CriticalValue { get; set; }
+        public Client Client { get; set; }
         public Sensor Sensor { get; set; }
     }
 }

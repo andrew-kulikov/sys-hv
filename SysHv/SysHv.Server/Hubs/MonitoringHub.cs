@@ -13,6 +13,7 @@ using SysHv.Server.DAL.Models;
 using SysHv.Server.DTOs;
 using SysHv.Server.Helpers;
 using SysHv.Server.Services;
+using SysHv.Server.Services.Contract;
 
 namespace SysHv.Server.Hubs
 {

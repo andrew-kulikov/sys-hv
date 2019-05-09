@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using SysHv.Client.Common.DTOs;
 using SysHv.Server.DAL.Models;
 using SysHv.Server.DTOs;
 using SysHv.Server.Helpers;
 using SysHv.Server.HostedServices;
 using SysHv.Server.Services;
+using SysHv.Server.Services.Contract;
 
 namespace SysHv.Server.Controllers
 {
@@ -112,5 +116,30 @@ namespace SysHv.Server.Controllers
 
             return _mapper.Map<List<DAL.Models.Client>, List<ClientDto>>(clients);
         }
+        /*
+        [HttpGet]
+        [Authorize("Bearer")]
+        public async Task<ActionResult<ICollection<ClientCountryDto>>> GetClientCountries()
+        {
+            
+            var ip = ""
+            var url = $"http://api.ipstack.com/{IP}?access_key={}";
+            var request = System.Net.WebRequest.Create(url);
+
+            using (WebResponse wrs = request.GetResponse())
+            using (Stream stream = wrs.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string json = reader.ReadToEnd();
+                var obj = JObject.Parse(json);
+                string City = (string)obj["city"];
+                string Country = (string)obj["region_name"];
+                string CountryCode = (string)obj["country_code"];
+
+                return (CountryCode + " - " + Country + "," + City);
+            }
+
+            return Ok();
+        }*/
     }
 }

@@ -107,6 +107,8 @@ namespace SysHv.Server.HostedServices
                     ClientSensorId = sensorResponse.SensorId,
                     Status = sensorValue.Status,
                     Time = sensorResponse.Time,
+                    ClientId = sensorResponse.ClientId,
+                    UserEmail = sensorResponse.UserEmail,
                     LogJson = JsonConvert.SerializeObject(sensorValue)
                 };
                 context.SensorLogs.Add(log);

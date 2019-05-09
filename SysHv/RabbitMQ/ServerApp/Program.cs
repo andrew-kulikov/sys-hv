@@ -33,14 +33,14 @@ namespace ServerApp
             //Console.ReadLine();
 
             //receiver.Dispose();
-            var receiver = new RPCReceiver(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
+            //var receiver = new RPCReceiver(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" });
     
-            receiver.StartListen<string, string>(s => { Console.WriteLine(s);
-                return "good";
-            });
+            //receiver.StartListen<string, string>(s => { Console.WriteLine(s);
+            //    return "good";
+            //});
 
-            Console.ReadLine();
-            receiver.Dispose();
+            //Console.ReadLine();
+            //receiver.Dispose();
         }
     }
 }

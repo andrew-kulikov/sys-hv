@@ -18,43 +18,57 @@ namespace RabbitMQCommunications.Communications
     /// </summary>
     public class RPCSender : IDisposable
     {
-        private readonly IConnection _connection;
+        private readonly IConnection _remoteConnection;
+        private readonly IConnection _localConnection;
 
         private readonly QueueingBasicConsumer _consumer;
-        private readonly IModel _model;
+        private readonly IModel _remoteModel;
+        private readonly IModel _localModel;
         private readonly PublishProperties _publishProperties;
         private readonly string _responseQueue;
         private readonly TimeSpan _timeout = new TimeSpan(0, 0, 30);
 
-        public RPCSender(ConnectionModel connectionModel, PublishProperties publishProperties)
+        public RPCSender(ConnectionModel localModel, ConnectionModel remoteModel, PublishProperties publishProperties)
         {
             _publishProperties = publishProperties;
 
-            _connection = new ConnectionFactory
+            _remoteConnection = new ConnectionFactory
             {
-                HostName = connectionModel.Host,
-                UserName = connectionModel.Username,
-                Password = connectionModel.Password
+                HostName = remoteModel.Host,
+                UserName = remoteModel.Username,
+                Password = remoteModel.Password
             }.CreateConnection();
 
-            _model = _connection.CreateModel();
+            _remoteModel = _remoteConnection.CreateModel();
 
-            _responseQueue = _model.QueueDeclare().QueueName;
-            _consumer = new QueueingBasicConsumer(_model);
-            _model.BasicConsume(_responseQueue, true, _consumer);
+            _localConnection = new ConnectionFactory
+            {
+                HostName = localModel.Host,
+                UserName = localModel.Username,
+                Password = localModel.Password
+            }.CreateConnection();
+
+            _localModel = _localConnection.CreateModel();
+
+            _responseQueue = _localModel.QueueDeclare().QueueName;
+            _consumer = new QueueingBasicConsumer(_localModel);
+            _localModel.BasicConsume(_responseQueue, true, _consumer);
         }
 
         public void Dispose()
         {
-            _model?.Abort();
-            _connection?.Close();
+            _remoteModel?.Abort();
+            _remoteConnection?.Close();
+
+            _localModel?.Abort();
+            _localConnection?.Close();
         }
 
         public async Task<TRes> Call<TArg, TRes>(TArg message)
         {
             var correlationToken = Guid.NewGuid().ToString();
 
-            var properties = _model.CreateBasicProperties();
+            var properties = _remoteModel.CreateBasicProperties();
             properties.ReplyTo = _responseQueue;
             properties.CorrelationId = correlationToken;
 
@@ -65,7 +79,7 @@ namespace RabbitMQCommunications.Communications
             var delivered = false;
             var response = default(TRes);
 
-            _model.BasicPublish("", _publishProperties.QueueName, properties, messageBuffer);
+            _remoteModel.BasicPublish("", _publishProperties.QueueName, properties, messageBuffer);
 
             await Task.Run(() =>
             {

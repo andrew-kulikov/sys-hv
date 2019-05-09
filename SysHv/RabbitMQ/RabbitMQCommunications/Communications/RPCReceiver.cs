@@ -13,27 +13,38 @@ namespace RabbitMQCommunications.Communications
 {
     public class RPCReceiver : IDisposable
     {
-        private readonly IConnection _connection;
-        private readonly IModel _model;
+        private readonly IConnection _remoteConnection;
+        private readonly IConnection _localConnection;
+        private readonly IModel _remoteModel;
+        private readonly IModel _localModel;
         private readonly EventingBasicConsumer _consumer;
 
         public bool Listening { get; set; }
 
 
-        public RPCReceiver(ConnectionModel connectionModel, PublishProperties publishProperties)
+        public RPCReceiver(ConnectionModel localModel, ConnectionModel remoteModel, PublishProperties publishProperties)
         {
-            _connection = new ConnectionFactory
+            _remoteConnection = new ConnectionFactory
             {
-                HostName = connectionModel.Host,
-                UserName = connectionModel.Username,
-                Password = connectionModel.Password,
+                HostName = remoteModel.Host,
+                UserName = remoteModel.Username,
+                Password = remoteModel.Password,
             }.CreateConnection();
-            _model = _connection.CreateModel();
-            _model.BasicQos(0, 1, false);
+            _remoteModel = _remoteConnection.CreateModel();
+            _remoteModel.BasicQos(0, 1, false);
 
-            _consumer = new EventingBasicConsumer(_model);
+            _localConnection = new ConnectionFactory
+            {
+                HostName = localModel.Host,
+                UserName = localModel.Username,
+                Password = localModel.Password,
+            }.CreateConnection();
+            _localModel = _localConnection.CreateModel();
+            _localModel.BasicQos(0, 1, false);
 
-            _model.BasicConsume(publishProperties.QueueName, false, _consumer);
+            _consumer = new EventingBasicConsumer(_localModel);
+
+            _localModel.BasicConsume(publishProperties.QueueName, false, _consumer);
 
             Listening = true;
         }
@@ -54,19 +65,22 @@ namespace RabbitMQCommunications.Communications
 
                 var messageBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response));
 
-                var replyProperties = _model.CreateBasicProperties();
+                var replyProperties = _remoteModel.CreateBasicProperties();
                 replyProperties.CorrelationId = ea.BasicProperties.CorrelationId;
 
-                _model.BasicPublish("", ea.BasicProperties.ReplyTo, replyProperties, messageBuffer);
-                _model.BasicAck(ea.DeliveryTag, false);
+                _remoteModel.BasicPublish("", ea.BasicProperties.ReplyTo, replyProperties, messageBuffer);
+                _localModel.BasicAck(ea.DeliveryTag, false);
             };
         }
 
 
         public void Dispose()
         {
-            _model?.Abort();
-            _connection?.Close();
+            _remoteModel?.Abort();
+            _remoteConnection?.Close();
+
+            _localModel?.Abort();
+            _localConnection?.Close();
         }
     }
 }

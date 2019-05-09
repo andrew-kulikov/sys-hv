@@ -37,14 +37,14 @@ namespace ClientApp
             //asd += () => Console.WriteLine("asd");
             //asd.Invoke();
             //Console.ReadLine();
-            using (var sender = new RPCSender(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" }))
-            {
-                Console.WriteLine("calling for 3");
-                var ans = await sender.Call<string, string>("3");
+            //using (var sender = new RPCSender(new ConnectionModel(), new PublishProperties { QueueName = "rpc", ExchangeName = "" }))
+            //{
+            //    Console.WriteLine("calling for 3");
+            //    var ans = await sender.Call<string, string>("3");
 
-                Console.WriteLine(ans);
-                Console.ReadLine();
-            }
+            //    Console.WriteLine(ans);
+            //    Console.ReadLine();
+            //}
             
         }
     }

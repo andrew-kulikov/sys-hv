@@ -33,12 +33,13 @@ namespace SysHv.Client.WinService.Services
 
         public MonitoringService()
         {
-            using (var creator = new QueueCreator(new ConnectionModel()))
+            var localModel = new ConnectionModel("localhost", "guest", "guest");
+            using (var creator = new QueueCreator(localModel))
             {
                 creator.TryCreateQueue("rpc_AddSensor", false, false, false, null);
             }
 
-            _receiver = new RPCReceiver(new ConnectionModel(),
+            _receiver = new RPCReceiver(localModel, new ConnectionModel(),
                 new PublishProperties { QueueName = "rpc_AddSensor", ExchangeName = "" });
             _assemblies = new List<Assembly>();
             _sensorTimers = new List<Timer>();

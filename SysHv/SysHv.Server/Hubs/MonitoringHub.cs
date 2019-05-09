@@ -70,7 +70,8 @@ namespace SysHv.Server.Hubs
 
             try
             {
-                using (var sender = new RPCSender(new ConnectionModel(client.Ip, "vasya", "123456"),
+                using (var sender = new RPCSender(new ConnectionModel("localhost", "guest", "guest"),
+                    new ConnectionModel(client.Ip, "vasya", "123456"),
                     new PublishProperties {QueueName = "rpc_AddSensor", ExchangeName = ""}))
                 {
                     var res = await sender.Call<SensorDto, bool>(addedSensor.ToSensorDto());
@@ -78,7 +79,6 @@ namespace SysHv.Server.Hubs
                     if (res)
                         await Clients.Clients(Connections[user] as IReadOnlyList<string>)
                             .SendAsync("sensorAdded", addedSensor);
-
                 }
             }
             catch (Exception e)

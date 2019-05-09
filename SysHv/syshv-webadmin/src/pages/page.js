@@ -22,16 +22,21 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
+import Popover from '@material-ui/core/Popover';
 
 import classNames from 'classnames';
 
 import styles from './style';
 
 import { connectTo } from '../utils';
+import { ListItem } from '@material-ui/core';
+
+import { removeNotification } from '../actions/notifications';
 
 class Page extends React.Component {
   state = {
-    open: true
+    open: true,
+    anchorEl: null
   };
 
   componentDidMount() {
@@ -49,8 +54,23 @@ class Page extends React.Component {
   handleDrawerClose = () => {
     this.setState({ open: false });
   };
+
+  handleClick = event => {
+    this.setState({
+      anchorEl: event.currentTarget
+    });
+  };
+
+  handleClose = () => {
+    this.setState({
+      anchorEl: null
+    });
+  };
+
   render() {
-    const { children, classes, title } = this.props;
+    const { children, classes, title, notifications } = this.props;
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
 
     return (
       <div className={classes.root}>
@@ -86,11 +106,44 @@ class Page extends React.Component {
             >
               {title}
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
+            <IconButton
+              color="inherit"
+              aria-owns={open ? 'simple-popper' : undefined}
+              aria-haspopup="true"
+              variant="contained"
+              onClick={this.handleClick}
+            >
+              <Badge
+                badgeContent={notifications.notifications.length}
+                color="secondary"
+              >
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+            <Popover
+              id="simple-popper"
+              open={open}
+              anchorEl={anchorEl}
+              onClose={this.handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center'
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center'
+              }}
+            >
+              <List style={{margin: '10px'}}>
+                {notifications.notifications.map((n, i) => (
+                  <ListItem
+                    key={i}
+                    onClick={() => this.props.removeNotification(i)}
+                    button
+                  >{`Client #${n.clientId}, Status: ${n.value.Status}`}</ListItem>
+                ))}
+              </List>
+            </Popover>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -130,8 +183,9 @@ class Page extends React.Component {
 
 export default connectTo(
   state => ({
-    token: state.auth.token
+    token: state.auth.token,
+    notifications: state.notifications
   }),
-  { },
+  { removeNotification },
   withRouter(withStyles(styles)(Page))
 );

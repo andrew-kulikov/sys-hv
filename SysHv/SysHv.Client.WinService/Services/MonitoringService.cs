@@ -4,7 +4,6 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.ServiceModel.Configuration;
 using System.Threading.Tasks;
 using System.Timers;
 using NLog;
@@ -41,7 +40,7 @@ namespace SysHv.Client.WinService.Services
             }
 
             _receiver = new RPCReceiver(localModel, new ConnectionModel(),
-                new PublishProperties { QueueName = "rpc_AddSensor", ExchangeName = "" });
+                new PublishProperties {QueueName = "rpc_AddSensor", ExchangeName = ""});
             _assemblies = new List<Assembly>();
             _sensorTimers = new List<Timer>();
             _sensorInstances = new List<object>();
@@ -54,13 +53,15 @@ namespace SysHv.Client.WinService.Services
 
             if (sensorType == null) return null;
 
-            var sensorInstance = Activator.CreateInstance(sensorType, sensor);
+            var sensorInstance = sensor.Contract == "PingSensor"
+                ? Activator.CreateInstance(sensorType, sensor, ConfigurationHelper.ServerAddress)
+                : Activator.CreateInstance(sensorType, sensor);
             _sensorInstances.Add(sensorInstance);
 
             return (sender, args) =>
             {
                 using (var rabbitSender = new OneWaySender(new ConnectionModel(),
-                    new PublishProperties { ExchangeName = "", QueueName = _queueName }))
+                    new PublishProperties {ExchangeName = "", QueueName = _queueName}))
                 {
                     var collect = sensorType.GetMethod("Collect");
                     var result = collect?.Invoke(sensorInstance, new object[] { });
@@ -84,7 +85,7 @@ namespace SysHv.Client.WinService.Services
             while (true)
             {
                 var loginResponse = await _restClient.Login();
-                
+
                 if (loginResponse != null && loginResponse.Success)
                 {
                     _queueName = loginResponse.Message;
@@ -107,7 +108,7 @@ namespace SysHv.Client.WinService.Services
             var info = gatherer.Gather();
 
             using (var rabbitSender = new OneWaySender(new ConnectionModel(),
-                new PublishProperties { ExchangeName = "", QueueName = _queueName }))
+                new PublishProperties {ExchangeName = "", QueueName = _queueName}))
             {
                 rabbitSender.Send(info, "HardwareInfo", ConfigurationHelper.Id.ToString());
             }
@@ -120,7 +121,7 @@ namespace SysHv.Client.WinService.Services
 
         private bool LaunchSensor(SensorDto sensor)
         {
-            var timer = new Timer(sensor.Interval) { AutoReset = true };
+            var timer = new Timer(sensor.Interval) {AutoReset = true};
 
             var timerElapsed = GetTimerElapsed(sensor);
 
@@ -143,8 +144,8 @@ namespace SysHv.Client.WinService.Services
             var libDirectory = ConfigurationManager.AppSettings["SensorExtensionsPath"];
 
             foreach (var sensorDirectory in Directory.GetDirectories(libDirectory))
-                foreach (var sensorPath in Directory.GetFiles(sensorDirectory, "*Sensor*.dll"))
-                    _assemblies.Add(Assembly.LoadFile(sensorPath));
+            foreach (var sensorPath in Directory.GetFiles(sensorDirectory, "*Sensor*.dll"))
+                _assemblies.Add(Assembly.LoadFile(sensorPath));
 
             Task.Run(StartServerConnection);
         }

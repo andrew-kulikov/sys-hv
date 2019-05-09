@@ -48,6 +48,7 @@
     <Compile Include="CpuTempSensor.cs" />
     <Compile Include="HardwareMonitor.cs" />
     <Compile Include="MemoryLoadSensor.cs" />
+    <Compile Include="PingSensor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdateVisitor.cs" />
   </ItemGroup>

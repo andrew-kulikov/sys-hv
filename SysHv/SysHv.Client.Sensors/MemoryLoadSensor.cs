@@ -9,10 +9,12 @@ namespace SysHv.Client.Sensors
     public class MemoryLoadSensor : IDisposable
     {
         private readonly SensorDto _sensor;
+
         public MemoryLoadSensor(SensorDto sensor)
         {
             _sensor = sensor;
         }
+
         public void Dispose()
         {
             HardwareMonitor.Close();
@@ -29,18 +31,13 @@ namespace SysHv.Client.Sensors
             if (ram == null) return null;
 
             var load = new NumericSensorDto();
-            var loadSensors = ram.Sensors.Where(s => s.SensorType == SensorType.Load).ToList();
+            var loadSensorValue = ram.Sensors.FirstOrDefault(s => s.SensorType == SensorType.Load)?.Value ?? 0;
 
-            load.Value = loadSensors.FirstOrDefault(s => s.Name == "CPU Package")?.Value ?? 0;
-            load.SubSensors = loadSensors.Where(s => s.Name.StartsWith("CPU Core"))
-                .Select(s => new NumericSensorDto.NumericSubSensorDto
-                {
-                    Name = s.Name,
-                    Value = s.Value ?? 0,
-                });
+            load.Value = loadSensorValue;
 
             var status = "OK";
-            if (load.Value >= _sensor.WarningValue && load.Value < _sensor.CriticalValue)
+            if (_sensor.WarningValue != null && _sensor.CriticalValue != null && load.Value >= _sensor.WarningValue &&
+                load.Value < _sensor.CriticalValue)
                 status = "Warning";
             if (load.Value >= _sensor.CriticalValue)
                 status = "Critical";

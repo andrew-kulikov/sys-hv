@@ -82,6 +82,10 @@ namespace WinAdminClientCore.ViewModels
             {
                 case SensorDataContract.CpuLoadSensor:
                 case SensorDataContract.CpuTempSensor:
+                case SensorDataContract.DiscLoadSensor:
+                case SensorDataContract.DiscTemperatureSensor:
+                case SensorDataContract.MemoryLoadSensor:
+                case SensorDataContract.PingSensor:
                     {
                         var sensorDto = JsonConvert.DeserializeObject<NumericSensorDto>(response.Value.ToString());
                         

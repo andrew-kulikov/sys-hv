@@ -24,6 +24,14 @@ namespace WinAdminClientCore.ViewModels
 
         private NumericSensorViewModel _cpuLoad;
 
+        private NumericSensorViewModel _discTemperature;
+
+        private NumericSensorViewModel _discLoad;
+
+        private NumericSensorViewModel _memoryLoad;
+
+        private NumericSensorViewModel _ping;
+
         private DefaultComputerInfo _defaultComputerInfo;
 
         private DispatcherizedObservableCollection<SensorInfoViewModel> _sensorsInfo;
@@ -67,6 +75,46 @@ namespace WinAdminClientCore.ViewModels
             }
         }
 
+        public NumericSensorViewModel DiscTemperature
+        {
+            get => _discTemperature;
+            set
+            {
+                _discTemperature = value;
+                OnPropertyChanged(nameof(DiscTemperature));
+            }
+        }
+
+        public NumericSensorViewModel DiscLoad
+        {
+            get => _discLoad;
+            set
+            {
+                _discLoad = value;
+                OnPropertyChanged(nameof(DiscLoad));
+            }
+        }
+
+        public NumericSensorViewModel MemoryLoad
+        {
+            get => _memoryLoad;
+            set
+            {
+                _memoryLoad = value;
+                OnPropertyChanged(nameof(MemoryLoad));
+            }
+        }
+
+        public NumericSensorViewModel Ping
+        {
+            get => _ping;
+            set
+            {
+                _ping = value;
+                OnPropertyChanged(nameof(Ping));
+            }
+        }
+
         public DefaultComputerInfo DefaultComputerInfo
         {
             get => _defaultComputerInfo;
@@ -87,9 +135,23 @@ namespace WinAdminClientCore.ViewModels
             Temperature = new NumericSensorViewModel() { DisplayName = "Temperature, Celsius" };
 
             CpuLoad = new NumericSensorViewModel() { DisplayName = "CpuLoad, %" };
+
+            DiscTemperature = new NumericSensorViewModel() { DisplayName = "Disc Temperature, Celsius" };
+
+            DiscLoad = new NumericSensorViewModel() { DisplayName = "Disc Load, %" };
+
+            MemoryLoad = new NumericSensorViewModel() { DisplayName = "Memory Load, %" };
+
+            Ping = new NumericSensorViewModel() { DisplayName = "Ping, ms" };
+
+
             //SensorsInfo[0].Status
             SensorsInfo = new DispatcherizedObservableCollection<SensorInfoViewModel>()
             {
+                new SensorInfoViewModel() {Status = "Not Available yet"},
+                new SensorInfoViewModel() {Status = "Not Available yet"},
+                new SensorInfoViewModel() {Status = "Not Available yet"},
+                new SensorInfoViewModel() {Status = "Not Available yet"},
                 new SensorInfoViewModel() {Status = "Not Available yet"},
                 new SensorInfoViewModel() {Status = "Not Available yet"},
             };
@@ -107,20 +169,47 @@ namespace WinAdminClientCore.ViewModels
                 case SensorDataContract.CpuTempSensor:
                     UpdateSeries(Temperature.SeriesCollection, sensor);
                     Temperature.Visibility = Visibility.Visible;
-                    SensorsInfo[0].Contract = contract;
-                    SensorsInfo[0].Status = sensor.Status;
-                    SensorsInfo[0].Value = sensor.Value;
+                    UpdateSensorInfo(SensorsInfo[0], sensor, contract);
                     break;
 
 
                 case SensorDataContract.CpuLoadSensor:
                     UpdateSeries(CpuLoad.SeriesCollection, sensor);
                     CpuLoad.Visibility = Visibility.Visible;
-                    SensorsInfo[1].Contract = contract;
-                    SensorsInfo[1].Status = sensor.Status;
-                    SensorsInfo[1].Value = sensor.Value;
+                    UpdateSensorInfo(SensorsInfo[1], sensor, contract);
+                    break;
+
+                case SensorDataContract.DiscLoadSensor:
+                    UpdateSeries(DiscLoad.SeriesCollection, sensor);
+                    DiscLoad.Visibility = Visibility.Visible;
+                    UpdateSensorInfo(SensorsInfo[2], sensor, contract);
+                    break;
+
+                case SensorDataContract.DiscTemperatureSensor:
+                    UpdateSeries(DiscTemperature.SeriesCollection, sensor);
+                    DiscLoad.Visibility = Visibility.Visible;
+                    UpdateSensorInfo(SensorsInfo[3], sensor, contract);
+                    break;
+
+                case SensorDataContract.MemoryLoadSensor:
+                    UpdateSeries(MemoryLoad.SeriesCollection, sensor);
+                    MemoryLoad.Visibility = Visibility.Visible;
+                    UpdateSensorInfo(SensorsInfo[4], sensor, contract);
+                    break;
+
+                case SensorDataContract.PingSensor:
+                    UpdateSeries(Ping.SeriesCollection, sensor);
+                    Ping.Visibility = Visibility.Visible;
+                    UpdateSensorInfo(SensorsInfo[5], sensor, contract);
                     break;
             }
+        }
+
+        private void UpdateSensorInfo(SensorInfoViewModel sensorInfo, NumericSensorDto sensor, string contract)
+        {
+            sensorInfo.Contract = contract;
+            sensorInfo.Status = sensor.Status;
+            sensorInfo.Value = sensor.Value;
         }
 
         #endregion

@@ -14,6 +14,10 @@
                         <StackPanel>
                             <local:TemperatureChart DataContext="{Binding Temperature}"/>
                             <local:TemperatureChart DataContext="{Binding CpuLoad}"/>
+                            <local:TemperatureChart DataContext="{Binding DiscTemperature}"/>
+                            <local:TemperatureChart DataContext="{Binding DiscLoad}"/>
+                            <local:TemperatureChart DataContext="{Binding MemoryLoad}"/>
+                            <local:TemperatureChart DataContext="{Binding Ping}"/>
                         </StackPanel>
                     </Expander>
                 </DataTemplate>

@@ -7,13 +7,16 @@
              xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid Visibility="{Binding Visibility}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <wpf:CartesianChart Grid.Row="0" Margin="0, 0, 0, 0" Height="200" Series="{Binding TemperatureDots}" Hoverable="False" DataTooltip="{x:Null}">
+        <wpf:CartesianChart Grid.Row="0" Margin="0, 0, 0, 0" Height="200" Series="{Binding SeriesCollection}" ToolTip="{Binding DisplayName}" Hoverable="False" DataTooltip="{x:Null}">
+            <wpf:CartesianChart.AxisY>
+                <wpf:Axis MinValue="0"></wpf:Axis>
+            </wpf:CartesianChart.AxisY>
             <wpf:CartesianChart.AxisX>
                 <!--a small visual improvement, lets hide the first points (x = 0, x=1) to get better animations-->
                 <wpf:Axis MinValue="2"></wpf:Axis>

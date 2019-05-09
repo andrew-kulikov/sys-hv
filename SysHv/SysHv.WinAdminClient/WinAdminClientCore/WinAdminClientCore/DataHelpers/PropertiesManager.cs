@@ -67,5 +67,15 @@ namespace WinAdminClientCore.UIHelpers
                 config.Save(ConfigurationSaveMode.Modified);
             }
         }
+
+        public static string Token
+        {
+            get => config.AppSettings.Settings["Token"].Value;
+            set
+            {
+                config.AppSettings.Settings["Token"].Value = value;
+                config.Save(ConfigurationSaveMode.Modified);
+            }
+        }
     }
 }

@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace WinAdminClientCore.Views
 {
     /// <summary>
-    /// Логика взаимодействия для RegisterService.xaml
+    /// Логика взаимодействия для RegisterClient.xaml
     /// </summary>
-    public partial class RegisterService : UserControl
+    public partial class RegisterClient : UserControl
     {
-        public RegisterService()
+        public RegisterClient()
         {
             InitializeComponent();
         }

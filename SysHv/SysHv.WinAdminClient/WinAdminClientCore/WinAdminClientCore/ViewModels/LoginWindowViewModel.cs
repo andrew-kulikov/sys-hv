@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using Newtonsoft.Json;
+using WinAdminClientCore.Collections;
+using WinAdminClientCore.DataHelpers;
+using WinAdminClientCore.Dtos;
 using WinAdminClientCore.UIHelpers;
 
 namespace WinAdminClientCore.ViewModels
@@ -58,10 +63,10 @@ namespace WinAdminClientCore.ViewModels
 
         public ICommand LogInCommand
         {
-            get => _logInCommand ?? (_logInCommand = new RelayCommand.RelayCommand(
-                       p => CanLogin(),
-                       p => LogIn())
-                   );
+            // nehooya sebe resharper umeet
+            get => _logInCommand ??= new RelayCommand.RelayCommand(
+                p => CanLogin(),
+                p => RunMainWindow());
         }
 
         #endregion
@@ -89,7 +94,54 @@ namespace WinAdminClientCore.ViewModels
             return !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password);
         }
 
-        private void LogIn()
+        private void RunMainWindow()
+        {
+            if (!LogIn())
+                return;
+
+            var clients = AcquireClients();
+
+            DispatcherizedObservableCollection<ComputerInfoViewModel> comps = new DispatcherizedObservableCollection<ComputerInfoViewModel>();
+
+            foreach (var clientDto in clients)
+            {
+                comps.Add(new ComputerInfoViewModel(clientDto.Id) {DisplayName = clientDto.Name});
+            }
+
+            var mainWindow = new MainWindow(new MainWindowViewModel() {Computers = comps});
+            
+
+            mainWindow.Show();
+
+            _window.Close();
+        }
+
+        private List<ClientDto> AcquireClients()
+        {
+            var server = PropertiesManager.SignalRServer;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(server);
+                RequestBuilder.SetJsonAsAcceptable(client);
+                RequestBuilder.SetAuthToken(client);
+
+                try
+                {
+                    var result = client.GetAsync("/api/client").Result;
+                    var computers =
+                        JsonConvert.DeserializeObject<List<ClientDto>>(result.Content.ReadAsStringAsync().Result);
+                    return computers;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
+        }
+
+        private bool LogIn()
         {
             PropertiesManager.RememberMe = RememberMe;
             if (RememberMe)
@@ -97,24 +149,44 @@ namespace WinAdminClientCore.ViewModels
                 PropertiesManager.UserName = UserName;
                 PropertiesManager.Password = Password;
             }
-            // todo: auth
             var server = PropertiesManager.SignalRServer;
 
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(server);
 
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue ("application/json"));
+                RequestBuilder.SetJsonAsAcceptable(client);
 
-                /*var content = new StringContent(
-                    JsonConvert.SerializeObject(new {email = UserName, Password = Password}));*/
+                var content = RequestBuilder.GenerateLoginBody(UserName, Password);
+
+                HttpResponseMessage result;
+                try
+                {
+                    result = client.PostAsync("/api/account/login", content).Result;
+
+                    if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        MessageBox.Show("wrong user credentials");
+                        return false;
+                    }
+
+                    var token = JsonConvert.DeserializeObject<TokenDTO>(result.Content.ReadAsStringAsync().Result);
+                    if (!string.IsNullOrEmpty(token.Token))
+                        PropertiesManager.Token = token.Token;
+                    else
+                    {
+                        MessageBox.Show("failed to acquire session token");
+                        return false;
+                    }
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("a connection problem encountered");
+                    return false;
+                }
             }
-
-            var mainWindow = new MainWindow(new MainWindowViewModel());
-            //mainWindow.DataContext = new MainWindowViewModel();
-            mainWindow.Show();
-
-            _window.Close();
         }
 
         #endregion

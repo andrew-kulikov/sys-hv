@@ -11,7 +11,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Expander Header="{Binding DisplayName}">
-                        <TextBlock Text="{Binding DisplayName}"/>
+                        <local:SensorsInfo />
                     </Expander>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

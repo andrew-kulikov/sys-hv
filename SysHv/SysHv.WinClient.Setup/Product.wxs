@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Id="*" Name="Sys Admin Heaven Background Service" Language="1033" Version="1.0.0.0" Manufacturer="Sys Hv Team" UpgradeCode="198f89a3-c4ed-4a10-abff-86bba4e425c5">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64"/>
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes"/>
@@ -14,6 +14,7 @@
 
     <Feature Id="ProductFeature" Title="SysHv.WinClient.Setup" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="Sensors"/>
     </Feature>
 
     <CustomAction Id="InstallService"
@@ -40,10 +41,17 @@
 
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <!--<Directory Id="ProgramFilesFolder">-->
       <Directory Id="INSTALLFOLDER" Name="Sys Admin Heaven Background Service" />
+
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="SysHvDir" Name="SysHv">
+          <Directory Id="SENSORSDIR" Name="Sensors">
+            <Directory Id="CpuTempSensor" Name="CpuTempSensor"/>
+          </Directory>
+        </Directory>
+      </Directory>
     </Directory>
-    <!--</Directory>-->
+    
 
 
   </Fragment>

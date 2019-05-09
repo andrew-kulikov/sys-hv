@@ -34,7 +34,7 @@ class SensorsPage extends React.Component {
         <Typography variant="h4" component="h2" style={{ marginLeft: '10px' }}>
           All sensors available in system:
         </Typography>
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           {this.props.sensors.map(s => (
             <Card className={classes.card} key={s.id}>
               <CardContent>
@@ -52,26 +52,28 @@ class SensorsPage extends React.Component {
                   OS: {getOsType(s.osType)}; Units: {s.valueUnit}
                 </Typography>
                 <Typography component="p">{s.description}</Typography>
-                <div style={{ marginTop: '10px' }}>
-                  <Typography variant="h6" component="h2">
-                    Subsensors:
-                  </Typography>
-                  <List>
-                    {s.subSensors.map(subsensor => (
-                      <ListItem
-                        key={subsensor.id}
-                        style={{ padding: '0' }}
-                        button
-                      >
-                        <ListItemText>
-                          <Typography>{`${subsensor.name} - ${
-                            subsensor.description
-                          }`}</Typography>
-                        </ListItemText>
-                      </ListItem>
-                    ))}
-                  </List>
-                </div>
+                {s.subSensors && s.subSensors.length ? (
+                  <div style={{ marginTop: '10px' }}>
+                    <Typography variant="h6" component="h2">
+                      Subsensors:
+                    </Typography>
+                    <List>
+                      {s.subSensors.map(subsensor => (
+                        <ListItem
+                          key={subsensor.id}
+                          style={{ padding: '0' }}
+                          button
+                        >
+                          <ListItemText>
+                            <Typography>{`${subsensor.name} - ${
+                              subsensor.description
+                            }`}</Typography>
+                          </ListItemText>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </div>
+                ) : ''}
               </CardContent>
               <CardActions>
                 <Button size="small">Learn More</Button>

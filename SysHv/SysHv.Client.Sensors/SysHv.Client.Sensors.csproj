@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="CpuLoadSensor.cs" />
     <Compile Include="CpuTempSensor.cs" />
+    <Compile Include="DiscLoadSensor.cs" />
+    <Compile Include="DiscTemperatureSensor.cs" />
     <Compile Include="HardwareMonitor.cs" />
     <Compile Include="MemoryLoadSensor.cs" />
     <Compile Include="PingSensor.cs" />

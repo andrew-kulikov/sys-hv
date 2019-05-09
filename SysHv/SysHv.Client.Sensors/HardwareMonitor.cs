@@ -13,6 +13,7 @@ namespace SysHv.Client.Sensors
             Computer.Open();
             Computer.CPUEnabled = true;
             Computer.RAMEnabled = true;
+            Computer.HDDEnabled = true;
         }
 
         public static void Accept()

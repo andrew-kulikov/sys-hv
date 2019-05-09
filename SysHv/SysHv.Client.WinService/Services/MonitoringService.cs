@@ -54,7 +54,7 @@ namespace SysHv.Client.WinService.Services
             if (sensorType == null) return null;
 
             var sensorInstance = sensor.Contract == "PingSensor"
-                ? Activator.CreateInstance(sensorType, sensor, ConfigurationHelper.ServerAddress)
+                ? Activator.CreateInstance(sensorType, sensor, "google.com")
                 : Activator.CreateInstance(sensorType, sensor);
             _sensorInstances.Add(sensorInstance);
 

@@ -24,7 +24,6 @@ class LogsPage extends React.Component {
 
     return (
       <Page title="Logs">
-        <div>Logs</div>
         <List>
           {history.history.slice(0, 100).map(log => (
             <ListItem key={log.id}><ReactJson src={JSON.parse(log.logJson)} /></ListItem>

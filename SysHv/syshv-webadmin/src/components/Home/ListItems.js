@@ -16,12 +16,6 @@ import { withRouter } from 'react-router-dom';
 
 export const MainListItems = withRouter(props => (
   <div>
-    <ListItem button onClick={() => props.history.push('/')}>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
     <ListItem button onClick={() => props.history.push('/computers')}>
       <ListItemIcon>
         <LaptopIcon />

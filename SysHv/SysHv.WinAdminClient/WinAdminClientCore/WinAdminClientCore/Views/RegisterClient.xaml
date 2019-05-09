@@ -25,7 +25,7 @@
 
         <TextBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" MinWidth="50" MaxWidth="500" Text="{Binding Name, Mode=TwoWay}"/>
         <TextBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" MinWidth="50" MaxWidth="500" Text="{Binding Ip, Mode=TwoWay}"/>
-        <TextBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" MinWidth="50" MaxWidth="500" Text="{Binding SendDelay, Mode=TwoWay}"/>
+        <TextBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" MinWidth="50" MaxWidth="500" Text="{Binding Description, Mode=TwoWay}"/>
 
         <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" Margin="10" Content="Register" Command="{Binding Register}"/>
     </Grid>

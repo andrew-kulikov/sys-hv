@@ -67,7 +67,8 @@ namespace WinAdminClientCore.ViewModels
 
         private bool CanRegister()
         {
-            return !string.IsNullOrEmpty(Ip) && !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Description);
+            var can = !string.IsNullOrEmpty(Ip) && !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Description);
+            return can;
         }
 
         private void RegisterClient()

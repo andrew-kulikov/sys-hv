@@ -134,6 +134,10 @@
         <File Id="WinAdminClientCoreConfig" Source="$(var.WinAdminClientCore.TargetDir)WinAdminClientCore.dll.config"/>
       </Component>
 
+      <Component Id="SysHvServerDAL" Guid="0FFBFA74-FAF8-4B1F-91E7-51346C1753F2">
+        <File Id="SysHvServerDAL" Source="$(var.WinAdminClientCore.TargetDir)SysHv.Server.DAL.dll"/>
+      </Component>
+
     </ComponentGroup>
 	</Fragment>
 </Wix>

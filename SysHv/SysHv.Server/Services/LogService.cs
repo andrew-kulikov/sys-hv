@@ -23,9 +23,9 @@ namespace SysHv.Server.Services
             _context?.Dispose();
         }
 
-        public Task<ICollection<SensorLog>> GetClientSensorLogs(int clientSensorId)
+        public Task<List<SensorLog>> GetClientSensorLogs(int clientSensorId)
         {
-            throw new NotImplementedException();
+            return _context.SensorLogs.Where(sl => sl.ClientSensorId == clientSensorId).ToListAsync();
         }
 
         public Task<List<SensorLog>> GetClientSensorLogsFrom(int clientSensorId, DateTime from)

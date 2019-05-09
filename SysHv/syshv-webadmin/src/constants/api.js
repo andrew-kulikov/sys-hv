@@ -15,6 +15,9 @@ export const ADD_CLIENT = `${API}client/register`;
 
 export const SENSORS = `${API}sensor`;
 
+export const SENSOR_LOGS = id => `${API}log/sensor/${id}`;
+export const ALL_LOGS = `${API}log/last`;
+
 export const CLIENT_SENSOR = id => `${API}sensor/${id}`;
 
 export const ME = `${API}me`;

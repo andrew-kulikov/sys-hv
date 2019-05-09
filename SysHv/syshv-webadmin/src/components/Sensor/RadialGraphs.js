@@ -140,10 +140,10 @@ class RadialGraphs extends React.Component {
             </Paper>
           );
         })}
-        <Paper className={classes.info}>
+        {/* <Paper className={classes.info}>
           <div>Last update:</div>
           <div>Last status:</div>
-        </Paper>
+        </Paper> */}
       </div>
     );
   }

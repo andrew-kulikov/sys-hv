@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SysHv.Server.DAL;
 using SysHv.Server.DAL.Models;
+using SysHv.Server.Services.Contract;
 
 namespace SysHv.Server.Services
 {

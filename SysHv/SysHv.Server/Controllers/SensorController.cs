@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SysHv.Server.DAL.Models;
 using SysHv.Server.DTOs;
 using SysHv.Server.Services;
+using SysHv.Server.Services.Contract;
 
 namespace SysHv.Server.Controllers
 {

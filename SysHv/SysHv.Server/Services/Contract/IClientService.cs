@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using SysHv.Server.DAL.Models;
 
-namespace SysHv.Server.Services
+namespace SysHv.Server.Services.Contract
 {
     public interface IClientService
     {

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using SysHv.Server.Configuration;
 using SysHv.Server.DAL.Models;
+using SysHv.Server.Services.Contract;
 
 namespace SysHv.Server.Services
 {

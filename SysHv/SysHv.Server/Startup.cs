@@ -25,6 +25,7 @@ using SysHv.Server.Helpers;
 using SysHv.Server.HostedServices;
 using SysHv.Server.Hubs;
 using SysHv.Server.Services;
+using SysHv.Server.Services.Contract;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace SysHv.Server

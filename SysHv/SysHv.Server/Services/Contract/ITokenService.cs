@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SysHv.Server.Services
+namespace SysHv.Server.Services.Contract
 {
     public interface ITokenService
     {

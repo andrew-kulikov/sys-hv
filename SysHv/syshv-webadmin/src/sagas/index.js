@@ -12,12 +12,16 @@ import * as clientSagas from './client';
 import * as sensorActions from '../actions/sensor';
 import * as sensorSagas from './sensor';
 
+import * as historyActions from '../actions/history';
+import * as historySagas from './history';
+
 export default function* saga() {
   const relations = [
     [authActions, authSagas],
     [accountActions, accountSagas],
     [clientActions, clientSagas],
-    [sensorActions, sensorSagas]
+    [sensorActions, sensorSagas],
+    [historyActions, historySagas]
   ];
 
   for (const [actions, sagas] of relations) {

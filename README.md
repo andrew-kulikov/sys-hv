@@ -1,3 +1,7 @@
+<p align="center">
+   <img src="SysHv/sysHvLogo-big.jpg" width="400"  />
+</p>
+   
 [![Build Status](https://keksight.visualstudio.com/SysHv-react/_apis/build/status/SysHv-react-CI?branchName=develop)](https://keksight.visualstudio.com/SysHv-react/_build/latest?definitionId=1&branchName=develop)
 
 **SysHv** is an application designed to help system administrator to monitor and manage organization computers. It provides good interface to manage your network computers and monitor their accessibility/statistics in runtime. This application is 6th term project of BSUIR informatics specialization. 

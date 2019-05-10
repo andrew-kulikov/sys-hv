@@ -2,7 +2,7 @@ import React from 'react';
 import ReduxToastr from 'react-redux-toastr';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
-import Home from './pages/Home';
+
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Account from './pages/Account';
@@ -23,8 +23,8 @@ const App = props => (
     <Router>
       <>
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/home" component={Home} />
+          <Route exact path="/" component={Computers} />
+         
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/account" component={Account} />

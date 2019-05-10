@@ -8,7 +8,7 @@ namespace SysHv.Server.Services.Contract
 {
     public interface ILogService
     {
-        Task<ICollection<SensorLog>> GetClientSensorLogs(int clientSensorId);
+        Task<List<SensorLog>> GetClientSensorLogs(int clientSensorId);
         Task<List<SensorLog>> GetClientSensorLogsFrom(int clientSensorId, DateTime from);
         Task<List<SensorLog>> GetUserClientSensorLogs(string userEmail, DateTime from);
     }

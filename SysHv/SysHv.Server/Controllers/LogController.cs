@@ -22,11 +22,18 @@ namespace SysHv.Server.Controllers
             _logService = logService;
         }
 
+        //[HttpGet]
+        //[Route("sensor")]
+        //public ActionResult<List<SensorLog>> GetClientSensorLogs([FromQuery] int clientSensorId, [FromQuery] DateTime from)
+        //{
+        //    return Ok(_logService.GetClientSensorLogsFrom(clientSensorId, from));
+        //}
+
         [HttpGet]
-        [Route("sensor")]
-        public ActionResult<List<SensorLog>> GetClientSensorLogs([FromQuery] int clientSensorId, [FromQuery] DateTime from)
+        [Route("sensor/{id:int}")]
+        public ActionResult<List<SensorLog>> GetClientSensorLogs(int id)
         {
-            return Ok(_logService.GetClientSensorLogsFrom(clientSensorId, from));
+            return Ok(_logService.GetClientSensorLogs(id).Result);
         }
 
         [HttpGet]

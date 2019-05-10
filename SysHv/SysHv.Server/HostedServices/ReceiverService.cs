@@ -100,20 +100,26 @@ namespace SysHv.Server.HostedServices
 
             if (sensorValue == null) return;
 
+            if ((sensorValue.Status != "OK" && sensorValue.Status != "Success") &&
+                MonitoringHub.Connections.ContainsKey(sensorResponse.UserEmail))
+                _hubContext.Clients
+                    .Clients(MonitoringHub.Connections[sensorResponse.UserEmail] as IReadOnlyList<string>)
+                    .SendAsync("notificationReceived", JsonConvert.DeserializeObject<SensorResponse>(message));
+
             using (var context = new ServerDbContext(_options))
-            {
-                var log = new SensorLog
                 {
-                    ClientSensorId = sensorResponse.SensorId,
-                    Status = sensorValue.Status,
-                    Time = sensorResponse.Time,
-                    ClientId = sensorResponse.ClientId,
-                    UserEmail = sensorResponse.UserEmail,
-                    LogJson = JsonConvert.SerializeObject(sensorValue)
-                };
-                context.SensorLogs.Add(log);
-                context.SaveChanges();
-            }
+                    var log = new SensorLog
+                    {
+                        ClientSensorId = sensorResponse.SensorId,
+                        Status = sensorValue.Status,
+                        Time = sensorResponse.Time,
+                        ClientId = sensorResponse.ClientId,
+                        UserEmail = sensorResponse.UserEmail,
+                        LogJson = JsonConvert.SerializeObject(sensorValue)
+                    };
+                    context.SensorLogs.Add(log);
+                    context.SaveChanges();
+                }
         }
 
         private void SaveHardwareInfo(int clientId, string hardwareInfo)

@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 
 import RadialGraphs from '../../components/Sensor/RadialGraphs';
 import LiveGraphs from '../../components/Sensor/LiveGraphs';
+import AllHistory from '../../components/Sensor/AllHistory';
 
 import styles from './style';
 import { withNamespaces } from 'react-i18next';
@@ -15,6 +16,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { connectTo } from '../../utils';
 
 import { getClientSensor } from '../../actions/sensor';
+import { getHistory } from '../../actions/history';
 
 function TabContainer(props) {
   return (
@@ -31,6 +33,7 @@ class SensorPage extends React.Component {
 
   componentDidMount() {
     this.props.getClientSensor(this.props.match.params.id);
+    this.props.getHistory(this.props.match.params.id);
   }
 
   handleChange = (event, value) => {
@@ -48,8 +51,6 @@ class SensorPage extends React.Component {
             <Tabs value={value} onChange={this.handleChange}>
               <Tab label="Sensors" />
               <Tab label="Live graph" />
-              <Tab label="Last 2 days" />
-              <Tab label="Last month" />
               <Tab label="All history" />
               <Tab label="Logs" />
             </Tabs>
@@ -64,10 +65,12 @@ class SensorPage extends React.Component {
               <LiveGraphs />
             </TabContainer>
           )}
-          {value === 2 && <TabContainer>Last 2 days</TabContainer>}
-          {value === 3 && <TabContainer>Last month</TabContainer>}
-          {value === 4 && <TabContainer>All history</TabContainer>}
-          {value === 5 && <TabContainer>Logs</TabContainer>}
+          {value === 2 && (
+            <TabContainer>
+              <AllHistory />
+            </TabContainer>
+          )}
+          {value === 3 && <TabContainer>Logs</TabContainer>}
         </div>
       </Page>
     );
@@ -77,9 +80,10 @@ class SensorPage extends React.Component {
 export default withNamespaces()(
   withStyles(styles)(
     connectTo(
-      state => ({}),
+      state => ({ selectedSensor: state.selectedSensor.sensor }),
       {
-        getClientSensor
+        getClientSensor,
+        getHistory
       },
       SensorPage
     )

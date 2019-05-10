@@ -22,8 +22,6 @@ class AddClientDialog extends React.Component {
   state = {
     name: '',
     description: '',
-    minValue: '',
-    maxValue: '',
     interval: '',
     criticalValue: '',
     warningValue: '',
@@ -105,15 +103,6 @@ class AddClientDialog extends React.Component {
             />
             <TextField
               margin="dense"
-              id="minValue"
-              name="minValue"
-              value={this.state.minValue}
-              label="Minimum Value"
-              fullWidth
-              onChange={this.handleChange}
-            />
-            <TextField
-              margin="dense"
               id="warningValue"
               name="warningValue"
               value={this.state.warningValue}
@@ -127,15 +116,6 @@ class AddClientDialog extends React.Component {
               name="criticalValue"
               value={this.state.criticalValue}
               label="Critical Value"
-              fullWidth
-              onChange={this.handleChange}
-            />
-            <TextField
-              margin="dense"
-              id="maxValue"
-              name="maxValue"
-              value={this.state.maxValue}
-              label="Maximim Value"
               fullWidth
               onChange={this.handleChange}
             />

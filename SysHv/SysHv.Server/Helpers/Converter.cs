@@ -18,8 +18,6 @@ namespace SysHv.Server.Helpers
                 WarningValue = clientSensor.WarningValue,
                 CriticalValue = clientSensor.CriticalValue,
                 IsNumeric = sensor.IsNumeric,
-                MaxValue = clientSensor.MaxValue,
-                MinValue = clientSensor.MinValue,
                 ReturnType = sensor.ReturnType
             };
         }

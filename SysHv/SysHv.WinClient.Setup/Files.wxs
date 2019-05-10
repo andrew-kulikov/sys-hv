@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+
+      <Component Id="MicrosoftDiagnosticsTracingEventSource" Guid="B05E69B7-CD98-420A-A4E0-3006F8220398">
+        <File Id="MicrosoftDiagnosticsTracingEventSource" Source="$(var.SysHv.Client.WinService.TargetDir)Microsoft.Diagnostics.Tracing.EventSource.dll"/>
+      </Component>
+
+      <Component Id="NewtonsoftJson" Guid="ACCEDD5E-3FB5-4B9D-A2CD-F0F8C177607D">
+        <File Id="NewtonsoftJson" Source="$(var.SysHv.Client.WinService.TargetDir)Newtonsoft.Json.dll"/>
+      </Component>
+
+      <Component Id="NLogConfig" Guid="178DBE82-8D1A-44ED-B096-F80FA5F0E85B">
+        <File Id="NLogConfig" Source="$(var.SysHv.Client.WinService.TargetDir)NLog.config"/>
+      </Component>
+
+      <Component Id="NLog" Guid="DE440018-B2D6-42F1-A20C-1CEAB3615314">
+        <File Id="NLog" Source="$(var.SysHv.Client.WinService.TargetDir)NLog.dll"/>
+      </Component>
+
+      <Component Id="OpenHardwareMonitorLib" Guid="1DEEEA0B-B635-439D-8AFC-114E4CD190EF">
+        <File Id="OpenHardwareMonitorLib" Source="$(var.SysHv.Client.WinService.TargetDir)OpenHardwareMonitorLib.dll"/>
+      </Component>
+
+      <Component Id="RabbitMQClient" Guid="2AC9A874-338C-457F-A47F-EFC8EEEAB442">
+        <File Id="RabbitMQClient" Source="$(var.SysHv.Client.WinService.TargetDir)RabbitMQ.Client.dll"/>
+      </Component>
+
+      <Component Id="RabbitMQCommunications" Guid="B88667C3-29C7-4528-A383-CA2E757FEB45">
+        <File Id="RabbitMQCommunications" Source="$(var.SysHv.Client.WinService.TargetDir)RabbitMQCommunications.dll"/>
+      </Component>
+
+      <Component Id="SysHvClientCommon" Guid="5CC5B1A7-85E4-4FCC-9CA9-9C535E6DC7C8">
+        <File Id="SysHvClientCommon" Source="$(var.SysHv.Client.WinService.TargetDir)SysHv.Client.Common.dll"/>
+      </Component>
+
+      <Component Id="SysHvClientWinServiceExeConfig" Guid="1B4659F0-717F-4323-A872-08459E7005B3">
+        <File Id="SysHvClientWinServiceExeConfig" Source="$(var.SysHv.Client.WinService.TargetDir)SysHv.Client.WinService.exe.config"/>
+      </Component>
+
+      <Component Id="Topshelf" Guid="625823D2-63BE-4F2E-BED4-1166561F2AF0">
+        <File Id="Topshelf" Source="$(var.SysHv.Client.WinService.TargetDir)Topshelf.dll"/>
+      </Component>
+
+      <Component Id="Service" Guid="2FD49BD8-8984-4509-BAC6-0CE287596CF1">
+        <File Id="MonitoringServiceEXE" Source="$(var.SysHv.Client.WinService.TargetDir)SysHv.Client.WinService.exe"/>
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

@@ -22,13 +22,11 @@ namespace SysHv.Server.Controllers
             _logService = logService;
         }
 
-        //[HttpGet]
-        //[Route("sensor")]
-        //public ActionResult<List<SensorLog>> GetClientSensorLogs([FromQuery] int clientSensorId, [FromQuery] DateTime from)
-        //{
-        //    return Ok(_logService.GetClientSensorLogsFrom(clientSensorId, from));
-        //}
-
+        /// <summary>
+        /// Get logs of client sensor with given id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("sensor/{id:int}")]
         public ActionResult<List<SensorLog>> GetClientSensorLogs(int id)
@@ -36,6 +34,10 @@ namespace SysHv.Server.Controllers
             return Ok(_logService.GetClientSensorLogs(id).Result);
         }
 
+        /// <summary>
+        /// Get logs of all client sensor for last day
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("last")]
         public ActionResult<List<SensorLog>> GetLastDayLogs()

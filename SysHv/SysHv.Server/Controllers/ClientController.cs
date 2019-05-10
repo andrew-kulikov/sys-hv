@@ -78,6 +78,11 @@ namespace SysHv.Server.Controllers
             return Json(new Response { Message = queue, Success = true, Sensors = sensorDtos });
         }
 
+        /// <summary>
+        /// Register client with given email and password
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns>Success</returns>
         [HttpPost]
         [Route("register")]
         [Authorize("Bearer")]
@@ -97,6 +102,11 @@ namespace SysHv.Server.Controllers
             return Json(new { success = true });
         }
 
+        /// <summary>
+        /// Remove client with given id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Success</returns>
         [HttpDelete]
         [Route("{id:int}")]
         [Authorize("Bearer")]
@@ -107,6 +117,10 @@ namespace SysHv.Server.Controllers
             return Json(new { success = true });
         }
 
+        /// <summary>
+        /// Get all clients associated with logged in user
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Authorize("Bearer")]
         public async Task<ActionResult<ICollection<ClientDto>>> GetAllClients()

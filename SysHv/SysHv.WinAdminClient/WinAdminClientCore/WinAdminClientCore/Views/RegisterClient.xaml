@@ -21,7 +21,7 @@
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Name" VerticalAlignment="Bottom"/>
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Ip" VerticalAlignment="Bottom"/>
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Delay" VerticalAlignment="Bottom"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Description" VerticalAlignment="Bottom"/>
 
         <TextBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" MinWidth="50" MaxWidth="500" Text="{Binding Name, Mode=TwoWay}"/>
         <TextBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" MinWidth="50" MaxWidth="500" Text="{Binding Ip, Mode=TwoWay}"/>

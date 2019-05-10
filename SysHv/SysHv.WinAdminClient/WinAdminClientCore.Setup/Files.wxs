@@ -138,6 +138,16 @@
         <File Id="SysHvServerDAL" Source="$(var.WinAdminClientCore.TargetDir)SysHv.Server.DAL.dll"/>
       </Component>
 
+      <!--1-st-->
+
+      <Component Id="MicrosoftExtensionsIdentityStores" Guid="1A64F27A-3B11-4F97-B9AC-388AB24D41B3">
+        <File Id="MicrosoftExtensionsIdentityStores" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.Identity.Stores.dll"/>
+      </Component>
+
+      <Component Id="MicrosoftExtensionsIdentityCore" Guid="A0E9B67E-7B93-43BF-A305-C2D57A3D6F54">
+        <File Id="MicrosoftExtensionsIdentityCore" Source="$(var.WinAdminClientCore.TargetDir)Microsoft.Extensions.Identity.Core.dll"/>
+      </Component>
+
     </ComponentGroup>
 	</Fragment>
 </Wix>

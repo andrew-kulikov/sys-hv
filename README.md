@@ -4,6 +4,10 @@
    
 [![Build Status](https://keksight.visualstudio.com/SysHv-react/_apis/build/status/SysHv-react-CI?branchName=develop)](https://keksight.visualstudio.com/SysHv-react/_build/latest?definitionId=1&branchName=develop)
 
+[![forthebadge](https://forthebadge.com/images/badges/made-with-c-sharp.svg)](https://forthebadge.com)
+
+[![forthebadge](https://forthebadge.com/images/badges/contains-cat-gifs.svg)](https://forthebadge.com)
+
 **SysHv** is an application designed to help system administrator to monitor and manage organization computers. It provides good interface to manage your network computers and monitor their accessibility/statistics in runtime. This application is 6th term project of BSUIR informatics specialization. 
 
 ---
@@ -18,8 +22,8 @@
 * Database: Mircrosoft SQL Server
 * Message transfering: RabbitMQ
 ---
-### Possible functionality
- * Admin app:
+### Functionality
+ * Admin app (web and windows):
     * Desctop application.
     * Can be installed.
     * Consumes messages from all clients.
@@ -28,7 +32,7 @@
     * Shows client computer processes.
     * Shows client computer usage.
     * Uses middleware API layer that processes user data.
-    * Has possibility to add custom sensor (?).
+    * Has possibility to add custom sensor.
     * Can send notification to client.
 * Client app:
     * Is windows service at windows.
@@ -39,4 +43,4 @@
     * Uses RabbitMQ producer to send messages to the server.
     * Can consume notifications from server.
 
-In future can be added admin app for linux, web and phone platforms. That may be possible because of patform independent communication between client and server.
+In future can be added admin app for linux, and phone platforms. That may be possible because of patform independent communication between client and server.

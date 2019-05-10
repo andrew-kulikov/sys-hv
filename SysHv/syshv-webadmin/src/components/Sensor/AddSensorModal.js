@@ -48,11 +48,11 @@ class AddClientDialog extends React.Component {
           onClose={handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Add Client</DialogTitle>
+          <DialogTitle id="form-dialog-title">Add Sensor</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              To add new client, please enter it's ip, name and description.
-              Then configure service on client machine and enjoy!
+              To add new sensor, please enter it's interval, name and description.
+              Then just update the page to get updates!
             </DialogContentText>
             <FormControl className={classes.sensorSelect}>
               <InputLabel htmlFor="sensorId">Sensor</InputLabel>
@@ -130,7 +130,7 @@ class AddClientDialog extends React.Component {
               }
               color="primary"
             >
-              Register
+              Add
             </Button>
           </DialogActions>
         </Dialog>
